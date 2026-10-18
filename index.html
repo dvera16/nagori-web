@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nagori — El diario diseñado para la era del feed</title>
+<meta name="description" content="Nagori es el diario personal que captura lo que ya compartes desde Instagram, Threads, TikTok, Facebook o X, y te ayuda a convertirlo en reflexión. 名残 — lo que queda del día." />
+<link rel="icon" href="assets/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="site-nav" id="siteNav">
+  <a href="#top" class="nav-brand">
+    <img src="assets/icon.png" alt="" />
+    <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#funciones">Funciones</a>
+    <a href="#pantallas">Pantallas</a>
+    <button class="theme-toggle" id="themeToggle" type="button">Modo oscuro</button>
+  </div>
+</nav>
+
+<main>
+
+  <header class="hero" id="top">
+    <div class="hero-copy">
+      <div class="hero-kanji"><span>名残</span><span class="rule"></span><span>Lo que queda del día</span></div>
+      <div class="hero-brand">
+        <img class="hero-mark" src="assets/icon.png" alt="Icono de Nagori" id="heroMark" />
+        <h1 class="hero-word" id="heroWord"><span class="wordmark">nagor<span class="i">ı<span class="dot" id="heroTape"></span></span></span></h1>
+      </div>
+      <p class="hero-headline" id="heroHeadline">
+        <span class="line"><span>El diario diseñado</span></span>
+        <span class="line"><span><em>para la era del feed.</em></span></span>
+      </p>
+      <p class="hero-sub" id="heroSub">No compite con el scroll: lo usa como materia prima para reflexionar.</p>
+      <a class="btn-primary" href="#para-que-sirve" id="scrollCue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14 M6 13l6 6 6-6"></path></svg>Descubre cómo funciona</a>
+    </div>
+    <div class="hero-phone" id="heroPhone">
+      <div class="phone-stage"><div style="width:360px;height:760px;border-radius:34px;overflow:hidden;background:#F6EFE3;box-shadow:0 0 0 8px #2A2018,0 40px 60px -30px rgba(42,32,24,.6);display:flex;flex-direction:column">
+        <div style="height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 13px/1 'Hanken Grotesk'"><span>21:14</span><span style="width:20px;height:10px;border:1.5px solid #3B2E23;border-radius:2px"></span></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:14px 20px 18px;gap:20px;min-height:0">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font:600 12px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#C1662F">Sábado</div>
+              <div style="font:400 40px/1 'Instrument Serif';letter-spacing:-.01em">18 de octubre</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:2px;padding:6px 9px;border-radius:14px;background:#EFE4D2;font:600 11px/1 'Hanken Grotesk';color:#6F604C"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 11.5 3.5 3.5 0 0 1 17.5 18z M9.5 14l2 2 3.5-3.5"></path></svg>Copia anoche</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <div style="font:400 24px/1 'Instrument Serif'">Bandeja <span style="font-style:italic;color:#6F604C">· 4 recortes</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;font:500 12.5px/1.3 'Hanken Grotesk';color:#6F604C"><svg viewBox="0 0 24 24" width="15" height="15" style="flex:none;fill:none;stroke:#C1662F;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z M12 7v5l3 2"></path></svg>Lo que no uses pasa al Cofre en 2 h 46 min</div>
+            <div style="display:flex;gap:14px;overflow:hidden;padding:12px 2px 10px;margin:0 -20px;padding-left:22px">
+              <div style="position:relative;flex:none;width:120px;transform:rotate(-2deg)">
+                <div style="position:absolute;top:-8px;left:38px;width:44px;height:16px;background:rgba(226,205,148,.82);transform:rotate(4deg);z-index:1"></div>
+                <div style="background:#FBF6EC;padding:6px 6px 9px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 8px 16px -10px rgba(59,46,35,.45)">
+                  <div style="height:116px;border-radius:2px;background:repeating-linear-gradient(135deg,#E6D6BC 0 6px,#DECDB0 6px 12px);display:flex;align-items:flex-end;padding:6px;font:500 10px/1 'Hanken Grotesk';color:#6F604C">post · atardecer</div>
+                  <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font:700 10px/1 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;color:#6F604C"><svg viewBox="0 0 24 24" width="12" height="12" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1 M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Instagram</div>
+                </div>
+              </div>
+              <div style="position:relative;flex:none;width:120px;transform:rotate(1.5deg);margin-top:6px">
+                <div style="position:absolute;top:-8px;left:34px;width:44px;height:16px;background:rgba(226,205,148,.82);transform:rotate(-3deg);z-index:1"></div>
+                <div style="background:#FBF6EC;padding:6px 6px 9px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 8px 16px -10px rgba(59,46,35,.45)">
+                  <div style="height:116px;border-radius:2px;background:#3B2E23;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;gap:3px"><div style="font:400 15px/1.05 'Instrument Serif';color:#F6EFE3">Canción del camino</div><div style="font:500 9.5px/1 'Hanken Grotesk';color:#C2B49C">carátula</div></div>
+                  <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font:700 10px/1 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;color:#6F604C"><svg viewBox="0 0 24 24" width="12" height="12" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 18V5l11-2v13 M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M20 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path></svg>Spotify</div>
+                </div>
+              </div>
+              <div style="position:relative;flex:none;width:120px;transform:rotate(-1deg)">
+                <div style="position:absolute;top:-8px;left:40px;width:44px;height:16px;background:rgba(226,205,148,.82);transform:rotate(2deg);z-index:1"></div>
+                <div style="background:#FBF6EC;padding:6px 6px 9px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 8px 16px -10px rgba(59,46,35,.45)">
+                  <div style="height:116px;border-radius:2px;background:#F3E3D3;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px">
+                    <div style="display:flex;align-items:center;gap:3px;height:28px"><span style="width:3px;height:10px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:22px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:14px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:26px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:16px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:8px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:20px;border-radius:2px;background:#C1662F"></span><span style="width:3px;height:12px;border-radius:2px;background:#C1662F"></span></div>
+                    <div style="font:600 12px/1 'Hanken Grotesk';color:#8E4F1F">0:42</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font:700 10px/1 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;color:#6F604C"><svg viewBox="0 0 24 24" width="12" height="12" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M5.5 11a6.5 6.5 0 0 0 13 0 M12 17.5V21"></path></svg>Nota de voz</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font:600 12px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#6F604C">Añadir a la bandeja</div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+              <div style="height:64px;border-radius:14px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg>Foto</div>
+              <div style="height:64px;border-radius:14px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 7h12v10H3z M15 10.5l6-3.5v10l-6-3.5"></path></svg>Video</div>
+              <div style="height:64px;border-radius:14px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h14v14 M3 7h14v14H3z M3 17l4-4 3 3 3-3 4 4"></path></svg>Galería</div>
+              <div style="height:64px;border-radius:14px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M5.5 11a6.5 6.5 0 0 0 13 0 M12 17.5V21"></path></svg>Voz</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font:400 13px/1.3 'Newsreader';font-style:italic;color:#6F604C"><svg viewBox="0 0 24 24" width="14" height="14" style="flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v11 M8 10l4 4 4-4 M4 14v5h16v-5"></path></svg>O compártelo desde cualquier app con «Nagori».</div>
+          </div>
+
+          <div style="margin-top:auto;height:56px;border-radius:16px;background:#3B2E23;color:#F6EFE3;display:flex;align-items:center;justify-content:center;gap:10px;font:600 15px/1 'Hanken Grotesk';box-shadow:0 10px 20px -12px rgba(59,46,35,.7)"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:#E08A52;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M4 20l1.2-4.4L15.5 5.3a2.1 2.1 0 0 1 3 3L8.2 18.8z M13.5 7.3l3 3"></path></svg>Escribir la página de hoy</div>
+        </div>
+        <div style="height:68px;flex:none;background:#F3EADC;border-top:1px solid #E0D3BC;display:flex">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#3B2E23;font:700 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:#C1662F;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M3 19h18 M7 15.5a5 5 0 0 1 10 0 M12 4v3 M4.9 8.4l2 2 M19.1 8.4l-2 2"></path></svg>Hoy<span style="width:18px;height:3px;border-radius:2px;background:#C1662F"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18v4H3z M5 10v10h14V10 M10 14h4"></path></svg>Cofre<span style="width:18px;height:3px"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z M5 19.5A1.5 1.5 0 0 0 6.5 21H19 M9 7.5h6"></path></svg>Historial<span style="width:18px;height:3px"></span></div>
+        </div>
+      </div></div>
+    </div>
+  </header>
+
+  <section id="que-es">
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow" data-reveal-eyebrow><span>Qué es Nagori</span></p>
+        <h2 class="reveal-heading" data-reveal-heading>
+            <span class="line"><span>Un diario de reflexión,</span></span>
+            <span class="line"><span><em>enriquecido con el</em></span></span>
+            <span class="line"><span><em>contexto del momento.</em></span></span>
+        </h2>
+        <p class="section-body">
+          Nagori no es un archivador de redes sociales ni un agregador de feed. Es el lugar donde lo que ves durante el día —un post, una foto, una canción— se convierte en <strong>materia prima</strong> para algo que escribes sobre tu propio día.
+        </p>
+      </div>
+      <div class="positioning-card" data-reveal-card>
+        <span class="tape"></span>
+        <div class="label">Posicionamiento</div>
+        <p class="quote">«El diario diseñado para la era del feed.»</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="para-que-sirve">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal-eyebrow><span>Para qué sirve</span></p>
+        <h2 class="reveal-heading" data-reveal-heading>
+            <span class="line"><span>Compártelo donde</span></span>
+            <span class="line"><span><em>ya estás.</em></span></span>
+        </h2>
+        <p class="section-body">
+          Usas el <strong>menú Compartir</strong> de siempre y eliges Nagori como destino, igual que elegirías a un amigo. Sin APIs, sin conectar cuentas, sin entrar a buscar nada luego.
+        </p>
+      </div>
+      <div class="flow">
+        <div class="flow-step" data-reveal-card style="--r:-1.2deg;--tl:40%">
+          <span class="tape"></span>
+          <div class="num">01</div>
+          <h3>Compartes</h3>
+          <p>Desde Instagram, Threads, TikTok, Facebook o X, como ya haces mientras scrolleas.</p>
+        </div>
+        <div class="flow-step" data-reveal-card style="--r:.8deg;--tl:34%">
+          <span class="tape"></span>
+          <div class="num">02</div>
+          <h3>Llega como recorte</h3>
+          <p>Nagori guarda la miniatura, el enlace y el momento exacto en la bandeja del día. Nada se pierde.</p>
+        </div>
+        <div class="flow-step" data-reveal-card style="--r:-.6deg;--tl:44%">
+          <span class="tape"></span>
+          <div class="num">03</div>
+          <h3>Lo pegas al escribir</h3>
+          <p>Cuando te sientas a reflexionar, eliges qué recortes pegar en la página de hoy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="funciones">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal-eyebrow><span>Qué funciones tiene</span></p>
+        <h2 class="reveal-heading" data-reveal-heading>
+            <span class="line"><span>Todo lo que necesita</span></span>
+            <span class="line"><span><em>un diario de verdad.</em></span></span>
+        </h2>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card" data-reveal-card>
+          <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h14v14 M3 7h14v14H3z"></path></svg></span>
+          <h3>Bandeja del día</h3>
+          <p>Todo lo que compartes aterriza aquí primero, con una cuenta atrás visible hasta medianoche. Tú decides qué usar.</p>
+        </div>
+        <div class="feature-card" data-reveal-card>
+          <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v4H3z M5 10v10h14V10 M10 14h4"></path></svg></span>
+          <h3>El Cofre</h3>
+          <p>Lo que no usas en el día no se pierde: pasa solo al Cofre, y de vez en cuando vuelve a ti para «traerlo a hoy».</p>
+        </div>
+        <div class="feature-card" data-reveal-card>
+          <span class="mood-strip" aria-hidden="true"><i style="background:#5E7A55"></i><i style="background:#B07A12"></i><i style="background:#C1662F"></i><i style="background:#5A5A7E"></i><i style="background:#4F6B80"></i><i style="background:#A2412E"></i></span>
+          <h3>Color de ánimo</h3>
+          <p>Seis ánimos con iconos propios. Cada página lleva el tono del día, y tu mes se lee de un vistazo en el Historial.</p>
+        </div>
+        <div class="feature-card" data-reveal-card>
+          <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4 M8 8l4-4 4 4 M4 13v7h16v-7"></path></svg></span>
+          <h3>Compartir con estilo</h3>
+          <p>Tu cita se convierte en una hoja de cuaderno; tus fotos, en un recorte con cinta. Todo se mueve, escala y gira con el dedo.</p>
+        </div>
+        <div class="feature-card" data-reveal-card>
+          <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg></span>
+          <h3>Visor a pantalla completa</h3>
+          <p>Vuelve a mirar cada recuerdo tal y como lo guardaste, sin distracciones.</p>
+        </div>
+        <div class="feature-card" data-reveal-card>
+          <span class="tag">Nuevo</span>
+          <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 11.5 3.5 3.5 0 0 1 17.5 18z M9.5 14l2 2 3.5-3.5"></path></svg></span>
+          <h3>Copia de seguridad automática</h3>
+          <p>Tu diario se respalda solo en tu Google Drive, y el estado de la copia siempre está a la vista. Nunca sale de tu propia nube.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pantallas">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal-eyebrow><span>Pantallas</span></p>
+        <h2 class="reveal-heading" data-reveal-heading>
+            <span class="line"><span>Tu día,</span></span>
+            <span class="line"><span><em>en recortes.</em></span></span>
+        </h2>
+        <p class="section-body">Lo que compartes desde el feed llega como un recorte de papel con cinta. Tú decides cuál pegar en la página del día; el resto se guarda solo en el Cofre a medianoche.</p>
+      </div>
+    </div>
+    <div class="shots">
+        <figure class="shot" data-reveal-card>
+          <figcaption class="shot-label"><span class="badge">1</span>Escribir la página</figcaption>
+          <div class="phone-stage"><div style="width:360px;height:760px;border-radius:34px;overflow:hidden;background:#FBF6EC;box-shadow:0 0 0 8px #2A2018,0 40px 60px -30px rgba(42,32,24,.6);display:flex;flex-direction:column;position:relative">
+        <div style="height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 13px/1 'Hanken Grotesk'"><span>21:20</span><span style="width:20px;height:10px;border:1.5px solid #3B2E23;border-radius:2px"></span></div>
+        <div style="height:52px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 8px">
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M15 5l-7 7 7 7"></path></svg></div>
+          <div style="font:600 12px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#6F604C">Sábado · 21:20</div>
+          <div style="height:36px;padding:0 14px;margin-right:6px;border-radius:18px;background:#C1662F;color:#FFFBF3;display:flex;align-items:center;gap:6px;font:700 13px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Listo</div>
+        </div>
+        <div style="padding:6px 22px 0;display:flex;flex-direction:column;gap:14px">
+          <div style="font:400 34px/1 'Instrument Serif'">18 de octubre</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <div style="height:34px;padding:0 12px 0 9px;border-radius:17px;background:#5E7A55;color:#FBF6EC;display:flex;align-items:center;gap:6px;font:600 12.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14z M5 19l7-7"></path></svg>Tranquilo</div>
+            <div style="width:34px;height:34px;border-radius:17px;border:1px solid #E0D3BC;display:flex;align-items:center;justify-content:center;color:#B07A12"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M12 2.5v2 M12 19.5v2 M2.5 12h2 M19.5 12h2 M5.3 5.3l1.4 1.4 M17.3 17.3l1.4 1.4 M5.3 18.7l1.4-1.4 M17.3 6.7l1.4-1.4"></path></svg></div>
+            <div style="width:34px;height:34px;border-radius:17px;border:1px solid #E0D3BC;display:flex;align-items:center;justify-content:center;color:#C1662F"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M11 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z M19 15v5 M16.5 17.5h5"></path></svg></div>
+            <div style="width:34px;height:34px;border-radius:17px;border:1px solid #E0D3BC;display:flex;align-items:center;justify-content:center;color:#5A5A7E"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg></div>
+            <div style="width:34px;height:34px;border-radius:17px;border:1px solid #E0D3BC;display:flex;align-items:center;justify-content:center;color:#4F6B80"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M7 14a4 4 0 0 1-.5-8A6 6 0 0 1 18 7.5 3.5 3.5 0 0 1 17.5 14z M8 17.5l-1 3 M12 17.5l-1 3 M16 17.5l-1 3"></path></svg></div>
+            <div style="width:34px;height:34px;border-radius:17px;border:1px solid #E0D3BC;display:flex;align-items:center;justify-content:center;color:#A2412E"><svg viewBox="0 0 24 24" width="17" height="17" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M2.5 12l3-4 3 8 3-10 3 12 3-8 3 4"></path></svg></div>
+          </div>
+        </div>
+        <div style="flex:1;margin-top:14px;padding:4px 22px 0;background-image:repeating-linear-gradient(to bottom,transparent 0 29px,#EADCC5 29px 30px);background-position:0 4px;font:400 18px/30px 'Newsreader';color:#3B2E23;text-wrap:pretty;display:flex;flex-direction:column">
+          <div>Volví caminando por el parque. Había una luz naranja sobre los edificios, y esa canción sonando todo el rato<span style="display:inline-block;width:2px;height:20px;background:#C1662F;vertical-align:-3px;margin-left:1px"></span></div>
+          <div style="display:flex;gap:14px;padding:16px 0 0 4px">
+            <div style="position:relative;flex:none;width:84px;transform:rotate(-3deg)">
+              <div style="position:absolute;top:-7px;left:24px;width:36px;height:13px;background:rgba(226,205,148,.82);transform:rotate(5deg);z-index:1"></div>
+              <div style="background:#F6EFE3;padding:4px 4px 6px;border-radius:2px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -8px rgba(59,46,35,.45)"><div style="height:80px;background:#3B2E23;border-radius:1px;display:flex;align-items:flex-end;padding:5px;font:400 12px/1 'Instrument Serif';color:#F6EFE3">Canción del camino</div></div>
+            </div>
+            <div style="position:relative;flex:none;width:84px;transform:rotate(2.5deg);margin-top:4px">
+              <div style="position:absolute;top:-7px;left:24px;width:36px;height:13px;background:rgba(226,205,148,.82);transform:rotate(-4deg);z-index:1"></div>
+              <div style="background:#F6EFE3;padding:4px 4px 6px;border-radius:2px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -8px rgba(59,46,35,.45)"><div style="height:80px;background:repeating-linear-gradient(135deg,#E6D6BC 0 6px,#DECDB0 6px 12px);border-radius:1px"></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;background:#F3EADC;border-top:1px solid #E0D3BC;border-radius:22px 22px 0 0;padding:10px 20px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 -12px 24px -18px rgba(59,46,35,.5)">
+          <div style="align-self:center;width:36px;height:4px;border-radius:2px;background:#D6C6AA"></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 20px/1 'Instrument Serif'">De tu bandeja</div><div style="font:600 12px/1 'Hanken Grotesk';color:#6F604C">2 sin pegar</div></div>
+          <div style="display:flex;gap:10px">
+            <div style="flex:1;height:56px;border-radius:12px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;align-items:center;gap:10px;padding:0 8px"><div style="width:40px;height:40px;border-radius:6px;background:#F3E3D3;display:flex;align-items:center;justify-content:center;color:#C1662F"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M5.5 11a6.5 6.5 0 0 0 13 0 M12 17.5V21"></path></svg></div><div style="flex:1;font:600 12.5px/1.2 'Hanken Grotesk'">Voz · 0:42</div><svg viewBox="0 0 24 24" width="20" height="20" style="flex:none;fill:none;stroke:#C1662F;stroke-width:2;stroke-linecap:round"><path d="M12 5v14 M5 12h14"></path></svg></div>
+            <div style="flex:1;height:56px;border-radius:12px;background:#FBF6EC;border:1px solid #E0D3BC;display:flex;align-items:center;gap:10px;padding:0 8px"><div style="width:40px;height:40px;border-radius:6px;background:repeating-linear-gradient(135deg,#E6D6BC 0 5px,#DECDB0 5px 10px)"></div><div style="flex:1;font:600 12.5px/1.2 'Hanken Grotesk'">Foto</div><svg viewBox="0 0 24 24" width="20" height="20" style="flex:none;fill:none;stroke:#C1662F;stroke-width:2;stroke-linecap:round"><path d="M12 5v14 M5 12h14"></path></svg></div>
+          </div>
+        </div>
+      </div></div>
+          <p class="shot-note">Escritura en serif sobre pautado; la bandeja vive en una hoja inferior y un toque pega el recorte.</p>
+        </figure>
+        <figure class="shot" data-reveal-card>
+          <figcaption class="shot-label"><span class="badge">2</span>Cofre</figcaption>
+          <div class="phone-stage"><div style="width:360px;height:760px;border-radius:34px;overflow:hidden;background:#F6EFE3;box-shadow:0 0 0 8px #2A2018,0 40px 60px -30px rgba(42,32,24,.6);display:flex;flex-direction:column">
+        <div style="height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 13px/1 'Hanken Grotesk'"><span>21:14</span><span style="width:20px;height:10px;border:1.5px solid #3B2E23;border-radius:2px"></span></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:14px 20px 0;gap:16px;min-height:0;overflow:hidden">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font:400 40px/1 'Instrument Serif'">Cofre</div>
+            <div style="font:400 15px/1.35 'Newsreader';font-style:italic;color:#6F604C">Lo que no usaste, a salvo. 38 recortes.</div>
+          </div>
+          <div style="background:#3B2E23;color:#F6EFE3;border-radius:18px;padding:14px;display:flex;gap:14px;align-items:center">
+            <div style="position:relative;flex:none;width:72px;transform:rotate(-4deg)">
+              <div style="position:absolute;top:-6px;left:20px;width:32px;height:12px;background:rgba(226,205,148,.85);transform:rotate(6deg);z-index:1"></div>
+              <div style="background:#FBF6EC;padding:4px 4px 6px;border-radius:2px"><div style="height:68px;background:repeating-linear-gradient(135deg,#E6D6BC 0 5px,#DECDB0 5px 10px)"></div></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+              <div style="font:600 11px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#E08A52">Hace 3 meses</div>
+              <div style="font:400 19px/1.1 'Instrument Serif'">Guardaste esto un martes de julio. ¿Te dice algo hoy?</div>
+              <div style="display:flex;gap:8px;margin-top:2px">
+                <div style="height:32px;padding:0 12px;border-radius:16px;background:#E08A52;color:#3B2008;display:flex;align-items:center;gap:6px;font:700 12px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V4 M8 8l4-4 4 4 M4 13v7h16v-7"></path></svg>Traer a hoy</div>
+                <div style="height:32px;padding:0 10px;display:flex;align-items:center;font:600 12px/1 'Hanken Grotesk';color:#C2B49C">Ahora no</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <div style="height:32px;padding:0 13px;border-radius:16px;background:#3B2E23;color:#F6EFE3;display:flex;align-items:center;font:600 12.5px/1 'Hanken Grotesk'">Todo</div>
+            <div style="height:32px;padding:0 13px;border-radius:16px;border:1px solid #E0D3BC;display:flex;align-items:center;font:600 12.5px/1 'Hanken Grotesk';color:#5A4A3A">Enlaces</div>
+            <div style="height:32px;padding:0 13px;border-radius:16px;border:1px solid #E0D3BC;display:flex;align-items:center;font:600 12.5px/1 'Hanken Grotesk';color:#5A4A3A">Fotos</div>
+            <div style="height:32px;padding:0 13px;border-radius:16px;border:1px solid #E0D3BC;display:flex;align-items:center;font:600 12.5px/1 'Hanken Grotesk';color:#5A4A3A">Voz</div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:8px"><div style="font:400 22px/1 'Instrument Serif'">Octubre</div><div style="flex:1;height:1px;background:#E0D3BC"></div></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px">
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="position:relative;background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(-1.5deg)"><div style="aspect-ratio:1;background:repeating-linear-gradient(135deg,#E6D6BC 0 5px,#DECDB0 5px 10px)"></div></div><div style="display:flex;justify-content:space-between;align-items:center;font:600 11px/1 'Hanken Grotesk';color:#6F604C">16 oct<svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:#C1662F;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V4 M8 8l4-4 4 4 M4 13v7h16v-7"></path></svg></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(1deg)"><div style="aspect-ratio:1;background:#3B2E23;display:flex;align-items:flex-end;padding:5px;font:400 11px/1 'Instrument Serif';color:#F6EFE3">Lista lluvia</div></div><div style="display:flex;justify-content:space-between;align-items:center;font:600 11px/1 'Hanken Grotesk';color:#6F604C">15 oct<svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:#C1662F;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V4 M8 8l4-4 4 4 M4 13v7h16v-7"></path></svg></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(-.5deg)"><div style="aspect-ratio:1;background:#FBF6EC;border:1px solid #EADCC5;display:flex;align-items:center;padding:6px;font:400 11px/1.25 'Newsreader';font-style:italic;color:#5A4A3A">«No todo lo que se guarda se pierde»</div></div><div style="display:flex;justify-content:space-between;align-items:center;font:600 11px/1 'Hanken Grotesk';color:#6F604C">15 oct<svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:#C1662F;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V4 M8 8l4-4 4 4 M4 13v7h16v-7"></path></svg></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(1.5deg)"><div style="aspect-ratio:1;background:#F3E3D3;display:flex;align-items:center;justify-content:center;gap:2px"><span style="width:3px;height:8px;background:#C1662F;border-radius:2px"></span><span style="width:3px;height:16px;background:#C1662F;border-radius:2px"></span><span style="width:3px;height:11px;background:#C1662F;border-radius:2px"></span><span style="width:3px;height:18px;background:#C1662F;border-radius:2px"></span><span style="width:3px;height:9px;background:#C1662F;border-radius:2px"></span></div></div><div style="font:600 11px/1 'Hanken Grotesk';color:#6F604C">12 oct</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(-1deg)"><div style="aspect-ratio:1;background:repeating-linear-gradient(45deg,#E6D6BC 0 5px,#DECDB0 5px 10px)"></div></div><div style="font:600 11px/1 'Hanken Grotesk';color:#6F604C">10 oct</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><div style="background:#FBF6EC;padding:4px;border-radius:3px;box-shadow:0 1px 0 #E0D3BC,0 6px 12px -9px rgba(59,46,35,.45);transform:rotate(.8deg)"><div style="aspect-ratio:1;background:#5E7A55;opacity:.85"></div></div><div style="font:600 11px/1 'Hanken Grotesk';color:#6F604C">9 oct</div></div>
+          </div>
+        </div>
+        <div style="height:68px;flex:none;background:#F3EADC;border-top:1px solid #E0D3BC;display:flex">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 19h18 M7 15.5a5 5 0 0 1 10 0 M12 4v3 M4.9 8.4l2 2 M19.1 8.4l-2 2"></path></svg>Hoy<span style="width:18px;height:3px"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#3B2E23;font:700 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:#C1662F;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18v4H3z M5 10v10h14V10 M10 14h4"></path></svg>Cofre<span style="width:18px;height:3px;border-radius:2px;background:#C1662F"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z M5 19.5A1.5 1.5 0 0 0 6.5 21H19 M9 7.5h6"></path></svg>Historial<span style="width:18px;height:3px"></span></div>
+        </div>
+      </div></div>
+          <p class="shot-note">Lo que no usaste, ordenado por mes. Una sola tarjeta te propone recuperar algo antiguo.</p>
+        </figure>
+        <figure class="shot" data-reveal-card>
+          <figcaption class="shot-label"><span class="badge">3</span>Historial</figcaption>
+          <div class="phone-stage"><div style="width:360px;height:760px;border-radius:34px;overflow:hidden;background:#F6EFE3;box-shadow:0 0 0 8px #2A2018,0 40px 60px -30px rgba(42,32,24,.6);display:flex;flex-direction:column">
+        <div style="height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 13px/1 'Hanken Grotesk'"><span>21:14</span><span style="width:20px;height:10px;border:1.5px solid #3B2E23;border-radius:2px"></span></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:14px 20px 0;gap:18px;min-height:0;overflow:hidden">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font:400 40px/1 'Instrument Serif'">Historial</div>
+            <div style="font:400 15px/1.35 'Newsreader';font-style:italic;color:#6F604C">Octubre de 2026 · 12 páginas</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px">
+              <span style="height:22px;border-radius:3px;background:#5E7A55"></span><span style="height:22px;border-radius:3px;background:#EADCC5"></span><span style="height:22px;border-radius:3px;background:#B07A12"></span><span style="height:22px;border-radius:3px;background:#B07A12"></span><span style="height:22px;border-radius:3px;background:#EADCC5"></span><span style="height:22px;border-radius:3px;background:#5A5A7E"></span><span style="height:22px;border-radius:3px;background:#C1662F"></span><span style="height:22px;border-radius:3px;background:#EADCC5"></span><span style="height:22px;border-radius:3px;background:#4F6B80"></span><span style="height:22px;border-radius:3px;background:#5E7A55"></span><span style="height:22px;border-radius:3px;background:#A2412E"></span><span style="height:22px;border-radius:3px;background:#EADCC5"></span><span style="height:22px;border-radius:3px;background:#5E7A55"></span><span style="height:22px;border-radius:3px;background:#B07A12"></span><span style="height:22px;border-radius:3px;background:#D6C6AA"></span><span style="height:22px;border-radius:3px;background:#5A5A7E"></span><span style="height:22px;border-radius:3px;background:#C1662F"></span><span style="height:22px;border-radius:3px;border:1.5px dashed #C1662F"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font:600 10.5px/1 'Hanken Grotesk';color:#6F604C"><span>1 oct</span><span>Tu mes en ánimos</span><span>hoy</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;gap:16px;padding:14px 0;border-top:1px solid #E0D3BC">
+              <div style="width:40px;flex:none;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font:400 34px/.9 'Instrument Serif'">17</div><div style="font:700 10px/1 'Hanken Grotesk';letter-spacing:.1em;text-transform:uppercase;color:#6F604C">vie</div></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;font:600 12px/1 'Hanken Grotesk';color:#C1662F"><svg viewBox="0 0 24 24" width="15" height="15" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M11 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z M19 15v5 M16.5 17.5h5"></path></svg>Agradecido<span style="color:#6F604C;font-weight:500">· 22:05</span></div>
+                <div style="font:400 15.5px/1.4 'Newsreader';color:#3B2E23;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">Llamé a mi madre después de mucho tiempo sin hablar. Me hizo bien escuchar su voz.</div>
+                <div style="display:flex;align-items:center;gap:5px;font:600 11px/1 'Hanken Grotesk';color:#6F604C"><svg viewBox="0 0 24 24" width="13" height="13" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h14v14 M3 7h14v14H3z"></path></svg>2 recortes</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:14px 0;border-top:1px solid #E0D3BC">
+              <div style="width:40px;flex:none;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font:400 34px/.9 'Instrument Serif'">16</div><div style="font:700 10px/1 'Hanken Grotesk';letter-spacing:.1em;text-transform:uppercase;color:#6F604C">jue</div></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;font:600 12px/1 'Hanken Grotesk';color:#5A5A7E"><svg viewBox="0 0 24 24" width="15" height="15" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>Cansado<span style="color:#6F604C;font-weight:500">· 23:40</span></div>
+                <div style="font:400 15.5px/1.4 'Newsreader';color:#3B2E23;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">Mucho trabajo acumulado, pero logré ponerme al día con los correos pendientes.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;padding:14px 0;border-top:1px solid #E0D3BC">
+              <div style="width:40px;flex:none;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font:400 34px/.9 'Instrument Serif'">14</div><div style="font:700 10px/1 'Hanken Grotesk';letter-spacing:.1em;text-transform:uppercase;color:#6F604C">mar</div></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;font:600 12px/1 'Hanken Grotesk';color:#6F604C">Sin ánimo · 21:12</div>
+                <div style="font:400 15.5px/1.4 'Newsreader';font-style:italic;color:#6F604C">Página sin texto — solo recortes.</div>
+                <div style="display:flex;align-items:center;gap:5px;font:600 11px/1 'Hanken Grotesk';color:#6F604C"><svg viewBox="0 0 24 24" width="13" height="13" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h14v14 M3 7h14v14H3z"></path></svg>3 recortes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="height:68px;flex:none;background:#F3EADC;border-top:1px solid #E0D3BC;display:flex">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 19h18 M7 15.5a5 5 0 0 1 10 0 M12 4v3 M4.9 8.4l2 2 M19.1 8.4l-2 2"></path></svg>Hoy<span style="width:18px;height:3px"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#6F604C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18v4H3z M5 10v10h14V10 M10 14h4"></path></svg>Cofre<span style="width:18px;height:3px"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#3B2E23;font:700 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:#C1662F;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z M5 19.5A1.5 1.5 0 0 0 6.5 21H19 M9 7.5h6"></path></svg>Historial<span style="width:18px;height:3px;border-radius:2px;background:#C1662F"></span></div>
+        </div>
+      </div></div>
+          <p class="shot-note">La franja de ánimos del mes, y cada día con su hora, su tono y sus recortes.</p>
+        </figure>
+        <figure class="shot" data-reveal-card>
+          <figcaption class="shot-label"><span class="badge">4</span>Hoy · modo oscuro</figcaption>
+          <div class="phone-stage"><div style="width:360px;height:760px;border-radius:34px;overflow:hidden;background:#201810;color:#EFE6D8;box-shadow:0 0 0 8px #0E0A07,0 40px 60px -30px rgba(42,32,24,.6);display:flex;flex-direction:column">
+        <div style="height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 13px/1 'Hanken Grotesk'"><span>23:31</span><span style="width:20px;height:10px;border:1.5px solid #EFE6D8;border-radius:2px"></span></div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:14px 20px 18px;gap:20px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font:600 12px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#E08A52">Sábado</div>
+            <div style="font:400 40px/1 'Instrument Serif'">18 de octubre</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="font:400 24px/1 'Instrument Serif'">Bandeja <span style="font-style:italic;color:#C2B49C">· 1 recorte</span></div>
+            <div style="display:flex;align-items:center;gap:7px;font:600 12.5px/1.3 'Hanken Grotesk';color:#E08A52"><svg viewBox="0 0 24 24" width="15" height="15" style="flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z M12 7v5l3 2"></path></svg>Pasa al Cofre en 29 min</div>
+            <div style="padding:12px 2px 0">
+              <div style="position:relative;width:120px;transform:rotate(-2deg)">
+                <div style="position:absolute;top:-8px;left:38px;width:44px;height:16px;background:rgba(200,176,120,.7);transform:rotate(4deg);z-index:1"></div>
+                <div style="background:#2B2117;padding:6px 6px 9px;border-radius:3px;box-shadow:0 1px 0 #4A4030,0 10px 18px -10px rgba(0,0,0,.7)">
+                  <div style="height:116px;border-radius:2px;background:repeating-linear-gradient(135deg,#362A1D 0 6px,#413323 6px 12px)"></div>
+                  <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font:700 10px/1 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;color:#C2B49C"><svg viewBox="0 0 24 24" width="12" height="12" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg>Foto</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+            <div style="height:64px;border-radius:14px;background:#2B2117;border:1px solid #4A4030;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg>Foto</div>
+            <div style="height:64px;border-radius:14px;background:#2B2117;border:1px solid #4A4030;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 7h12v10H3z M15 10.5l6-3.5v10l-6-3.5"></path></svg>Video</div>
+            <div style="height:64px;border-radius:14px;background:#2B2117;border:1px solid #4A4030;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h14v14 M3 7h14v14H3z M3 17l4-4 3 3 3-3 4 4"></path></svg>Galería</div>
+            <div style="height:64px;border-radius:14px;background:#2B2117;border:1px solid #4A4030;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="22" height="22" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M5.5 11a6.5 6.5 0 0 0 13 0 M12 17.5V21"></path></svg>Voz</div>
+          </div>
+          <div style="margin-top:auto;height:56px;border-radius:16px;background:#E08A52;color:#3B2008;display:flex;align-items:center;justify-content:center;gap:10px;font:700 15px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M4 20l1.2-4.4L15.5 5.3a2.1 2.1 0 0 1 3 3L8.2 18.8z M13.5 7.3l3 3"></path></svg>Escribir la página de hoy</div>
+        </div>
+        <div style="height:68px;flex:none;background:#231A12;border-top:1px solid #4A4030;display:flex">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:700 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:#E08A52;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round"><path d="M3 19h18 M7 15.5a5 5 0 0 1 10 0 M12 4v3 M4.9 8.4l2 2 M19.1 8.4l-2 2"></path></svg>Hoy<span style="width:18px;height:3px;border-radius:2px;background:#E08A52"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#C2B49C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18v4H3z M5 10v10h14V10 M10 14h4"></path></svg>Cofre<span style="width:18px;height:3px"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#C2B49C;font:600 11.5px/1 'Hanken Grotesk'"><svg viewBox="0 0 24 24" width="24" height="24" style="fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z M5 19.5A1.5 1.5 0 0 0 6.5 21H19 M9 7.5h6"></path></svg>Historial<span style="width:18px;height:3px"></span></div>
+        </div>
+      </div></div>
+          <p class="shot-note">Cerca de medianoche la cuenta atrás se tiñe de acento: un aviso amable, no una alarma.</p>
+        </figure>
+    </div>
+  </section>
+
+  <section id="privacidad" class="privacy-section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal-eyebrow><span>Privacidad</span></p>
+        <h2 class="reveal-heading" data-reveal-heading>
+            <span class="line"><span>Tu diario es tuyo.</span></span>
+            <span class="line"><span><em>Literalmente.</em></span></span>
+        </h2>
+        <p class="section-body">Nagori se diseñó para que la respuesta a «¿quién tiene acceso a mi diario?» sea siempre la misma: tú.</p>
+      </div>
+      <div class="privacy-points">
+        <div class="privacy-point" data-reveal-card>
+          <span class="mark">1</span>
+          <p><strong>Todo vive primero en tu móvil.</strong> Nagori guarda tus entradas localmente, en tu dispositivo.</p>
+        </div>
+        <div class="privacy-point" data-reveal-card>
+          <span class="mark">2</span>
+          <p><strong>La copia de seguridad va a tu Google Drive</strong>, en una carpeta visible y exportable —nunca oculta— que puedes abrir, descargar o borrar cuando quieras.</p>
+        </div>
+        <div class="privacy-point" data-reveal-card>
+          <span class="mark">3</span>
+          <p><strong>Nagori solo toca lo que ella misma crea.</strong> El permiso de Google que pedimos (<code>drive.file</code>) no da acceso al resto de tu Drive.</p>
+        </div>
+        <div class="privacy-point" data-reveal-card>
+          <span class="mark">4</span>
+          <p><strong>Sin APIs de redes sociales, sin vender datos.</strong> Lo que compartes llega por el menú Compartir del sistema, nunca por una conexión de cuenta.</p>
+        </div>
+      </div>
+      <a class="btn-secondary" href="privacidad/index.html">Leer la política de privacidad completa<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></a>
+      <p class="privacy-note">Última actualización: 18 de octubre de 2026. La copia de seguridad en la nube es una función reciente — esta página se mantiene al día con lo que la app hace realmente, no con lo que promete hacer.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <a href="#top" class="footer-brand">
+        <img src="assets/icon.png" alt="" />
+        <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+      </a>
+      <div class="footer-links">
+        <a href="privacidad/index.html">Privacidad</a>
+        <a href="mailto:contacto.nagori@gmail.com">Contacto</a>
+      </div>
+    </div>
+    <p class="footer-copy"><span>© 2026 Nagori</span><span class="rule"></span><span>名残 — lo que queda del día</span></p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
