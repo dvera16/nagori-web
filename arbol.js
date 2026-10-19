@@ -29,7 +29,7 @@
   }
   function boot() {
     if (typeof gsap === "undefined" || typeof DrawSVGPlugin === "undefined") { N.release("tree"); return; }   // sin GSAP: la página queda sin árbol
-    Promise.all([loadScript("assets/arbol/bonsai-data.js?v=20261020-3"), loadScript("assets/arbol/viento-data.js?v=20261020-3")])
+    Promise.all([loadScript("assets/arbol/bonsai-data.js?v=20261020-8"), loadScript("assets/arbol/viento-data.js?v=20261020-8")])
       .then(init).catch(function () { N.release("tree"); });
   }
   boot();
@@ -114,7 +114,7 @@
     /* ---------- La pintura ---------- */
     // Una sola imagen (la silueta, el grosor y las transparencias son los de la pintura) descubierta por una máscara que es la
     // unión de un trazo ancho sobre la línea central de cada rama. DrawSVG anima esos trazos: el árbol se «dibuja» a la vez.
-    var PAINT_URL = "assets/arbol/bonsai-tinta-marron.webp?v=20261020-7";
+    var PAINT_URL = "assets/arbol/bonsai-tinta-marron.webp?v=20261020-8";
     var washOn = function () {};                                  // (antes: lavado difuminado; la pintura ya lo trae)
     var growMask = el("mask", { id: "trGrow", maskUnits: "userSpaceOnUse", x: -10, y: -10, width: 310, height: 400 }, $("trMasks"));
     var paint = el("image", { x: 0, y: 0, width: 287.337, height: 383.117, preserveAspectRatio: "none", mask: "url(#trGrow)" }, $("trArt"));

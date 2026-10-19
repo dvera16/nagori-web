@@ -13,6 +13,48 @@
     "[data-reveal-eyebrow] span", "[data-reveal-card]"
   ];
 
+  /* ---------- Galería «Pantallas»: sin barra de scroll; flechas, arrastre con el ratón y teclado ---------- */
+  (function initShots() {
+    var track = document.getElementById("shots");
+    var prev = document.querySelector(".shots-prev"), next = document.querySelector(".shots-next");
+    if (!track || !prev || !next) return;
+    function step() {                                   // ancho de una pantalla + el hueco entre ellas
+      var first = track.querySelector(".shot");
+      var cs = getComputedStyle(track), gap = parseFloat(cs.columnGap || cs.gap) || 48;
+      return (first ? first.getBoundingClientRect().width : 300) + gap;
+    }
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var first = track.querySelector(".shot");          // posición de reposo: la primera pantalla pegada al borde izquierdo
+      var home = first ? first.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft : 0;
+      prev.disabled = track.scrollLeft <= home + 4;
+      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    }
+    function go(dir) { track.scrollBy({ left: dir * step(), behavior: reduceMotion ? "auto" : "smooth" }); }
+    prev.addEventListener("click", function () { go(-1); });
+    next.addEventListener("click", function () { go(1); });
+    track.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener("resize", update);
+    track.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+    });
+    var drag = null;                                    // arrastrar con el ratón (con el dedo y el trackpad ya funciona de serie)
+    track.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      drag = { x: e.clientX, left: track.scrollLeft, moved: false };
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; track.classList.add("is-dragging"); }
+      if (drag.moved) track.scrollLeft = drag.left - dx;
+    });
+    window.addEventListener("pointerup", function () { drag = null; track.classList.remove("is-dragging"); });
+    update();
+  })();
+
   /* Sin GSAP (CDN caído) o con movimiento reducido: todo visible al instante */
   if (!hasGsap || reduceMotion) {
     document.querySelectorAll(hidden.join(",")).forEach(function (el) {

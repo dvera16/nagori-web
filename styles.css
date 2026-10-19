@@ -351,6 +351,27 @@ section { padding: clamp(72px, 10vw, 120px) 0; position: relative; border-top: 1
 .shot { margin: 0; flex: none; width: 376px; display: flex; flex-direction: column; gap: 18px; scroll-snap-align: start; opacity: 0; transform: translateY(24px); }
 .shot-label { display: flex; align-items: center; gap: 10px; font: 600 14px/1 var(--font-body); color: var(--ink); }
 .badge { font: 700 12px/1 var(--font-body); background: var(--terracotta); color: var(--on-terracotta); padding: 5px 8px; border-radius: 4px; }
+/* Galería: sin barra de scroll (se sigue pudiendo arrastrar con el ratón, deslizar con el dedo o el trackpad y usar las flechas) */
+.shots-wrap { position: relative; }
+.shots { scrollbar-width: none; -ms-overflow-style: none; cursor: grab; }
+.shots::-webkit-scrollbar { display: none; }
+.shots.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.shots:focus-visible { outline: 2px solid var(--terracotta); outline-offset: -2px; }
+.shots .shot { zoom: 0.97; }                                  /* pantallas un 3 % más pequeñas */
+.shots-arrow {
+  position: absolute; top: 46%; z-index: 2; width: 48px; height: 48px; margin-top: -24px; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: var(--terracotta); color: var(--on-terracotta);
+  box-shadow: 0 10px 20px -10px rgba(142, 79, 31, 0.75);
+  transition: opacity .25s ease, transform .25s ease, filter .25s ease;
+}
+.shots-arrow svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.4; fill: none; }
+.shots-arrow:hover { filter: brightness(1.08); transform: scale(1.06); }
+.shots-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.shots-arrow[disabled] { opacity: 0; pointer-events: none; }
+.shots-prev { left: clamp(8px, 2vw, 28px); }
+.shots-next { right: clamp(8px, 2vw, 28px); }
+@media (max-width: 860px) { .shots-arrow { width: 40px; height: 40px; margin-top: -20px; } .shots-arrow svg { width: 18px; height: 18px; } }
 .shot-note { margin: 0; font-family: var(--font-journal); font-style: italic; font-size: 15px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
 
 /* ---------- Privacidad ---------- */
