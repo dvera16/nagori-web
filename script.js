@@ -7,29 +7,6 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
 
-  /* ---------- Tema claro/oscuro ---------- */
-  var themeToggle = document.getElementById("themeToggle");
-  var root = document.documentElement;
-  var stored = null;
-  try { stored = localStorage.getItem("nagori-theme"); } catch (e) {}
-  if (stored === "oscuro" || stored === "claro") root.setAttribute("data-theme", stored);
-  function currentIsDark() {
-    var attr = root.getAttribute("data-theme");
-    if (attr === "oscuro") return true;
-    if (attr === "claro") return false;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-  function syncToggleLabel() { themeToggle.textContent = currentIsDark() ? "Modo claro" : "Modo oscuro"; }
-  if (themeToggle) {
-    syncToggleLabel();
-    themeToggle.addEventListener("click", function () {
-      var next = currentIsDark() ? "claro" : "oscuro";
-      root.setAttribute("data-theme", next);
-      try { localStorage.setItem("nagori-theme", next); } catch (e) {}
-      syncToggleLabel();
-    });
-  }
-
   var hidden = [
     "#heroMark", "#heroWord", "#heroSub", "#scrollCue", "#heroPhone",
     ".hero-headline .line > span", ".reveal-heading .line > span",

@@ -99,7 +99,6 @@
     <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
   </a>
   <div class="nav-links">
-    <button class="theme-toggle" id="themeToggle" type="button">Modo oscuro</button>
   </div>
 </nav>
 
@@ -206,30 +205,5 @@
   </div>
 </footer>
 
-<script>
-  (function () {
-    var themeToggle = document.getElementById("themeToggle");
-    var root = document.documentElement;
-    var stored = null;
-    try { stored = localStorage.getItem("nagori-theme"); } catch (e) {}
-    if (stored === "oscuro" || stored === "claro") root.setAttribute("data-theme", stored);
-    function isDark() {
-      var attr = root.getAttribute("data-theme");
-      if (attr === "oscuro") return true;
-      if (attr === "claro") return false;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    function sync() { themeToggle.textContent = isDark() ? "Modo claro" : "Modo oscuro"; }
-    if (themeToggle) {
-      sync();
-      themeToggle.addEventListener("click", function () {
-        var next = isDark() ? "claro" : "oscuro";
-        root.setAttribute("data-theme", next);
-        try { localStorage.setItem("nagori-theme", next); } catch (e) {}
-        sync();
-      });
-    }
-  })();
-</script>
 </body>
 </html>

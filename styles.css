@@ -32,54 +32,6 @@
   --shadow-clip: 0 1px 0 #e0d3bc, 0 18px 30px -18px rgba(59, 46, 35, 0.45);
 }
 
-:root[data-theme="oscuro"] {
-  color-scheme: dark;
-  --paper: #201810;
-  --paper-card: #2b2117;
-  --paper-sunk: #231a12;
-  --ink: #efe6d8;
-  --ink-soft: #d6c9b4;
-  --text-secondary: #c2b49c;
-  --taupe: #8e8064;
-  --hairline: #4a4030;
-  --ruled-line: #362a1d;
-  --tape: rgba(200, 176, 120, 0.7);
-  --terracotta: #e08a52;
-  --terracotta-deep: #e08a52;
-  --on-terracotta: #3b2008;
-  --terracotta-container: #4a2e16;
-  --btn-ink: #e08a52;
-  --on-btn-ink: #3b2008;
-  --btn-ink-icon: #3b2008;
-  --shadow-card: 0 10px 24px -14px rgba(0, 0, 0, 0.6);
-  --shadow-clip: 0 1px 0 #4a4030, 0 18px 30px -16px rgba(0, 0, 0, 0.7);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="claro"]) {
-    color-scheme: dark;
-    --paper: #201810;
-    --paper-card: #2b2117;
-    --paper-sunk: #231a12;
-    --ink: #efe6d8;
-    --ink-soft: #d6c9b4;
-    --text-secondary: #c2b49c;
-    --taupe: #8e8064;
-    --hairline: #4a4030;
-    --ruled-line: #362a1d;
-    --tape: rgba(200, 176, 120, 0.7);
-    --terracotta: #e08a52;
-    --terracotta-deep: #e08a52;
-    --on-terracotta: #3b2008;
-    --terracotta-container: #4a2e16;
-    --btn-ink: #e08a52;
-    --on-btn-ink: #3b2008;
-    --btn-ink-icon: #3b2008;
-    --shadow-card: 0 10px 24px -14px rgba(0, 0, 0, 0.6);
-    --shadow-clip: 0 1px 0 #4a4030, 0 18px 30px -16px rgba(0, 0, 0, 0.7);
-  }
-}
-
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -145,17 +97,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .nav-links { display: flex; align-items: center; gap: 22px; }
 .nav-links a { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
 .nav-links a:hover { color: var(--ink); }
-.theme-toggle {
-  height: 36px;
-  border: 1px solid var(--hairline);
-  background: var(--paper-card);
-  color: var(--ink-soft);
-  border-radius: 18px;
-  padding: 0 16px;
-  font: 600 13px/1 var(--font-body);
-  cursor: pointer;
-}
-.theme-toggle:hover { color: var(--ink); border-color: var(--taupe); }
 
 /* ---------- Botones ---------- */
 .btn-primary, .btn-secondary {
@@ -460,6 +401,50 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--hairline); }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-secondary);
+}
+
+/* ---------- Bonsái de tinta: fijo en el lateral derecho mientras se hace scroll ---------- */
+:root { --tree-w: clamp(280px, min(calc((100vh - 88px) * 0.8), 40vw), 800px); }   /* el árbol ocupa todo el alto disponible */
+.tree-dock {
+  position: fixed;
+  z-index: 0;
+  right: 0;
+  top: 72px;
+  bottom: 16px;
+  width: var(--tree-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  --tree-ink: var(--ink);
+  --tree-wash: var(--taupe);
+  --tree-wind: var(--ink-soft);
+}
+.tree-wrap { position: relative; height: min(100%, calc(var(--tree-w) * 1.25)); aspect-ratio: 4 / 5; max-width: 100%; }
+.tree-stage { width: 100%; height: 100%; }
+.tree-stage svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* Capa transparente de pantalla completa: por aquí cruzan el viento y las hojas, de lado a lado, por detrás del contenido */
+.tree-flow {
+  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;
+  background: transparent;
+  --tree-ink: var(--ink); --tree-wash: var(--taupe); --tree-wind: var(--ink-soft);
+}
+/* El kanji va aparte, a tamaño fijo: no se escala con el árbol y se mantiene nítido */
+.tree-kanji { position: absolute; left: 79%; top: 54%; width: 48px; height: auto; color: var(--ink); shape-rendering: geometricPrecision; }
+.tree-kanji path { fill: currentColor; }
+main, footer { position: relative; z-index: 1; }
+@media (min-width: 1180px) {
+  main, footer { margin-right: var(--tree-w); }
+}
+@media (min-width: 1180px) and (max-width: 1599px) {   /* el árbol ocupa mucho: el hero pasa a una columna */
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-phone { justify-content: flex-start; }
+  .hero-word { white-space: nowrap; font-size: clamp(76px, 9vw, 112px); }
+}
+@media (max-width: 1179px) {                 /* pantallas estrechas: el árbol queda como marca de agua tras el contenido */
+  :root { --tree-w: 78vw; }
+  .tree-dock { right: -14vw; top: 60px; opacity: 0.14; }
+  .tree-kanji { display: none; }
 }
 
 /* ---------- Responsive ---------- */
