@@ -1,5 +1,5 @@
 // Bonsái de tinta de Nagori — GSAP + DrawSVG.
-// El tronco, las ramas y la roca son la pintura sumi-e original (assets/arbol/bonsai-tinta.webp), tal cual: tinta negra con sus
+// El tronco, las ramas y la roca son la pintura sumi-e original (assets/arbol/bonsai-tinta-marron.webp), tal cual: tinta negra con sus
 // grises y huecos de papel pasada a transparencia. Crece con las máscaras de DrawSVG a lo largo de la línea de cada rama.
 // Encima van las hojas (una por entrada) y el viento. Arranca tapado por la pantalla de carga (kanji) y crece al destaparse.
 (function () {
@@ -111,7 +111,7 @@
     /* ---------- La pintura ---------- */
     // Una sola imagen (la silueta, el grosor y las transparencias son los de la pintura) descubierta por una máscara que es la
     // unión de un trazo ancho sobre la línea central de cada rama. DrawSVG anima esos trazos: el árbol se «dibuja» a la vez.
-    var PAINT_URL = "assets/arbol/bonsai-tinta.webp?v=20261020-4";
+    var PAINT_URL = "assets/arbol/bonsai-tinta-marron.webp?v=20261020-6";
     var washOn = function () {};                                  // (antes: lavado difuminado; la pintura ya lo trae)
     var growMask = el("mask", { id: "trGrow", maskUnits: "userSpaceOnUse", x: -10, y: -10, width: 310, height: 400 }, $("trMasks"));
     var paint = el("image", { x: 0, y: 0, width: 287.337, height: 383.117, preserveAspectRatio: "none", mask: "url(#trGrow)" }, $("trArt"));
@@ -160,7 +160,7 @@
       var bez = function (p0, p1, p2, p3, t) { var v = 1 - t; return [v*v*v*p0[0] + 3*v*v*t*p1[0] + 3*v*t*t*p2[0] + t*t*t*p3[0], v*v*v*p0[1] + 3*v*v*t*p1[1] + 3*v*t*t*p2[1] + t*t*t*p3[1]]; };
       for (i = 0; i < 13; i++) pts.push(bez([0, 0], [w, -L * .25], [w * 1.1, -L * .7], [0, -L], i / 12));            // lado derecho, base -> punta
       for (i = 1; i < 12; i++) pts.push(bez([0, -L], [-w * 1.1, -L * .7], [-w, -L * .25], [0, 0], i / 12));          // lado izquierdo, punta -> base
-      var bend = (r() - .5) * 9, p1 = r() * 6, p2 = r() * 6, k1 = 5 + r() * 4, k2 = 11 + r() * 5, A = .8 + r() * .5, out = [];
+      var bend = (r() - .5) * 9, p1 = r() * 6, p2 = r() * 6, k1 = 5 + r() * 4, k2 = 11 + r() * 5, A = 1.4 + r() * .9, out = [];
       for (i = 0; i < pts.length; i++) {
         var a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], m = Math.hypot(dx, dy) || 1;
         t = i / pts.length;
@@ -176,12 +176,13 @@
     function makeLeaf(mood, instant, tracked, parent) {
       var id = ++leafSeq, L = LEAF_L, w = LEAF_W;
       var g = el("g", {}, parent || gLeaves), shape = LEAF_SHAPES[id % LEAF_SHAPES.length], color = COLORS[mood];
-      // halo suave sin filtro: dos copias más grandes y muy transparentes
-      var halo = el("path", { d: shape, transform: "scale(1.55)", opacity: .07, fill: color }, g);
-      el("path", { d: shape, transform: "scale(1.25)", opacity: .1, fill: color }, g);
-      el("path", { d: shape, opacity: (.74 + .2 * mulberryR(id + 3)()).toFixed(2), fill: color }, g);              // algo translúcidas: al solaparse se ven las capas
-      el("path", { d: "M0 -1 L" + rnd(-1, 1) + " " + (-L * .8), fill: "none", stroke: "#000", "stroke-width": .6, "stroke-opacity": .22 }, g);
-      for (var i = 0; i < 2; i++) el("circle", { cx: rnd(-w * 1.4, w * 1.4), cy: rnd(-L * 1.1, -L * .4), r: rnd(1.2, 2.6), opacity: .65, fill: color }, g);
+      // Pincelada de lavado: el color de la emoción, translúcido (al solaparse se ven las capas), con un charco de tinta
+      // más oscura hacia la base, como cuando el pigmento se asienta; sin contorno ni halo.
+      var rt = mulberryR(id + 3), tone = .5 + .3 * rt();
+      var rgb = color.replace("#", ""), dark = "#" + [0, 2, 4].map(function (i) { return ("0" + Math.round(parseInt(rgb.substr(i, 2), 16) * .66).toString(16)).slice(-2); }).join("");
+      var halo = el("path", { d: shape, opacity: tone, fill: color }, g);
+      el("path", { d: shape, transform: "translate(" + (rt() - .5) * 1.6 + " -3) scale(" + (.5 + .12 * rt()).toFixed(2) + " .58)", opacity: .34, fill: dark }, g);
+      for (var i = 0; i < 2; i++) el("circle", { cx: rnd(-w * 1.5, w * 1.5), cy: rnd(-L * 1.15, -L * .35), r: rnd(.9, 1.9), opacity: .5, fill: dark }, g);
       var leaf = { id: id, mood: mood, g: g, halo: halo, x: 0, y: 0, a: 0, s: 0, o: 0, pop: 1, sway: 0, settled: false };
       leaf.applyT = function () {
         g.setAttribute("transform", "translate(" + leaf.x.toFixed(2) + " " + leaf.y.toFixed(2) + ") rotate(" + (leaf.a + leaf.sway).toFixed(2) + ") scale(" + (leaf.s * leaf.pop).toFixed(3) + ")");
