@@ -2,6 +2,9 @@
 // El tronco, las ramas y la roca son la pintura sumi-e original (assets/arbol/bonsai-tinta-marron.webp), tal cual: tinta negra con sus
 // grises y huecos de papel pasada a transparencia. Crece con las máscaras de DrawSVG a lo largo de la línea de cada rama.
 // Encima van las hojas (una por entrada) y el viento. Arranca tapado por la pantalla de carga (kanji) y crece al destaparse.
+// Las hojas representan emociones registradas: se acumulan, no se pierden. La brisa solo las mece (revoloteo corto y vuelta a su
+// rama) y las rachas de viento se dibujan dentro del lienzo del árbol, que queda siempre a la derecha del bloque de texto.
+// Todo se pausa cuando el árbol no está en el viewport (IntersectionObserver) o la pestaña está oculta.
 (function () {
   "use strict";
 
@@ -111,7 +114,7 @@
     /* ---------- La pintura ---------- */
     // Una sola imagen (la silueta, el grosor y las transparencias son los de la pintura) descubierta por una máscara que es la
     // unión de un trazo ancho sobre la línea central de cada rama. DrawSVG anima esos trazos: el árbol se «dibuja» a la vez.
-    var PAINT_URL = "assets/arbol/bonsai-tinta-marron.webp?v=20261020-6";
+    var PAINT_URL = "assets/arbol/bonsai-tinta-marron.webp?v=20261020-7";
     var washOn = function () {};                                  // (antes: lavado difuminado; la pintura ya lo trae)
     var growMask = el("mask", { id: "trGrow", maskUnits: "userSpaceOnUse", x: -10, y: -10, width: 310, height: 400 }, $("trMasks"));
     var paint = el("image", { x: 0, y: 0, width: 287.337, height: 383.117, preserveAspectRatio: "none", mask: "url(#trGrow)" }, $("trArt"));
@@ -196,14 +199,25 @@
     /* ---------- Balanceo del árbol entero: una sola rotación CSS sobre su capa, 60 fps sin repintar ----------
        amb = respiración lenta · gust = empujón de cada racha (vuelve con muelle) · scroll = inercia al desplazarse */
     var sway = { amb: 0, gust: 0, scroll: 0 }, lastY = window.scrollY, lastR = 1e9;
+    var inView = true, started = false, ambTween = null, growTl = null;
+    function setActive() {                              // en pantalla y con la pestaña activa: todo corre; si no, todo se detiene
+      var on = inView && !document.hidden;
+      master.paused(!(started && on));
+      if (ambTween) ambTween.paused(!on);
+      if (growTl && growTl.progress() < 1) growTl.paused(!on);
+    }
+    if (motion) {
+      if ("IntersectionObserver" in window) new IntersectionObserver(function (en) { inView = en[0].isIntersecting; setActive(); }).observe(stage);
+      document.addEventListener("visibilitychange", setActive);
+    }
     (function pivot() {                                 // la capa gira sobre la base del tronco, donde se apoya en la roca
       var c = pieces.Ta.center, a = c.getPointAtLength(0), b = c.getPointAtLength(pieces.Ta.len), p = a.y > b.y ? a : b;
       svg.style.transformOrigin = ((p.x * K + OX) / 8).toFixed(2) + "% " + ((p.y * K + OY) / 10).toFixed(2) + "%";
     })();
     if (motion) {
-      gsap.fromTo(sway, { amb: -.32 }, { amb: .32, duration: 5.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      ambTween = gsap.fromTo(sway, { amb: -.32 }, { amb: .32, duration: 5.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
       gsap.ticker.add(function () {
-        if (document.hidden) return;
+        if (document.hidden || !inView) return;
         var y = window.scrollY, dy = y - lastY; lastY = y;
         var target = Math.max(-1.4, Math.min(1.4, -dy * .03));
         sway.scroll += (target - sway.scroll) * .06;
@@ -230,7 +244,7 @@
     /** Racha: un trazo de viento.svg (cinta rellena + línea central). Se escala, gira y refleja al azar y
      *  se coloca para que su final caiga en T y su inicio quede a la derecha (el aire sopla hacia la izquierda). */
     var gustSeq = 0, lastGust = -1, GUST_OPACITY = .16;
-    function makeGust(T, parent, scale) {
+    function makeGust(T, parent, scale, bounds) {
       var gi; do { gi = Math.floor(Math.random() * WIND.length); } while (gi === lastGust && WIND.length > 1);
       lastGust = gi;
       var G = WIND[gi], mx = Math.random() < .5 ? -1 : 1, rot = rnd(-.45, .45), sc = scale || rnd(2, 3);
@@ -240,6 +254,9 @@
       if (tf(orig[orig.length - 1])[0] > tf(orig[0])[0]) orig.reverse();       // el inicio es el extremo más a la derecha
       var e = tf(orig[orig.length - 1]), tx = T.x - e[0], ty = T.y - e[1];
       var W = orig.map(function (p) { var q = tf(p); return [q[0] + tx, q[1] + ty]; });
+      if (bounds) for (var bi = 0; bi < W.length; bi++) {                       // fuera del lienzo permitido: se descarta
+        if (W[bi][0] < bounds[0] || W[bi][0] > bounds[2] || W[bi][1] < bounds[1] || W[bi][1] > bounds[3]) return null;
+      }
       var cum = [0]; for (var i = 1; i < W.length; i++) cum.push(cum[i - 1] + Math.hypot(W[i][0] - W[i - 1][0], W[i][1] - W[i - 1][1]));
       var total = cum[cum.length - 1];
       var at = function (u) {                                                   // posición a lo largo de la línea central, u en 0..1
@@ -294,6 +311,7 @@
         return (T[id] = p ? start(p) + dur(p) * .45 : 0);
       };
       var tl = gsap.timeline({ delay: .2, onComplete: function () { washOn(); done(); } });
+      growTl = tl;
       tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: .9, ease: "sine.out" }, 0);
       tl.fromTo(rockMask, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: 1.3, ease: "sine.inOut" }, .1);
       Object.keys(state.drawn).forEach(function (id) {
@@ -319,106 +337,46 @@
       gsap.ticker.add(probe);
     }
 
-    /* ---------- Hoja que se suelta del árbol: tiembla, se desprende y deja su hueco hasta que vuelve a brotar ---------- */
-    function pickTreeLeaf() {
-      for (var k = 0; k < 20; k++) {
-        var l = state.leaves[Math.floor(Math.random() * state.leaves.length)];
-        if (!l.away && l.pop > .99) return l;
-      }
-      return null;
-    }
-    function release(leaf, onFree) {
-      leaf.away = true;
-      var tug = { k: 0 }, amp = rnd(8, 14);
-      track(gsap.to(tug, { k: 1, duration: rnd(.8, 1.2), ease: "none",
-        onUpdate: function () { leaf.sway = Math.sin(tug.k * Math.PI * 6) * amp * (1 - tug.k * .5); leaf.applyT(); },
-        onComplete: function () {
-          leaf.sway = 0; leaf.applyT();
-          var m = leaf.g.getScreenCTM();
-          leaf.g.style.opacity = 0;
-          onFree({ x: m.e, y: m.f, s: Math.hypot(m.a, m.b), a: Math.atan2(m.b, m.a) * 180 / Math.PI });
-          master.call(function () {                     // vuelve a brotar en su sitio
-            leaf.pop = 0; leaf.applyT(); leaf.g.style.opacity = 1;
-            track(gsap.to(leaf, { pop: 1, duration: .8, ease: "back.out(2)", onUpdate: leaf.applyT, onComplete: function () { leaf.away = false; } }));
-          }, null, master.time() + rnd(16, 28));
-        } }));
-    }
-
-    /* ---------- Capa de pantalla completa (transparente) por la que viaja el bucle ---------- */
-    var flow = null, fLeaves = null, fWind = null, FW = 0, FH = 0;
-    function setupFlow() {
-      flow = el("svg", { "class": "tree-flow", "aria-hidden": "true", focusable: "false" });
-      fWind = el("g", {}, flow); fLeaves = el("g", {}, flow);
-      document.body.appendChild(flow);
-      var fit = function () {
-        FW = window.innerWidth; FH = window.innerHeight;
-        flow.setAttribute("viewBox", "0 0 " + FW + " " + FH);
-      };
-      fit(); window.addEventListener("resize", fit);
+    /* ---------- Hojas que se mecen: revoloteo corto alrededor de su rama ---------- */
+    // Cada hoja es una emoción registrada y se queda: la brisa solo la hace revolotear unas decenas de unidades del lienzo
+    // (con una pequeña rotación) y volver a su sitio. Los límites mantienen todo dentro del lienzo del árbol.
+    var fluttering = 0;
+    function flutter() {
+      master.call(flutter, null, master.time() + rnd(1.6, 3.2));
+      if (fluttering >= 6) return;
+      var leaf = null, k;
+      for (k = 0; k < 20 && !leaf; k++) { var l = state.leaves[Math.floor(Math.random() * state.leaves.length)]; if (!l.busy && l.pop > .99) leaf = l; }
+      if (!leaf) return;
+      leaf.busy = true; fluttering++;
+      var hx = leaf.x, hy = leaf.y, ha = leaf.a, ph = rnd(0, 6), spin = rnd(12, 26) * (Math.random() < .5 ? -1 : 1);
+      var dx = Math.max(-rnd(10, 30), 16 - hx), dy = Math.min(Math.max(rnd(-12, 22), 24 - hy), 976 - hy);   // el aire sopla hacia la izquierda; sin salir del lienzo
+      var p = { t: 0 };
+      track(gsap.to(p, { t: 1, duration: rnd(2.4, 3.6), ease: "none",
+        onUpdate: function () {
+          var e = Math.sin(Math.PI * p.t), w = Math.sin(p.t * 7 + ph);       // ida y vuelta suave + temblor
+          leaf.x = hx + dx * e; leaf.y = hy + dy * e + w * 2.2 * e; leaf.a = ha + spin * e + w * 6 * e;
+          leaf.applyT();
+        },
+        onComplete: function () { leaf.x = hx; leaf.y = hy; leaf.a = ha; leaf.applyT(); leaf.busy = false; fluttering--; } }));
+      push(-rnd(.15, .35), 1.6);                        // el tronco responde levemente
     }
 
-    /* ---------- Bucle: hojas y puntos de tinta que cruzan la página de lado a lado, llevados por una racha ---------- */
-    var drifting = 0;
-    function drifter() {
-      master.call(drifter, null, master.time() + rnd(3.4, 5.6));
-      if (drifting >= 5) return;
-      var src = pickTreeLeaf();
-      if (!src) return;
-      drifting++;
-      release(src, function (from) { fly(src.mood, from); });
-    }
-    function fly(mood, from) {
-      var color = COLORS[mood];
-      var leaf = makeLeaf(mood, true, false, fLeaves);
-      var S = { x: from.x, y: from.y };
-      var T = { x: rnd(FW * .1, Math.max(FW * .2, Math.min(FW * .6, S.x - 420))), y: rnd(FH * .15, FH * .85) };
-      var E = { x: rnd(-160, -80), y: rnd(30, FH - 30) };
-      push(-rnd(.6, 1.1));
-      var gust = makeGust(T, fWind, rnd(3, 5)), ph = Math.random() * 6, dir = Math.random() < .5 ? -1 : 1;
-      var A = windPath(S, gust.start, ph, gust.tin), B = windPath(gust.at(1), E, ph + 1);
-      var path = function (u) { return u < .3 ? A(u / .3) : u < .7 ? gust.at((u - .3) / .4) : B((u - .7) / .3); };
-      var dots = [];
-      for (var i = 0; i < 4; i++) dots.push({ c: el("circle", { r: rnd(1.4, 3.2), fill: color, opacity: 0 }, fLeaves), lag: .012 * (i + 1) + rnd(0, .008), ph: rnd(0, 6) });
-      var size = rnd(.6, .95), probe = { u: 0 }, a0 = from.a, lastKey = "";
-      var place = function () {
-        var u = probe.u, P = path(u), fade = Math.min(1, (1 - u) * 14);
-        var w = Math.min(1, u / .1), e = w * w * (3 - 2 * w);                 // del árbol al vuelo, sin saltos
-        var aim = 90 + dir * 40 + Math.sin(u * 22 + ph) * 28;                    // aleteo suave
-        while (a0 - aim > 180) a0 -= 360; while (aim - a0 > 180) a0 += 360;
-        leaf.x = P.x; leaf.y = P.y; leaf.s = from.s + (size - from.s) * e; leaf.o = fade;
-        leaf.a = a0 + (aim - a0) * e;
-        leaf.apply();
-        dots.forEach(function (d) {
-          var Q = path(Math.max(0, u - d.lag));
-          d.c.setAttribute("cx", (Q.x + Math.cos(d.ph + u * 9) * 8).toFixed(1));
-          d.c.setAttribute("cy", (Q.y + Math.sin(d.ph + u * 9) * 8).toFixed(1));
-          d.c.setAttribute("opacity", (.55 * fade * Math.min(1, u * 8)).toFixed(2));
-        });
-        if (u > .28) {                                                           // la racha se dibuja por delante de la hoja y se borra por detrás
-          var reveal = Math.min(1, (u - .3) / .4 + .1), erase = u > .72 ? Math.min(1, (u - .72) / .22) : 0;
-          var key = Math.round(erase * 200) + "/" + Math.round(reveal * 200);
-          if (key !== lastKey) { lastKey = key; gsap.set(gust.mp, { drawSVG: (erase * 100).toFixed(1) + "% " + (reveal * 100).toFixed(1) + "%" }); }
-          gust.rib.style.opacity = GUST_OPACITY * Math.min(1, (u - .28) * 6) * (1 - erase);
-        }
-      };
-      var tl = gsap.timeline({ onComplete: function () {
-        leaf.g.remove(); dots.forEach(function (d) { d.c.remove(); }); gust.remove(); drifting--;
-      } });
-      tl.to(probe, { u: 1, duration: Math.min(24, Math.max(13, FW / 85)), ease: "none", onUpdate: place }, 0);   // más ancho -> más tiempo: velocidad constante y calmada
-      track(tl);
-    }
-
-    /* ---------- Viento ambiente: rachas tenues sueltas por toda la pantalla ---------- */
+    /* ---------- Viento ambiente: rachas tenues dentro del follaje ---------- */
+    var WIND_ZONE = [200, 130, 760, 700], WIND_BOUNDS = [24, 40, 776, 960];   // lienzo del árbol (800x1000)
     function ambientWind() {
-      var gust = makeGust({ x: rnd(FW * .1, FW * .9), y: rnd(FH * .1, FH * .9) }, fWind, rnd(3, 5)), dur = rnd(6, 8);
+      master.call(ambientWind, null, master.time() + rnd(5, 9));
+      var gust = null, k;
+      for (k = 0; k < 8 && !gust; k++)
+        gust = makeGust({ x: rnd(WIND_ZONE[0], WIND_ZONE[2]), y: rnd(WIND_ZONE[1], WIND_ZONE[3]) }, gWind, Math.max(.7, rnd(1.1, 1.8) - k * .1), WIND_BOUNDS);
+      if (!gust) return;
+      var dur = rnd(6, 8);
       master.call(function () { push(-rnd(.2, .45), 2.2); }, null, master.time() + dur * .3);
       var tl = gsap.timeline({ onComplete: gust.remove });
       tl.fromTo(gust.mp, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: dur, ease: "sine.inOut" }, 0)
-        .fromTo(gust.rib, { opacity: 0 }, { opacity: .11, duration: dur * .4, ease: "sine.inOut" }, 0)
+        .fromTo(gust.rib, { opacity: 0 }, { opacity: .12, duration: dur * .4, ease: "sine.inOut" }, 0)
         .to(gust.mp, { drawSVG: "100% 100%", duration: dur * .6, ease: "sine.inOut" }, dur * .7)
         .to(gust.rib, { opacity: 0, duration: dur * .5, ease: "sine.inOut" }, dur * .75);
       track(tl);
-      master.call(ambientWind, null, master.time() + rnd(5, 9));
     }
 
     /* ---------- Arranque ---------- */
@@ -433,11 +391,9 @@
       N.onReveal(function () {                          // el crecimiento empieza cuando ya se ve la página
         grow(function () {
           if (!animated) return;
-          setupFlow();
-          master.paused(document.hidden);
-          document.addEventListener("visibilitychange", function () { master.paused(document.hidden); });   // pestaña oculta: todo se detiene
+          started = true; setActive();                  // desde aquí corre el bucle, salvo que el árbol salga del viewport o la pestaña se oculte
           master.call(ambientWind, null, master.time() + 1.5);
-          master.call(drifter, null, master.time() + 3);
+          master.call(flutter, null, master.time() + 2.5);
         });
       });
     });

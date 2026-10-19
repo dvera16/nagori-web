@@ -427,12 +427,6 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--hairline); }
 .tree-stage { position: relative; width: 100%; height: 100%; }
 .tree-stage svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
 .tree-stage .tree-art { will-change: transform; }   /* capa propia: el balanceo gira la capa, no repinta la tinta */
-/* Capa transparente de pantalla completa: por aquí cruzan el viento y las hojas, de lado a lado, por detrás del contenido */
-.tree-flow {
-  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; will-change: transform;
-  background: transparent;
-  --tree-ink: var(--ink); --tree-deep: #1f1611; --tree-wash: var(--taupe); --tree-wind: var(--ink-soft);
-}
 /* El kanji va aparte, a tamaño fijo: no se escala con el árbol y se mantiene nítido */
 .tree-kanji { position: absolute; left: 79%; top: 54%; width: 48px; height: auto; color: var(--ink); shape-rendering: geometricPrecision; }
 .tree-kanji path { fill: currentColor; }
