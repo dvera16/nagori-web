@@ -2,16 +2,18 @@
 // Al cargar, el árbol crece: las ramas se dibujan desde el tronco y las hojas brotan a medida que pasa el trazo.
 // El árbol vive en su propia capa compuesta (GPU): se mece con el viento y con el scroll sin repintar la tinta.
 // En bucle, una hoja del propio árbol tiembla, se suelta y una racha la lleva a través de la página; al rato vuelve a brotar.
-// Se carga cuando el navegador está libre: los datos (~70 KB gzip) no compiten con el resto de la página.
+// Arranca de inmediato, tapado por la pantalla de carga (kanji): construye el árbol y avisa de que está listo.
+// El crecimiento empieza cuando la pantalla de carga se retira («nagori:reveal»).
 (function () {
   "use strict";
 
+  var N = window.__nagori || { release: function () {}, onReveal: function (f) { f(); } };   // controlador de la pantalla de carga
   var stage = document.getElementById("treeStage");
-  if (!stage) return;
+  if (!stage) { N.release("tree"); return; }
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es solo una marca de agua: sin animar
-  var motion = !reduceMotion;                       // crecimiento y balanceo del árbol (capa compuesta: barato en cualquier pantalla)
+  var motion = wide && !reduceMotion;                // crecimiento y balanceo: solo en pantallas anchas (en móvil el árbol es una marca de agua quieta)
   var animated = wide && motion;                    // hojas que se sueltan y cruzan la página: solo en pantallas anchas
   var TOTAL = 356;                       // hojas del árbol
 
@@ -25,16 +27,11 @@
     });
   }
   function boot() {
-    if (typeof gsap === "undefined" || typeof DrawSVGPlugin === "undefined") return;   // sin GSAP: la página queda sin árbol
-    Promise.all([loadScript("assets/arbol/bonsai-data.js"), loadScript("assets/arbol/viento-data.js")])
-      .then(init).catch(function () {});
+    if (typeof gsap === "undefined" || typeof DrawSVGPlugin === "undefined") { N.release("tree"); return; }   // sin GSAP: la página queda sin árbol
+    Promise.all([loadScript("assets/arbol/bonsai-data.js?v=20261019-2"), loadScript("assets/arbol/viento-data.js?v=20261019-2")])
+      .then(init).catch(function () { N.release("tree"); });
   }
-  function whenIdle() {
-    if ("requestIdleCallback" in window) requestIdleCallback(boot, { timeout: 2500 });
-    else setTimeout(boot, 800);
-  }
-  if (document.readyState === "complete") whenIdle();
-  else window.addEventListener("load", whenIdle);
+  boot();
 
   function init() {
     gsap.registerPlugin(DrawSVGPlugin);
@@ -425,14 +422,17 @@
     /* ---------- Arranque ---------- */
     if (motion) gsap.set(kanji ? [stage, kanji] : stage, { opacity: 0 });
     buildTree(function () {
-      if (!motion) { washOn(); return; }                // movimiento reducido: árbol quieto, completo
-      grow(function () {
-        if (!animated) return;                          // pantalla estrecha: crece y se mece, sin hojas viajeras
-        setupFlow();
-        master.paused(document.hidden);
-        document.addEventListener("visibilitychange", function () { master.paused(document.hidden); });   // pestaña oculta: todo se detiene
-        master.call(ambientWind, null, master.time() + 1.5);
-        master.call(drifter, null, master.time() + 3);
+      N.release("tree");                                // árbol construido y en memoria: la pantalla de carga puede retirarse
+      if (!motion) { washOn(); return; }                // movimiento reducido o pantalla estrecha: árbol quieto, completo
+      N.onReveal(function () {                          // el crecimiento empieza cuando ya se ve la página
+        grow(function () {
+          if (!animated) return;
+          setupFlow();
+          master.paused(document.hidden);
+          document.addEventListener("visibilitychange", function () { master.paused(document.hidden); });   // pestaña oculta: todo se detiene
+          master.call(ambientWind, null, master.time() + 1.5);
+          master.call(drifter, null, master.time() + 3);
+        });
       });
     });
   }

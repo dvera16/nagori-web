@@ -48,7 +48,11 @@
   }
 
   /* ================= HERO ================= */
-  var hero = gsap.timeline({ delay: 0.15 });
+  var hero = gsap.timeline({ delay: 0.15, paused: true });
+  // La página está tapada por la pantalla de carga (kanji): el hero arranca cuando se retira.
+  var N = window.__nagori;
+  var startHero = function () { ScrollTrigger.refresh(); hero.play(); };
+  if (N && N.onReveal) N.onReveal(startHero); else startHero();
 
   hero.set("#heroMark", { opacity: 1, y: -16, scale: 0.9, rotation: -6 }, 0);
   hero.to("#heroMark", { y: 0, scale: 1, rotation: 0, duration: 0.9, ease: "expo.out" }, 0);
