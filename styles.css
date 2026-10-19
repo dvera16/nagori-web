@@ -419,6 +419,7 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--hairline); }
   justify-content: center;
   pointer-events: none;
   --tree-ink: var(--ink);
+  --tree-ink: var(--ink); --tree-deep: #1f1611;   /* color original: la tinta marrón de la web */
   --tree-wash: var(--taupe);
   --tree-wind: var(--ink-soft);
 }
@@ -430,7 +431,7 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--hairline); }
 .tree-flow {
   position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; will-change: transform;
   background: transparent;
-  --tree-ink: var(--ink); --tree-wash: var(--taupe); --tree-wind: var(--ink-soft);
+  --tree-ink: var(--ink); --tree-deep: #1f1611; --tree-wash: var(--taupe); --tree-wind: var(--ink-soft);
 }
 /* El kanji va aparte, a tamaño fijo: no se escala con el árbol y se mantiene nítido */
 .tree-kanji { position: absolute; left: 79%; top: 54%; width: 48px; height: auto; color: var(--ink); shape-rendering: geometricPrecision; }

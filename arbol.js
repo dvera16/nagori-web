@@ -1,9 +1,7 @@
 // Bonsái de tinta de Nagori — GSAP + DrawSVG.
-// Al cargar, el árbol crece: las ramas se dibujan desde el tronco y las hojas brotan a medida que pasa el trazo.
-// El árbol vive en su propia capa compuesta (GPU): se mece con el viento y con el scroll sin repintar la tinta.
-// En bucle, una hoja del propio árbol tiembla, se suelta y una racha la lleva a través de la página; al rato vuelve a brotar.
-// Arranca de inmediato, tapado por la pantalla de carga (kanji): construye el árbol y avisa de que está listo.
-// El crecimiento empieza cuando la pantalla de carga se retira («nagori:reveal»).
+// El tronco, las ramas y la roca son la pintura sumi-e original (assets/arbol/bonsai-tinta.webp), tal cual: tinta negra con sus
+// grises y huecos de papel pasada a transparencia. Crece con las máscaras de DrawSVG a lo largo de la línea de cada rama.
+// Encima van las hojas (una por entrada) y el viento. Arranca tapado por la pantalla de carga (kanji) y crece al destaparse.
 (function () {
   "use strict";
 
@@ -28,7 +26,7 @@
   }
   function boot() {
     if (typeof gsap === "undefined" || typeof DrawSVGPlugin === "undefined") { N.release("tree"); return; }   // sin GSAP: la página queda sin árbol
-    Promise.all([loadScript("assets/arbol/bonsai-data.js?v=20261019-2"), loadScript("assets/arbol/viento-data.js?v=20261019-2")])
+    Promise.all([loadScript("assets/arbol/bonsai-data.js?v=20261020-3"), loadScript("assets/arbol/viento-data.js?v=20261020-3")])
       .then(init).catch(function () { N.release("tree"); });
   }
   boot();
@@ -51,9 +49,7 @@
     stage.innerHTML =
       '<svg class="tree-rock" viewBox="0 0 800 1000" aria-hidden="true" focusable="false"><g id="trRock"></g></svg>' +
       '<svg class="tree-art" viewBox="0 0 800 1000" aria-hidden="true" focusable="false">' +
-      "<defs>" +
-        '<filter id="trWash" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter>' +
-      "</defs>" +
+      "<defs></defs>" +
       '<g id="trCenters" visibility="hidden"></g><g id="trMasks"></g><g id="trArt"></g>' +
       '<g id="trWind"></g><g id="trLeaves"></g></svg>';
     var svg = stage.lastChild;
@@ -112,29 +108,33 @@
       var tx = B.x - A.x, ty = B.y - A.y, m = Math.hypot(tx, ty) || 1;
       return { x: P.x * K + OX, y: P.y * K + OY, tx: tx / m, ty: ty / m };
     }
-    var gWashL = el("g", {}, $("trArt"));                              // halo de agua bajo la tinta
-    var washOn = function () { gWashL.setAttribute("filter", "url(#trWash)"); };   // el desenfoque se activa al terminar de crecer
-    var gInkL = el("g", {}, $("trArt"));
+    /* ---------- La pintura ---------- */
+    // Una sola imagen (la silueta, el grosor y las transparencias son los de la pintura) descubierta por una máscara que es la
+    // unión de un trazo ancho sobre la línea central de cada rama. DrawSVG anima esos trazos: el árbol se «dibuja» a la vez.
+    var PAINT_URL = "assets/arbol/bonsai-tinta.webp?v=20261020-4";
+    var washOn = function () {};                                  // (antes: lavado difuminado; la pintura ya lo trae)
+    var growMask = el("mask", { id: "trGrow", maskUnits: "userSpaceOnUse", x: -10, y: -10, width: 310, height: 400 }, $("trMasks"));
+    var paint = el("image", { x: 0, y: 0, width: 287.337, height: 383.117, preserveAspectRatio: "none", mask: "url(#trGrow)" }, $("trArt"));
+    paint.setAttribute("href", PAINT_URL);
+    paint.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", PAINT_URL);
+    var paintReady = new Promise(function (res) {                 // la pantalla de carga espera a que la pintura esté descodificada
+      var im = new Image(); im.onload = im.onerror = res; im.src = PAINT_URL;
+    });
+    function growStroke(pts, w, a, b) {                           // trazo «butt» para que DrawSVG no deje un punto al 0 %
+      return el("path", { d: smooth(extend(pts, a, b)), fill: "none", stroke: "#fff", "stroke-width": w,
+        "stroke-linecap": "butt", "stroke-linejoin": "round" }, growMask);
+    }
     BONSAI.pieces.forEach(function (sp) {
       var pc = { id: sp.id, parent: sp.parent };
       pc.center = el("path", { d: smooth(sp.pts) }, $("trCenters"));
       pc.len = pc.center.getTotalLength();
-      var xs = sp.pts.map(function (p) { return p[0]; }), ys = sp.pts.map(function (p) { return p[1]; }), pad = sp.w / 2 + 10;
-      var mx0 = Math.min.apply(null, xs) - pad, my0 = Math.min.apply(null, ys) - pad;
-      var mk = el("mask", { id: "trmk_" + sp.id, maskUnits: "userSpaceOnUse", x: mx0.toFixed(1), y: my0.toFixed(1),
-        width: (Math.max.apply(null, xs) + pad - mx0).toFixed(1), height: (Math.max.apply(null, ys) + pad - my0).toFixed(1) }, $("trMasks"));   // región acotada: menos píxeles que rasterizar en cada fotograma
-      // máscara: trazo ancho sobre la línea central; "butt" para que DrawSVG no deje un punto al 0%
-      pc.mask = el("path", { d: smooth(extend(sp.pts, sp.w > 40 ? 18 : 5, sp.w > 40 ? 18 : 8)), fill: "none", stroke: "#fff",
-        "stroke-width": sp.w, "stroke-linecap": "butt", "stroke-linejoin": "round" }, mk);
-      var wash = el("g", { mask: "url(#trmk_" + sp.id + ")" }, gWashL);
-      el("path", { d: sp.d, style: "fill:var(--tree-wash)", opacity: .35, transform: "translate(.5 .4)" }, wash);
-      var ink = el("g", { mask: "url(#trmk_" + sp.id + ")" }, gInkL);
-      el("path", { d: sp.d, style: "fill:var(--tree-ink)", "fill-rule": "evenodd", opacity: .93 }, ink);
+      pc.mask = growStroke(sp.pts, sp.w + 8, sp.w > 40 ? 18 : 5, sp.w > 40 ? 18 : 8);
       gsap.set(pc.mask, { drawSVG: "0% 0%" });
       pieces[sp.id] = pc;
     });
-    // Roca con su reflejo: fija, no crece
-    el("path", { d: BONSAI.rock, style: "fill:var(--tree-ink)", "fill-rule": "evenodd", opacity: .93 }, $("trRock"));
+    // La roca y su reflejo se descubren de izquierda a derecha
+    var rockMask = growStroke([[14, 330], [275, 330]], 80, 0, 0);
+    gsap.set(rockMask, { drawSVG: "0% 0%" });
 
     /* ---------- Estado ---------- */
     var state = { n: 0, drawn: {}, leaves: [] };
@@ -154,18 +154,18 @@
 
     /* ---------- Formas de hoja pre-deformadas: el borde irregular de tinta va horneado en el trazado ----------
        (antes cada hoja llevaba un filtro SVG con turbulencia + desplazamiento + desenfoque: 356 filtros que repintar) */
-    var LEAF_L = 34, LEAF_W = LEAF_L * .38;
+    var LEAF_L = 36, LEAF_W = LEAF_L * .3;
     function bakeLeaf(seed) {
       var r = mulberryR(seed + 900), L = LEAF_L, w = LEAF_W, pts = [], i, t;
       var bez = function (p0, p1, p2, p3, t) { var v = 1 - t; return [v*v*v*p0[0] + 3*v*v*t*p1[0] + 3*v*t*t*p2[0] + t*t*t*p3[0], v*v*v*p0[1] + 3*v*v*t*p1[1] + 3*v*t*t*p2[1] + t*t*t*p3[1]]; };
       for (i = 0; i < 13; i++) pts.push(bez([0, 0], [w, -L * .25], [w * 1.1, -L * .7], [0, -L], i / 12));            // lado derecho, base -> punta
       for (i = 1; i < 12; i++) pts.push(bez([0, -L], [-w * 1.1, -L * .7], [-w, -L * .25], [0, 0], i / 12));          // lado izquierdo, punta -> base
-      var p1 = r() * 6, p2 = r() * 6, k1 = 5 + r() * 4, k2 = 11 + r() * 5, A = .8 + r() * .5, out = [];
+      var bend = (r() - .5) * 9, p1 = r() * 6, p2 = r() * 6, k1 = 5 + r() * 4, k2 = 11 + r() * 5, A = .8 + r() * .5, out = [];
       for (i = 0; i < pts.length; i++) {
         var a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], m = Math.hypot(dx, dy) || 1;
         t = i / pts.length;
         var d = (i === 0 || i === 12) ? 0 : A * (Math.sin(k1 * t * 6.28 + p1) + .6 * Math.sin(k2 * t * 6.28 + p2));   // base y punta quedan firmes
-        out.push([pts[i][0] - dy / m * d, pts[i][1] + dx / m * d]);
+        out.push([pts[i][0] - dy / m * d + bend * Math.pow(-pts[i][1] / L, 2), pts[i][1] + dx / m * d]);   // la punta se curva, como un golpe de pincel
       }
       return smooth(out) + "Z";
     }
@@ -179,8 +179,8 @@
       // halo suave sin filtro: dos copias más grandes y muy transparentes
       var halo = el("path", { d: shape, transform: "scale(1.55)", opacity: .07, fill: color }, g);
       el("path", { d: shape, transform: "scale(1.25)", opacity: .1, fill: color }, g);
-      el("path", { d: shape, opacity: .9, fill: color }, g);
-      el("path", { d: "M0 -1 L" + rnd(-1, 1) + " " + (-L * .8), fill: "none", style: "stroke:var(--paper)", "stroke-width": .7, opacity: .35 }, g);
+      el("path", { d: shape, opacity: (.74 + .2 * mulberryR(id + 3)()).toFixed(2), fill: color }, g);              // algo translúcidas: al solaparse se ven las capas
+      el("path", { d: "M0 -1 L" + rnd(-1, 1) + " " + (-L * .8), fill: "none", stroke: "#000", "stroke-width": .6, "stroke-opacity": .22 }, g);
       for (var i = 0; i < 2; i++) el("circle", { cx: rnd(-w * 1.4, w * 1.4), cy: rnd(-L * 1.1, -L * .4), r: rnd(1.2, 2.6), opacity: .65, fill: color }, g);
       var leaf = { id: id, mood: mood, g: g, halo: halo, x: 0, y: 0, a: 0, s: 0, o: 0, pop: 1, sway: 0, settled: false };
       leaf.applyT = function () {
@@ -294,6 +294,7 @@
       };
       var tl = gsap.timeline({ delay: .2, onComplete: function () { washOn(); done(); } });
       tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: .9, ease: "sine.out" }, 0);
+      tl.fromTo(rockMask, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: 1.3, ease: "sine.inOut" }, .1);
       Object.keys(state.drawn).forEach(function (id) {
         tl.fromTo(pieces[id].mask, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: dur(id), ease: "sine.inOut" }, .15 + start(id));
       });
@@ -422,8 +423,12 @@
     /* ---------- Arranque ---------- */
     if (motion) gsap.set(kanji ? [stage, kanji] : stage, { opacity: 0 });
     buildTree(function () {
-      N.release("tree");                                // árbol construido y en memoria: la pantalla de carga puede retirarse
-      if (!motion) { washOn(); return; }                // movimiento reducido o pantalla estrecha: árbol quieto, completo
+      if (!motion) {                                    // movimiento reducido o pantalla estrecha: árbol quieto, completo
+        gsap.set(rockMask, { drawSVG: "0% 100%" });
+        paintReady.then(function () { N.release("tree"); });
+        return;
+      }
+      paintReady.then(function () { N.release("tree"); });   // árbol construido y pintura descodificada: la pantalla de carga puede retirarse
       N.onReveal(function () {                          // el crecimiento empieza cuando ya se ve la página
         grow(function () {
           if (!animated) return;
