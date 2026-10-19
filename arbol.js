@@ -1,7 +1,7 @@
 // Bonsái de tinta de Nagori — GSAP + DrawSVG.
-// Árbol fijo en un lateral de la página, completo desde el primer momento (356 hojas, una por entrada).
-// En bucle y muy despacio, rachas de viento y hojas (con sus puntos de tinta) cruzan toda la pantalla, de lado a lado,
-// sobre una capa transparente de pantalla completa; las hojas del árbol no se ven recortadas por ninguna caja.
+// Al cargar, el árbol crece: las ramas se dibujan desde el tronco y las hojas brotan a medida que pasa el trazo.
+// El árbol vive en su propia capa compuesta (GPU): se mece con el viento y con el scroll sin repintar la tinta.
+// En bucle, una hoja del propio árbol tiembla, se suelta y una racha la lleva a través de la página; al rato vuelve a brotar.
 // Se carga cuando el navegador está libre: los datos (~70 KB gzip) no compiten con el resto de la página.
 (function () {
   "use strict";
@@ -11,7 +11,8 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es solo una marca de agua: sin animar
-  var animated = wide && !reduceMotion;             // el bucle de viento y hojas solo en pantallas anchas y sin movimiento reducido
+  var motion = !reduceMotion;                       // crecimiento y balanceo del árbol (capa compuesta: barato en cualquier pantalla)
+  var animated = wide && motion;                    // hojas que se sueltan y cruzan la página: solo en pantallas anchas
   var TOTAL = 356;                       // hojas del árbol
 
   /* ---------- Carga diferida ---------- */
@@ -50,21 +51,16 @@
 
     /* ---------- SVG del árbol ---------- */
     var NS = "http://www.w3.org/2000/svg";
-    var leafFilters = [3, 8, 15].map(function (seed, k) {
-      return '<filter id="trLeaf' + k + '" x="-100%" y="-100%" width="300%" height="300%"><feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="2" seed="' + seed +
-             '" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation=".35"/></filter>';
-    }).join("");
     stage.innerHTML =
-      '<svg viewBox="0 0 800 1000" aria-hidden="true" focusable="false">' +
+      '<svg class="tree-rock" viewBox="0 0 800 1000" aria-hidden="true" focusable="false"><g id="trRock"></g></svg>' +
+      '<svg class="tree-art" viewBox="0 0 800 1000" aria-hidden="true" focusable="false">' +
       "<defs>" +
         '<filter id="trWash" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter>' +
-        '<filter id="trSoft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>' +
-        leafFilters +
       "</defs>" +
-      '<g id="trRock"></g><g id="trCenters" visibility="hidden"></g><g id="trMasks"></g><g id="trArt"></g>' +
+      '<g id="trCenters" visibility="hidden"></g><g id="trMasks"></g><g id="trArt"></g>' +
       '<g id="trWind"></g><g id="trLeaves"></g></svg>';
-    var svg = stage.firstChild;
-    var $ = function (id) { return svg.querySelector("#" + id); };
+    var svg = stage.lastChild;
+    var $ = function (id) { return stage.querySelector("#" + id); };
     var defs = svg.querySelector("defs");
     var el = function (name, attrs, parent) {
       var e = document.createElementNS(NS, name);
@@ -119,13 +115,17 @@
       var tx = B.x - A.x, ty = B.y - A.y, m = Math.hypot(tx, ty) || 1;
       return { x: P.x * K + OX, y: P.y * K + OY, tx: tx / m, ty: ty / m };
     }
-    var gWashL = el("g", { filter: "url(#trWash)" }, $("trArt"));     // halo de agua bajo la tinta
+    var gWashL = el("g", {}, $("trArt"));                              // halo de agua bajo la tinta
+    var washOn = function () { gWashL.setAttribute("filter", "url(#trWash)"); };   // el desenfoque se activa al terminar de crecer
     var gInkL = el("g", {}, $("trArt"));
     BONSAI.pieces.forEach(function (sp) {
       var pc = { id: sp.id, parent: sp.parent };
       pc.center = el("path", { d: smooth(sp.pts) }, $("trCenters"));
       pc.len = pc.center.getTotalLength();
-      var mk = el("mask", { id: "trmk_" + sp.id, maskUnits: "userSpaceOnUse", x: -60, y: -60, width: 420, height: 520 }, $("trMasks"));
+      var xs = sp.pts.map(function (p) { return p[0]; }), ys = sp.pts.map(function (p) { return p[1]; }), pad = sp.w / 2 + 10;
+      var mx0 = Math.min.apply(null, xs) - pad, my0 = Math.min.apply(null, ys) - pad;
+      var mk = el("mask", { id: "trmk_" + sp.id, maskUnits: "userSpaceOnUse", x: mx0.toFixed(1), y: my0.toFixed(1),
+        width: (Math.max.apply(null, xs) + pad - mx0).toFixed(1), height: (Math.max.apply(null, ys) + pad - my0).toFixed(1) }, $("trMasks"));   // región acotada: menos píxeles que rasterizar en cada fotograma
       // máscara: trazo ancho sobre la línea central; "butt" para que DrawSVG no deje un punto al 0%
       pc.mask = el("path", { d: smooth(extend(sp.pts, sp.w > 40 ? 18 : 5, sp.w > 40 ? 18 : 8)), fill: "none", stroke: "#fff",
         "stroke-width": sp.w, "stroke-linecap": "butt", "stroke-linejoin": "round" }, mk);
@@ -155,55 +155,73 @@
     function chain(id) { var c = []; for (var p = id; p; p = pieces[p].parent) c.unshift(p); return c; }
     var moodAt = function (i) { return i < SAMPLE.length ? SAMPLE[i] : MOODS[Math.floor(mulberryR(i + 5)() * 6)]; };
 
+    /* ---------- Formas de hoja pre-deformadas: el borde irregular de tinta va horneado en el trazado ----------
+       (antes cada hoja llevaba un filtro SVG con turbulencia + desplazamiento + desenfoque: 356 filtros que repintar) */
+    var LEAF_L = 34, LEAF_W = LEAF_L * .38;
+    function bakeLeaf(seed) {
+      var r = mulberryR(seed + 900), L = LEAF_L, w = LEAF_W, pts = [], i, t;
+      var bez = function (p0, p1, p2, p3, t) { var v = 1 - t; return [v*v*v*p0[0] + 3*v*v*t*p1[0] + 3*v*t*t*p2[0] + t*t*t*p3[0], v*v*v*p0[1] + 3*v*v*t*p1[1] + 3*v*t*t*p2[1] + t*t*t*p3[1]]; };
+      for (i = 0; i < 13; i++) pts.push(bez([0, 0], [w, -L * .25], [w * 1.1, -L * .7], [0, -L], i / 12));            // lado derecho, base -> punta
+      for (i = 1; i < 12; i++) pts.push(bez([0, -L], [-w * 1.1, -L * .7], [-w, -L * .25], [0, 0], i / 12));          // lado izquierdo, punta -> base
+      var p1 = r() * 6, p2 = r() * 6, k1 = 5 + r() * 4, k2 = 11 + r() * 5, A = .8 + r() * .5, out = [];
+      for (i = 0; i < pts.length; i++) {
+        var a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], m = Math.hypot(dx, dy) || 1;
+        t = i / pts.length;
+        var d = (i === 0 || i === 12) ? 0 : A * (Math.sin(k1 * t * 6.28 + p1) + .6 * Math.sin(k2 * t * 6.28 + p2));   // base y punta quedan firmes
+        out.push([pts[i][0] - dy / m * d, pts[i][1] + dx / m * d]);
+      }
+      return smooth(out) + "Z";
+    }
+    var LEAF_SHAPES = [0, 1, 2, 3, 4, 5].map(bakeLeaf);
+
     /* ---------- Hoja: tinta que se asienta ---------- */
     var leafSeq = 0;
     function makeLeaf(mood, instant, tracked, parent) {
-      var id = ++leafSeq, L = 34, w = L * .38;
-      var g = el("g", {}, parent || gLeaves), flt = null, disp = null, blur = null;
-      if (!instant) {                                   // filtro propio solo mientras la tinta se asienta
-        flt = el("filter", { id: "trlf" + id, x: "-100%", y: "-100%", width: "300%", height: "300%" }, defs);
-        el("feTurbulence", { type: "fractalNoise", baseFrequency: .07, numOctaves: 2, seed: id, result: "n" }, flt);
-        disp = el("feDisplacementMap", { "in": "SourceGraphic", in2: "n", scale: 9, xChannelSelector: "R", yChannelSelector: "G", result: "d" }, flt);
-        blur = el("feGaussianBlur", { "in": "d", stdDeviation: 6 }, flt);
-      }
-      var shape = "M0 0 C" + w + " " + (-L * .25) + " " + (w * 1.1) + " " + (-L * .7) + " 0 " + (-L) +
-                  " C" + (-w * 1.1) + " " + (-L * .7) + " " + (-w) + " " + (-L * .25) + " 0 0Z";
-      var color = COLORS[mood];
-      var halo = el("path", { d: shape, filter: "url(#trSoft)", transform: "scale(1.5)", opacity: .2, fill: color }, g);
-      var main = el("path", { d: shape, filter: instant ? "url(#trLeaf" + (id % 3) + ")" : "url(#trlf" + id + ")", opacity: .9, fill: color }, g);
+      var id = ++leafSeq, L = LEAF_L, w = LEAF_W;
+      var g = el("g", {}, parent || gLeaves), shape = LEAF_SHAPES[id % LEAF_SHAPES.length], color = COLORS[mood];
+      // halo suave sin filtro: dos copias más grandes y muy transparentes
+      var halo = el("path", { d: shape, transform: "scale(1.55)", opacity: .07, fill: color }, g);
+      el("path", { d: shape, transform: "scale(1.25)", opacity: .1, fill: color }, g);
+      el("path", { d: shape, opacity: .9, fill: color }, g);
       el("path", { d: "M0 -1 L" + rnd(-1, 1) + " " + (-L * .8), fill: "none", style: "stroke:var(--paper)", "stroke-width": .7, opacity: .35 }, g);
       for (var i = 0; i < 2; i++) el("circle", { cx: rnd(-w * 1.4, w * 1.4), cy: rnd(-L * 1.1, -L * .4), r: rnd(1.2, 2.6), opacity: .65, fill: color }, g);
-      var leaf = { id: id, g: g, flt: flt, blur: blur, disp: disp, halo: halo, x: 0, y: 0, a: 0, s: 0, o: 0, b: 6, dsp: 9, pop: 1, sway: 0, settled: false };
+      var leaf = { id: id, mood: mood, g: g, halo: halo, x: 0, y: 0, a: 0, s: 0, o: 0, pop: 1, sway: 0, settled: false };
       leaf.applyT = function () {
         g.setAttribute("transform", "translate(" + leaf.x.toFixed(2) + " " + leaf.y.toFixed(2) + ") rotate(" + (leaf.a + leaf.sway).toFixed(2) + ") scale(" + (leaf.s * leaf.pop).toFixed(3) + ")");
       };
-      leaf.apply = function () {
-        leaf.applyT(); g.style.opacity = leaf.o;
-        if (leaf.blur) { leaf.blur.setAttribute("stdDeviation", Math.max(.05, leaf.b).toFixed(2)); leaf.disp.setAttribute("scale", leaf.dsp.toFixed(2)); }
-      };
-      leaf.settle = function () {                       // la tinta ya está seca: filtro compartido + balanceo muy suave
-        if (leaf.settled) return;
-        leaf.settled = true; main.setAttribute("filter", "url(#trLeaf" + (id % 3) + ")");
-        if (leaf.flt) { leaf.flt.remove(); leaf.flt = leaf.blur = leaf.disp = null; }
-        leaf.amp = rnd(.8, 1.8) * (Math.random() < .5 ? -1 : 1); leaf.freq = rnd(.25, .5); leaf.ph = rnd(0, 6);
-      };
+      leaf.apply = function () { leaf.applyT(); g.style.opacity = leaf.o; };
+      leaf.settle = function () { leaf.settled = true; };
       if (tracked !== false) state.leaves.push(leaf);
       return leaf;
     }
 
-    // Un único bucle mueve todas las hojas asentadas (~15 fps): con cientos de hojas no puede haber un tween por hoja.
-    var swayTick = 0;
-    if (animated) gsap.ticker.add(function (time) {
-      if (document.hidden || ++swayTick % 4) return;
-      for (var i = 0; i < state.leaves.length; i++) {
-        var l = state.leaves[i];
-        if (l.settled) { l.sway = l.amp * Math.sin(time * l.freq + l.ph); l.applyT(); }
-      }
-    });
+    /* ---------- Balanceo del árbol entero: una sola rotación CSS sobre su capa, 60 fps sin repintar ----------
+       amb = respiración lenta · gust = empujón de cada racha (vuelve con muelle) · scroll = inercia al desplazarse */
+    var sway = { amb: 0, gust: 0, scroll: 0 }, lastY = window.scrollY, lastR = 1e9;
+    (function pivot() {                                 // la capa gira sobre la base del tronco, donde se apoya en la roca
+      var c = pieces.Ta.center, a = c.getPointAtLength(0), b = c.getPointAtLength(pieces.Ta.len), p = a.y > b.y ? a : b;
+      svg.style.transformOrigin = ((p.x * K + OX) / 8).toFixed(2) + "% " + ((p.y * K + OY) / 10).toFixed(2) + "%";
+    })();
+    if (motion) {
+      gsap.fromTo(sway, { amb: -.32 }, { amb: .32, duration: 5.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      gsap.ticker.add(function () {
+        if (document.hidden) return;
+        var y = window.scrollY, dy = y - lastY; lastY = y;
+        var target = Math.max(-1.4, Math.min(1.4, -dy * .03));
+        sway.scroll += (target - sway.scroll) * .06;
+        var r = sway.amb + sway.gust + sway.scroll;
+        if (Math.abs(r - lastR) > .003) { lastR = r; svg.style.transform = "rotate(" + r.toFixed(3) + "deg)"; }
+      });
+    }
+    function push(amount, hold) {                       // racha: el árbol cede hacia la izquierda y vuelve con un muelle suave
+      if (!motion) return;
+      gsap.to(sway, { gust: amount, duration: hold || 1.4, ease: "sine.inOut", overwrite: "auto",
+        onComplete: function () { gsap.to(sway, { gust: 0, duration: 3.4, ease: "elastic.out(1, 0.45)", overwrite: "auto" }); } });
+    }
 
     /* ---------- Viento ---------- */
     function windPath(S, T, phase, tin) {               // tin: dirección del aire al llegar a T (empalma con el trazo)
-      var c1 = { x: S.x - rnd(250, 400), y: S.y + rnd(-200, 200) };
+      var c1 = { x: S.x - rnd(200, 340), y: S.y + rnd(40, 200) };
       var c2 = tin ? { x: T.x - tin.x * rnd(140, 220), y: T.y - tin.y * rnd(140, 220) } : { x: T.x + rnd(120, 260), y: T.y + rnd(-160, 160) };
       return function (u) {
         var v = 1 - u, x = v*v*v*S.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*T.x, y = v*v*v*S.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*T.y;
@@ -252,9 +270,11 @@
       var sizeF = n < 30 ? 1 : Math.max(.5, 1 - (n - 30) / 500);                        // con muchas hojas, algo más pequeñas
       var leaf = makeLeaf(mood, true);
       chain(slot.p).forEach(function (id) {
-        if (!state.drawn[id]) { state.drawn[id] = true; gsap.set(pieces[id].mask, { drawSVG: "0% 100%" }); }
+        if (!state.drawn[id]) { state.drawn[id] = true; if (!motion) gsap.set(pieces[id].mask, { drawSVG: "0% 100%" }); }
       });
-      leaf.x = f.x; leaf.y = f.y; leaf.a = ang; leaf.s = sizeF * (.9 + .25 * r()); leaf.o = 1; leaf.b = .35; leaf.dsp = 3.5;
+      leaf.x = f.x; leaf.y = f.y; leaf.a = ang; leaf.s = sizeF * (.9 + .25 * r()); leaf.o = 1;
+      leaf.piece = slot.p; leaf.t = slot.t;
+      if (motion) leaf.pop = 0;                         // brotará cuando la rama la alcance
       leaf.apply(); leaf.settle();
     }
     function buildTree(done) {                          // en tandas, para no bloquear la página
@@ -263,6 +283,66 @@
         for (var k = 0; k < 45 && i < TOTAL; k++, i++) addLeaf(moodAt(i));
         if (i < TOTAL) setTimeout(chunk, 0); else done();
       })();
+    }
+
+    /* ---------- Crecimiento: cada rama nace a mitad de su madre; las hojas brotan cuando el trazo llega a ellas ---------- */
+    function grow(done) {
+      var maxLen = 0, T = {};
+      Object.keys(state.drawn).forEach(function (id) { maxLen = Math.max(maxLen, pieces[id].len); });
+      var dur = function (id) { return .7 + 1.1 * pieces[id].len / maxLen; };
+      var start = function (id) {
+        if (T[id] != null) return T[id];
+        var p = pieces[id].parent;
+        return (T[id] = p ? start(p) + dur(p) * .45 : 0);
+      };
+      var tl = gsap.timeline({ delay: .2, onComplete: function () { washOn(); done(); } });
+      tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: .9, ease: "sine.out" }, 0);
+      Object.keys(state.drawn).forEach(function (id) {
+        tl.fromTo(pieces[id].mask, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: dur(id), ease: "sine.inOut" }, .15 + start(id));
+      });
+      var end = 0;
+      state.leaves.forEach(function (l) {
+        var at = .15 + start(l.piece) + dur(l.piece) * Math.min(1, l.t * .85 + .1) + rnd(0, .35);
+        end = Math.max(end, at);
+        tl.to(l, { pop: 1, duration: .55, ease: "back.out(2.2)", onUpdate: l.applyT }, at);
+      });
+      if (kanji) tl.fromTo(kanji, { opacity: 0, scale: 1.25, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: .5, ease: "power3.out" }, end * .8);
+      tl.add(function () { push(-.7, 1.1); }, end * .6);       // primera brisa: el árbol recién crecido se despereza
+      // Guarda de rendimiento: cada 8 fotogramas se mide la media; si pasa de 40 ms (< 25 fps) el crecimiento se acelera
+      // (hasta ×8) para que la fase pesada dure menos en equipos justos. En equipos buenos nunca interviene.
+      var tA = performance.now(), nA = 0;
+      var probe = function () {
+        if (++nA < 8) return;
+        var avg = (performance.now() - tA) / nA; tA = performance.now(); nA = 0;
+        if (avg > 40) tl.timeScale(Math.min(8, tl.timeScale() * 1.8));
+        if (tl.progress() >= 1) gsap.ticker.remove(probe);
+      };
+      gsap.ticker.add(probe);
+    }
+
+    /* ---------- Hoja que se suelta del árbol: tiembla, se desprende y deja su hueco hasta que vuelve a brotar ---------- */
+    function pickTreeLeaf() {
+      for (var k = 0; k < 20; k++) {
+        var l = state.leaves[Math.floor(Math.random() * state.leaves.length)];
+        if (!l.away && l.pop > .99) return l;
+      }
+      return null;
+    }
+    function release(leaf, onFree) {
+      leaf.away = true;
+      var tug = { k: 0 }, amp = rnd(8, 14);
+      track(gsap.to(tug, { k: 1, duration: rnd(.8, 1.2), ease: "none",
+        onUpdate: function () { leaf.sway = Math.sin(tug.k * Math.PI * 6) * amp * (1 - tug.k * .5); leaf.applyT(); },
+        onComplete: function () {
+          leaf.sway = 0; leaf.applyT();
+          var m = leaf.g.getScreenCTM();
+          leaf.g.style.opacity = 0;
+          onFree({ x: m.e, y: m.f, s: Math.hypot(m.a, m.b), a: Math.atan2(m.b, m.a) * 180 / Math.PI });
+          master.call(function () {                     // vuelve a brotar en su sitio
+            leaf.pop = 0; leaf.applyT(); leaf.g.style.opacity = 1;
+            track(gsap.to(leaf, { pop: 1, duration: .8, ease: "back.out(2)", onUpdate: leaf.applyT, onComplete: function () { leaf.away = false; } }));
+          }, null, master.time() + rnd(16, 28));
+        } }));
     }
 
     /* ---------- Capa de pantalla completa (transparente) por la que viaja el bucle ---------- */
@@ -281,33 +361,44 @@
     /* ---------- Bucle: hojas y puntos de tinta que cruzan la página de lado a lado, llevados por una racha ---------- */
     var drifting = 0;
     function drifter() {
-      master.call(drifter, null, master.time() + rnd(2.2, 3.8));
-      if (drifting >= 7) return;
+      master.call(drifter, null, master.time() + rnd(3.4, 5.6));
+      if (drifting >= 5) return;
+      var src = pickTreeLeaf();
+      if (!src) return;
       drifting++;
-      var mood = MOODS[Math.floor(Math.random() * 6)], color = COLORS[mood];
+      release(src, function (from) { fly(src.mood, from); });
+    }
+    function fly(mood, from) {
+      var color = COLORS[mood];
       var leaf = makeLeaf(mood, true, false, fLeaves);
-      var T = { x: rnd(FW * .15, FW * .85), y: rnd(FH * .12, FH * .88) };
-      var S = { x: FW + 60, y: rnd(30, FH - 30) }, E = { x: rnd(-160, -80), y: rnd(30, FH - 30) };
+      var S = { x: from.x, y: from.y };
+      var T = { x: rnd(FW * .1, Math.max(FW * .2, Math.min(FW * .6, S.x - 420))), y: rnd(FH * .15, FH * .85) };
+      var E = { x: rnd(-160, -80), y: rnd(30, FH - 30) };
+      push(-rnd(.6, 1.1));
       var gust = makeGust(T, fWind, rnd(3, 5)), ph = Math.random() * 6, dir = Math.random() < .5 ? -1 : 1;
       var A = windPath(S, gust.start, ph, gust.tin), B = windPath(gust.at(1), E, ph + 1);
       var path = function (u) { return u < .3 ? A(u / .3) : u < .7 ? gust.at((u - .3) / .4) : B((u - .7) / .3); };
       var dots = [];
       for (var i = 0; i < 4; i++) dots.push({ c: el("circle", { r: rnd(1.4, 3.2), fill: color, opacity: 0 }, fLeaves), lag: .012 * (i + 1) + rnd(0, .008), ph: rnd(0, 6) });
-      var size = rnd(.6, .95), probe = { u: 0 };
+      var size = rnd(.6, .95), probe = { u: 0 }, a0 = from.a, lastKey = "";
       var place = function () {
-        var u = probe.u, P = path(u), fade = Math.min(1, u * 14, (1 - u) * 14);
-        leaf.x = P.x; leaf.y = P.y; leaf.s = size; leaf.o = .9 * fade;
-        leaf.a = 90 + dir * 40 + Math.sin(u * 22 + ph) * 28;                    // aleteo suave
+        var u = probe.u, P = path(u), fade = Math.min(1, (1 - u) * 14);
+        var w = Math.min(1, u / .1), e = w * w * (3 - 2 * w);                 // del árbol al vuelo, sin saltos
+        var aim = 90 + dir * 40 + Math.sin(u * 22 + ph) * 28;                    // aleteo suave
+        while (a0 - aim > 180) a0 -= 360; while (aim - a0 > 180) a0 += 360;
+        leaf.x = P.x; leaf.y = P.y; leaf.s = from.s + (size - from.s) * e; leaf.o = fade;
+        leaf.a = a0 + (aim - a0) * e;
         leaf.apply();
         dots.forEach(function (d) {
           var Q = path(Math.max(0, u - d.lag));
           d.c.setAttribute("cx", (Q.x + Math.cos(d.ph + u * 9) * 8).toFixed(1));
           d.c.setAttribute("cy", (Q.y + Math.sin(d.ph + u * 9) * 8).toFixed(1));
-          d.c.setAttribute("opacity", (.55 * fade).toFixed(2));
+          d.c.setAttribute("opacity", (.55 * fade * Math.min(1, u * 8)).toFixed(2));
         });
         if (u > .28) {                                                           // la racha se dibuja por delante de la hoja y se borra por detrás
           var reveal = Math.min(1, (u - .3) / .4 + .1), erase = u > .72 ? Math.min(1, (u - .72) / .22) : 0;
-          gsap.set(gust.mp, { drawSVG: (erase * 100).toFixed(1) + "% " + (reveal * 100).toFixed(1) + "%" });
+          var key = Math.round(erase * 200) + "/" + Math.round(reveal * 200);
+          if (key !== lastKey) { lastKey = key; gsap.set(gust.mp, { drawSVG: (erase * 100).toFixed(1) + "% " + (reveal * 100).toFixed(1) + "%" }); }
           gust.rib.style.opacity = GUST_OPACITY * Math.min(1, (u - .28) * 6) * (1 - erase);
         }
       };
@@ -321,6 +412,7 @@
     /* ---------- Viento ambiente: rachas tenues sueltas por toda la pantalla ---------- */
     function ambientWind() {
       var gust = makeGust({ x: rnd(FW * .1, FW * .9), y: rnd(FH * .1, FH * .9) }, fWind, rnd(3, 5)), dur = rnd(6, 8);
+      master.call(function () { push(-rnd(.2, .45), 2.2); }, null, master.time() + dur * .3);
       var tl = gsap.timeline({ onComplete: gust.remove });
       tl.fromTo(gust.mp, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: dur, ease: "sine.inOut" }, 0)
         .fromTo(gust.rib, { opacity: 0 }, { opacity: .11, duration: dur * .4, ease: "sine.inOut" }, 0)
@@ -331,13 +423,17 @@
     }
 
     /* ---------- Arranque ---------- */
+    if (motion) gsap.set(kanji ? [stage, kanji] : stage, { opacity: 0 });
     buildTree(function () {
-      if (!animated) return;                            // pantalla estrecha o movimiento reducido: árbol quieto
-      setupFlow();
-      master.paused(document.hidden);
-      document.addEventListener("visibilitychange", function () { master.paused(document.hidden); });   // pestaña oculta: todo se detiene
-      master.call(drifter, null, master.time() + 1);
-      master.call(ambientWind, null, master.time() + 3);
+      if (!motion) { washOn(); return; }                // movimiento reducido: árbol quieto, completo
+      grow(function () {
+        if (!animated) return;                          // pantalla estrecha: crece y se mece, sin hojas viajeras
+        setupFlow();
+        master.paused(document.hidden);
+        document.addEventListener("visibilitychange", function () { master.paused(document.hidden); });   // pestaña oculta: todo se detiene
+        master.call(ambientWind, null, master.time() + 1.5);
+        master.call(drifter, null, master.time() + 3);
+      });
     });
   }
 })();

@@ -33,7 +33,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
 body {
   margin: 0;
   background: var(--paper);
@@ -44,7 +44,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-a { color: var(--terracotta); text-underline-offset: 3px; }
+a { color: var(--terracotta); text-underline-offset: 3px; transition: color .2s ease; }
 a:hover { color: var(--terracotta-deep); }
 img { max-width: 100%; display: block; }
 em { font-style: italic; color: var(--terracotta); }
@@ -114,7 +114,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   color: var(--on-btn-ink);
   box-shadow: 0 10px 20px -12px rgba(59, 46, 35, 0.7);
 }
-.btn-primary:hover { color: var(--on-btn-ink); filter: brightness(1.1); }
+.btn-primary { transition: filter .25s ease, box-shadow .25s ease; }
+.btn-primary:hover { color: var(--on-btn-ink); filter: brightness(1.1); box-shadow: 0 14px 26px -12px rgba(59, 46, 35, 0.75); }
 .btn-primary svg { width: 20px; height: 20px; stroke: var(--btn-ink-icon); stroke-width: 1.9; }
 .btn-secondary {
   height: 48px;
@@ -126,7 +127,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   font-size: 14.5px;
   margin-top: 48px;
 }
-.btn-secondary:hover { color: var(--ink); border-color: var(--taupe); }
+.btn-secondary { transition: border-color .25s ease, background-color .25s ease; }
+.btn-secondary:hover { color: var(--ink); border-color: var(--taupe); background: var(--paper-card); }
 .btn-secondary svg { width: 18px; height: 18px; stroke: var(--terracotta); stroke-width: 2; }
 
 /* ---------- Hero ---------- */
@@ -421,11 +423,12 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--hairline); }
   --tree-wind: var(--ink-soft);
 }
 .tree-wrap { position: relative; height: min(100%, calc(var(--tree-w) * 1.25)); aspect-ratio: 4 / 5; max-width: 100%; }
-.tree-stage { width: 100%; height: 100%; }
-.tree-stage svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tree-stage { position: relative; width: 100%; height: 100%; }
+.tree-stage svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
+.tree-stage .tree-art { will-change: transform; }   /* capa propia: el balanceo gira la capa, no repinta la tinta */
 /* Capa transparente de pantalla completa: por aquí cruzan el viento y las hojas, de lado a lado, por detrás del contenido */
 .tree-flow {
-  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;
+  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; will-change: transform;
   background: transparent;
   --tree-ink: var(--ink); --tree-wash: var(--taupe); --tree-wind: var(--ink-soft);
 }
@@ -436,10 +439,13 @@ main, footer { position: relative; z-index: 1; }
 @media (min-width: 1180px) {
   main, footer { margin-right: var(--tree-w); }
 }
-@media (min-width: 1180px) and (max-width: 1599px) {   /* el árbol ocupa mucho: el hero pasa a una columna */
-  .hero { grid-template-columns: minmax(0, 1fr); }
-  .hero-phone { justify-content: flex-start; }
-  .hero-word { white-space: nowrap; font-size: clamp(76px, 9vw, 112px); }
+@media (min-width: 1180px) and (max-width: 1599px) {   /* el árbol ocupa mucho: título | móvil | árbol, con el móvil algo más pequeño */
+  .hero { grid-template-columns: minmax(0, 1fr) auto; gap: 28px; }
+  .hero-phone .phone-stage { zoom: 0.86; }
+  .hero-brand { gap: 16px; }
+  .hero-mark { width: 72px; height: 72px; border-radius: 18px; }
+  .hero-word { white-space: nowrap; font-size: clamp(64px, 6.4vw, 96px); }
+}
 }
 @media (max-width: 1179px) {                 /* pantallas estrechas: el árbol queda como marca de agua tras el contenido */
   :root { --tree-w: 78vw; }

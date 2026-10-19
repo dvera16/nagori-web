@@ -1,6 +1,6 @@
 // Animaciones de Nagori — GSAP + ScrollTrigger.
-// Entradas tipo "waterfall-entry": aparición binaria (opacity 0->1 por tl.set),
-// nunca fundido en un arrival; cascada con solape, no en cola.
+// Entradas tipo "waterfall-entry" para titulares; tarjetas por lotes según entran en pantalla,
+// con la cinta que se «pega» al final; el teléfono del hero se asienta con el scroll.
 (function () {
   "use strict";
 
@@ -25,6 +25,7 @@
   }
 
   gsap.registerPlugin(ScrollTrigger);
+  gsap.defaults({ overwrite: "auto" });
 
   /* ---------- Nav con borde al hacer scroll ---------- */
   var nav = document.getElementById("siteNav");
@@ -37,59 +38,77 @@
   function waterfallWords(container, tl, startTime) {
     var words = container.querySelectorAll(".line > span");
     var t = startTime;
-    var F = 1 / 60;
     words.forEach(function (word, i) {
       var isLast = i === words.length - 1;
-      var y = isLast ? 46 : 36;
-      var dur = isLast ? 0.5 : 0.42;
-      tl.set(word, { opacity: 1, y: y }, t);
-      tl.to(word, { y: 0, duration: dur, ease: "power4.out" }, t);
-      t += dur - 2 * F;
+      tl.set(word, { opacity: 1, y: isLast ? 46 : 38, rotation: isLast ? 1.5 : 1 }, t);
+      tl.to(word, { y: 0, rotation: 0, duration: isLast ? 0.9 : 0.8, ease: "expo.out" }, t);
+      t += 0.11;
     });
-    return t;
+    return t + 0.25;
   }
 
   /* ================= HERO ================= */
   var hero = gsap.timeline({ delay: 0.15 });
 
-  hero.set("#heroMark", { opacity: 1, y: -16, scale: 0.9 }, 0);
-  hero.to("#heroMark", { y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0);
+  hero.set("#heroMark", { opacity: 1, y: -16, scale: 0.9, rotation: -6 }, 0);
+  hero.to("#heroMark", { y: 0, scale: 1, rotation: 0, duration: 0.9, ease: "expo.out" }, 0);
 
-  hero.set("#heroWord", { opacity: 1, y: 28 }, 0.15);
-  hero.to("#heroWord", { y: 0, duration: 0.65, ease: "power4.out" }, 0.15);
+  hero.set("#heroWord", { opacity: 1, y: 28 }, 0.12);
+  hero.to("#heroWord", { y: 0, duration: 0.9, ease: "expo.out" }, 0.12);
 
   // El punto de la «i» es un trozo de cinta: se «pega» al final del wordmark.
   hero.set("#heroTape", { scaleX: 0, rotation: -10, transformOrigin: "left center" }, 0);
-  hero.to("#heroTape", { scaleX: 1, duration: 0.35, ease: "power2.out" }, 0.6);
+  hero.to("#heroTape", { scaleX: 1, duration: 0.4, ease: "power2.out" }, 0.55);
 
-  var tHead = waterfallWords(document.getElementById("heroHeadline"), hero, 0.7);
+  var tHead = waterfallWords(document.getElementById("heroHeadline"), hero, 0.55);
 
-  hero.set("#heroSub", { opacity: 1, y: 14 }, tHead + 0.05);
-  hero.to("#heroSub", { y: 0, duration: 0.5, ease: "power3.out" }, tHead + 0.05);
+  hero.set("#heroSub", { opacity: 1, y: 14 }, tHead - 0.1);
+  hero.to("#heroSub", { y: 0, duration: 0.8, ease: "expo.out" }, tHead - 0.1);
 
-  hero.set("#scrollCue", { opacity: 1, y: 10 }, tHead + 0.25);
-  hero.to("#scrollCue", { y: 0, duration: 0.45, ease: "power3.out" }, tHead + 0.25);
+  hero.set("#scrollCue", { opacity: 1, y: 12 }, tHead + 0.05);
+  hero.to("#scrollCue", { y: 0, duration: 0.8, ease: "expo.out" }, tHead + 0.05);
 
-  hero.set("#heroPhone", { opacity: 1, y: 48 }, 0.35);
-  hero.to("#heroPhone", { y: 0, duration: 0.8, ease: "power4.out" }, 0.35);
+  hero.fromTo("#heroPhone", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" }, 0.3);
+
+  // Al bajar, el teléfono sube un poco más despacio que la página y se endereza: se «asienta» sobre el papel.
+  var heroStage = document.querySelector("#heroPhone .phone-stage");
+  if (heroStage) {
+    gsap.fromTo(heroStage, { rotation: 2, y: 0 }, {
+      rotation: -1, y: -70, ease: "none",
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.8 }
+    });
+  }
 
   /* ================= SCROLL REVEALS ================= */
   document.querySelectorAll("[data-reveal-eyebrow]").forEach(function (el) {
     var span = el.querySelector("span");
-    gsap.timeline({ scrollTrigger: { trigger: el, start: "top 85%", once: true } })
-      .set(span, { opacity: 1, y: 0 }, 0)
-      .fromTo(span, { y: "100%" }, { y: "0%", duration: 0.5, ease: "power3.out" }, 0);
+    gsap.timeline({ scrollTrigger: { trigger: el, start: "top 88%", once: true } })
+      .set(span, { opacity: 1 }, 0)
+      .fromTo(span, { y: "100%" }, { y: "0%", duration: 0.7, ease: "expo.out" }, 0);
   });
 
   document.querySelectorAll("[data-reveal-heading]").forEach(function (heading) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: heading, start: "top 82%", once: true } });
+    var tl = gsap.timeline({ scrollTrigger: { trigger: heading, start: "top 85%", once: true } });
     waterfallWords(heading, tl, 0);
   });
 
-  document.querySelectorAll("section").forEach(function (section) {
-    var cards = section.querySelectorAll("[data-reveal-card]");
-    if (!cards.length) return;
-    gsap.timeline({ scrollTrigger: { trigger: section, start: "top 68%", once: true } })
-      .to(cards, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.09 });
+  // Tarjetas por lotes: cada una aparece cuando entra, no cuando entra su sección.
+  gsap.set("[data-reveal-card]", { y: 36 });
+  ScrollTrigger.batch("[data-reveal-card]", {
+    start: "top 90%",
+    once: true,
+    onEnter: function (batch) {
+      gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.08 });
+      batch.forEach(function (card, i) {
+        var d = 0.3 + i * 0.08;
+        var tape = card.querySelector(".tape");
+        if (tape) gsap.fromTo(tape, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.4, ease: "power2.out", delay: d });
+        var bars = card.querySelectorAll(".mood-strip i");
+        if (bars.length) gsap.fromTo(bars, { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.6, ease: "back.out(2)", stagger: 0.05, delay: d });
+      });
+    }
   });
+
+  // Las fuentes cambian la altura de los titulares: recalcular disparadores cuando terminen de cargar.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
 })();
