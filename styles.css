@@ -465,9 +465,9 @@ main, footer { position: relative; z-index: 1; }
   .hero-mark { width: 72px; height: 72px; border-radius: 18px; }
   .hero-word { white-space: nowrap; font-size: clamp(64px, 6.4vw, 96px); }
 }
-@media (max-width: 1179px) {                 /* pantallas estrechas: el árbol queda como marca de agua tras el contenido */
+@media (max-width: 1179px) {                 /* pantallas estrechas: el árbol queda como marca de agua tenue sobre el contenido */
   :root { --tree-w: 78vw; }
-  .tree-dock { right: -14vw; top: 60px; opacity: 0.12; z-index: -1; }
+  .tree-dock { right: -14vw; top: 60px; opacity: 0.2; z-index: 5; }   /* por encima del contenido (sin capturar toques), bajo la barra: las hojas pasan sobre el texto */
   .tree-kanji { display: none; }
 }
 
