@@ -380,6 +380,20 @@
       track(tl);
     }
 
+    /* ---------- Balanceo por scroll (móvil) ----------
+       El árbol quieto se inclina un poco con el desplazamiento y vuelve solo a su sitio. Solo hay trabajo mientras se mueve:
+       el bucle se engancha al hacer scroll y se suelta cuando el árbol ha vuelto al reposo. */
+    function scrollSway() {
+      var cur = 0, lastY = window.scrollY, on = false, K2 = 2.6;
+      function tick() {
+        var y = window.scrollY, dy = y - lastY; lastY = y;
+        cur += (Math.max(-1.4, Math.min(1.4, -dy * .03)) - cur) * .06;
+        svg.style.transform = "rotate(" + (cur * K2).toFixed(3) + "deg)";
+        if (Math.abs(cur) < .004 && dy === 0) { svg.style.transform = ""; gsap.ticker.remove(tick); on = false; }
+      }
+      window.addEventListener("scroll", function () { if (!on) { on = true; lastY = window.scrollY - 1; gsap.ticker.add(tick); } }, { passive: true });
+    }
+
     /* ---------- Hojas en una capa por encima de la página (móvil) ----------
        El árbol queda quieto y tenue tras el contenido. Unas pocas hojas se sacan de él y viven en una capa propia, por encima del
        texto (sin capturar toques), donde revolotean y vuelven a su sitio. Solo se animan esas hojas: el resto del árbol no se repinta. */
@@ -388,12 +402,12 @@
       dock.className = "tree-dock tree-dock-top"; dock.setAttribute("aria-hidden", "true");
       dock.innerHTML = '<div class="tree-wrap"><div class="tree-stage"><svg viewBox="0 0 800 1000" focusable="false"><g></g></svg></div></div>';
       document.body.appendChild(dock);
-      var g = dock.querySelector("g"), picks = [], list = state.leaves, step = Math.floor(list.length / 10), i;
-      for (i = 0; i < 10; i++) picks.push(list[i * step + 3]);
+      var g = dock.querySelector("g"), picks = [], list = state.leaves, step = Math.floor(list.length / 14), i;
+      for (i = 0; i < 14; i++) picks.push(list[i * step + 3]);
       var tweens = picks.map(function (src) {
         var leaf = makeLeaf(src.mood, true, false, g);
         src.g.style.display = "none";                       // la hoja del árbol quieto pasa a la capa superior
-        leaf.x = src.x; leaf.y = src.y; leaf.a = src.a; leaf.s = src.s; leaf.apply();
+        leaf.x = src.x; leaf.y = src.y; leaf.a = src.a; leaf.s = src.s; leaf.o = 1; leaf.apply();
         var hx = leaf.x, hy = leaf.y, ha = leaf.a, p = { t: 0 };
         var ph = rnd(0, 6), spin = rnd(25, 55) * (Math.random() < .5 ? -1 : 1);
         var dx = -rnd(40, 110), dy = rnd(30, 120);       // el aire sopla hacia la izquierda y las hojas bajan un poco
@@ -413,7 +427,7 @@
     buildTree(function () {
       if (!motion) {                                    // movimiento reducido o pantalla estrecha: árbol quieto, completo
         gsap.set(rockMask, { drawSVG: "0% 100%" });
-        if (topLeaves) floatLeaves();
+        if (topLeaves) { floatLeaves(); scrollSway(); }
         paintReady.then(function () { N.release("tree"); });
         return;
       }
