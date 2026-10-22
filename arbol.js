@@ -395,31 +395,45 @@
     }
 
     /* ---------- Hojas viajeras por encima de la página (móvil) ----------
-       El árbol queda quieto y tenue tras el contenido. Tres hojas se sueltan de él y vagan por la pantalla, por encima del texto
-       (capa fija, sin capturar toques), con un trayecto aleatorio: cada tramo va a un punto nuevo de la pantalla, a paso lento. */
+       El árbol queda quieto y tenue tras el contenido. Tres hojas se sueltan de él y las empuja un viento que cambia: ráfagas que
+       arrecian y amainan, y cuya dirección oscila (sopla sobre todo hacia la izquierda). Cada hoja tiene inercia, cae despacio,
+       se bambolea de lado a lado y se voltea más cuanto más fuerte sopla. Al salir por un borde reaparece por el opuesto. */
     function floatLeaves() {
       var sky = document.createElement("div");
       sky.className = "leaf-sky"; sky.setAttribute("aria-hidden", "true");
       sky.innerHTML = '<svg focusable="false"><g></g></svg>';
       document.body.appendChild(sky);
-      var g = sky.querySelector("g"), list = state.leaves, SPEED = 11, tweens = [];   // px por segundo
+      var g = sky.querySelector("g"), list = state.leaves, T = 0, ph0 = rnd(0, 6);
       var vw = function () { return window.innerWidth; }, vh = function () { return window.innerHeight; };
-      [40, 150, 260].forEach(function (idx, n) {
+      var P = [40, 150, 260].map(function (idx, n) {
         var src = list[idx], box = src.g.getBoundingClientRect();
         var leaf = makeLeaf(src.mood, true, false, g);
         src.g.style.display = "none";                       // la hoja del árbol quieto pasa a la capa superior
         leaf.x = box.left + box.width / 2; leaf.y = box.top + box.height / 2; leaf.a = src.a; leaf.s = .55 + .1 * n; leaf.o = 1; leaf.apply();
-        var ph = rnd(0, 6), spin = rnd(18, 34), t0 = 0, p = { t: 0 }, base = leaf.a;
-        function leg() {                                    // siguiente punto al azar dentro de la pantalla
-          var tx = rnd(24, vw() - 24), ty = rnd(84, vh() - 24), dist = Math.hypot(tx - leaf.x, ty - leaf.y);
-          tweens.push(gsap.to(leaf, { x: tx, y: ty, duration: Math.max(4, dist / SPEED), ease: "sine.inOut", onComplete: leg }));
-        }
-        leg();
-        tweens.push(gsap.to(p, { t: 1, duration: 1e5, ease: "none", onUpdate: function () {   // revoloteo: giro y vaivén continuos
-          var T = p.t * 1e5; leaf.a = base + Math.sin(T * .9 + ph) * spin + Math.sin(T * .37) * 12; leaf.applyT();
-        } }));
+        return { leaf: leaf, vx: 0, vy: 0, ph: rnd(0, 6.28), f: rnd(1.3, 2.1), mass: rnd(.8, 1.25), tumble: rnd(.8, 1.3) };
       });
-      document.addEventListener("visibilitychange", function () { tweens.forEach(function (t) { t.paused(document.hidden); }); });
+      function wind(t) {                                    // fuerza 0..1 de la ráfaga y dirección (rad; π = hacia la izquierda)
+        var gust = Math.max(0, .55 * Math.sin(t * .33 + ph0) + .45 * Math.sin(t * .11 + 2.3 * ph0) + .15);
+        return { k: Math.min(1, gust), dir: Math.PI + .9 * Math.sin(t * .17 + ph0) + .35 * Math.sin(t * .53) };
+      }
+      function step() {
+        var dt = Math.min(.05, gsap.ticker.deltaRatio() / 60); T += dt;
+        var w = wind(T), speed = 12 + 62 * w.k * w.k, wx = Math.cos(w.dir) * speed, wy = Math.sin(w.dir) * speed + 7;   // +7: cae despacio
+        P.forEach(function (p) {
+          var l = p.leaf, m = 1 / p.mass, vx = p.vx, vy = p.vy;
+          p.vx += (wx - vx) * 1.3 * m * dt; p.vy += (wy - vy) * 1.3 * m * dt;                       // el aire arrastra a la hoja: inercia
+          var sp = Math.hypot(p.vx, p.vy) || 1, sway = Math.sin(T * p.f + p.ph) * (10 + 26 * w.k);  // bamboleo de lado a lado
+          var x = l.x + (p.vx - p.vy / sp * sway) * dt, y = l.y + (p.vy + p.vx / sp * sway) * dt;
+          var pad = 30, W = vw(), H = vh();
+          if (x < -pad) { x = W + pad; y = rnd(70, H - 20); } else if (x > W + pad) { x = -pad; y = rnd(70, H - 20); }
+          if (y > H + pad) { y = -pad; x = rnd(20, W - 20); } else if (y < -pad) { y = H + pad; x = rnd(20, W - 20); }
+          l.x = x; l.y = y;
+          l.a = Math.atan2(p.vy, p.vx) * 57.3 + 90 + Math.sin(T * p.f * 1.4 + p.ph) * (28 + 70 * w.k) * p.tumble;   // la punta sigue el viento y se voltea al arreciar
+          l.applyT();
+        });
+      }
+      gsap.ticker.add(step);
+      document.addEventListener("visibilitychange", function () { if (document.hidden) gsap.ticker.remove(step); else gsap.ticker.add(step); });
     }
 
     /* ---------- Arranque ---------- */
