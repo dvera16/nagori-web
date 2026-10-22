@@ -13,9 +13,10 @@
   if (!stage) { N.release("tree"); return; }
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es solo una marca de agua: sin animar
-  var motion = wide && !reduceMotion;                // crecimiento y balanceo: solo en pantallas anchas (en móvil el árbol es una marca de agua quieta)
-  var animated = wide && motion;                    // hojas que se sueltan y cruzan la página: solo en pantallas anchas
+  var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es una marca de agua de fondo, pero con el mismo movimiento
+  var motion = !reduceMotion;                        // crecimiento y balanceo: en escritorio y en móvil
+  var animated = motion;                            // viento y hojas que revolotean: en escritorio y en móvil
+  var swayK = wide ? 1 : 2.6;                       // en móvil el árbol es tenue y pequeño: el balanceo se amplifica para que se note
   var TOTAL = 356;                       // hojas del árbol
 
   /* ---------- Carga diferida ---------- */
@@ -221,7 +222,7 @@
         var y = window.scrollY, dy = y - lastY; lastY = y;
         var target = Math.max(-1.4, Math.min(1.4, -dy * .03));
         sway.scroll += (target - sway.scroll) * .06;
-        var r = sway.amb + sway.gust + sway.scroll;
+        var r = (sway.amb + sway.gust + sway.scroll) * swayK;
         if (Math.abs(r - lastR) > .003) { lastR = r; svg.style.transform = "rotate(" + r.toFixed(3) + "deg)"; }
       });
     }
