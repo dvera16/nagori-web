@@ -469,7 +469,6 @@ main, footer { position: relative; z-index: 1; }
   :root { --tree-w: 78vw; }
   .tree-dock { right: -14vw; top: 60px; opacity: 0.12; z-index: -1; }
   .tree-kanji { display: none; }
-  .tree-stage .tree-art { will-change: auto; }   /* sin capa propia: el árbol aquí no se mueve */
 }
 
 /* ---------- Responsive ---------- */
