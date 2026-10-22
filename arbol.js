@@ -13,10 +13,10 @@
   if (!stage) { N.release("tree"); return; }
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es una marca de agua de fondo, pero con el mismo movimiento
-  var motion = !reduceMotion;                        // crecimiento y balanceo: en escritorio y en móvil
-  var animated = motion;                            // viento y hojas que revolotean: en escritorio y en móvil
-  var swayK = wide ? 1 : 2.6;                       // en móvil el árbol es tenue y pequeño: el balanceo se amplifica para que se note
+  var wide = window.matchMedia("(min-width: 1180px)").matches;     // en pantallas estrechas el árbol es una marca de agua quieta (ligera para el scroll)
+  var motion = wide && !reduceMotion;                // crecimiento y balanceo: solo en pantallas anchas
+  var animated = wide && motion;                    // viento y hojas que revolotean en el árbol: solo en pantallas anchas
+  var topLeaves = !wide && !reduceMotion;           // en estrecho: solo unas pocas hojas revolotean en una capa por encima de la página
   var TOTAL = 356;                       // hojas del árbol
 
   /* ---------- Carga diferida ---------- */
@@ -222,7 +222,7 @@
         var y = window.scrollY, dy = y - lastY; lastY = y;
         var target = Math.max(-1.4, Math.min(1.4, -dy * .03));
         sway.scroll += (target - sway.scroll) * .06;
-        var r = (sway.amb + sway.gust + sway.scroll) * swayK;
+        var r = sway.amb + sway.gust + sway.scroll;
         if (Math.abs(r - lastR) > .003) { lastR = r; svg.style.transform = "rotate(" + r.toFixed(3) + "deg)"; }
       });
     }
@@ -380,11 +380,40 @@
       track(tl);
     }
 
+    /* ---------- Hojas en una capa por encima de la página (móvil) ----------
+       El árbol queda quieto y tenue tras el contenido. Unas pocas hojas se sacan de él y viven en una capa propia, por encima del
+       texto (sin capturar toques), donde revolotean y vuelven a su sitio. Solo se animan esas hojas: el resto del árbol no se repinta. */
+    function floatLeaves() {
+      var dock = document.createElement("div");
+      dock.className = "tree-dock tree-dock-top"; dock.setAttribute("aria-hidden", "true");
+      dock.innerHTML = '<div class="tree-wrap"><div class="tree-stage"><svg viewBox="0 0 800 1000" focusable="false"><g></g></svg></div></div>';
+      document.body.appendChild(dock);
+      var g = dock.querySelector("g"), picks = [], list = state.leaves, step = Math.floor(list.length / 10), i;
+      for (i = 0; i < 10; i++) picks.push(list[i * step + 3]);
+      var tweens = picks.map(function (src) {
+        var leaf = makeLeaf(src.mood, true, false, g);
+        src.g.style.display = "none";                       // la hoja del árbol quieto pasa a la capa superior
+        leaf.x = src.x; leaf.y = src.y; leaf.a = src.a; leaf.s = src.s; leaf.apply();
+        var hx = leaf.x, hy = leaf.y, ha = leaf.a, p = { t: 0 };
+        var ph = rnd(0, 6), spin = rnd(25, 55) * (Math.random() < .5 ? -1 : 1);
+        var dx = -rnd(40, 110), dy = rnd(30, 120);       // el aire sopla hacia la izquierda y las hojas bajan un poco
+        return gsap.to(p, { t: 1, duration: rnd(4.5, 7), ease: "none", repeat: -1, repeatDelay: rnd(1.5, 5), delay: rnd(.5, 5),
+          onUpdate: function () {
+            var e = Math.sin(Math.PI * p.t), w = Math.sin(p.t * 7 + ph);
+            leaf.x = hx + dx * e; leaf.y = hy + dy * e + w * 4 * e; leaf.a = ha + spin * e + w * 10 * e;
+            leaf.applyT();
+          } });
+      });
+      var setOn = function () { var off = document.hidden; tweens.forEach(function (t) { t.paused(off); }); };
+      document.addEventListener("visibilitychange", setOn);
+    }
+
     /* ---------- Arranque ---------- */
     if (motion) gsap.set(kanji ? [stage, kanji] : stage, { opacity: 0 });
     buildTree(function () {
       if (!motion) {                                    // movimiento reducido o pantalla estrecha: árbol quieto, completo
         gsap.set(rockMask, { drawSVG: "0% 100%" });
+        if (topLeaves) floatLeaves();
         paintReady.then(function () { N.release("tree"); });
         return;
       }
