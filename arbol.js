@@ -410,8 +410,22 @@
         var leaf = makeLeaf(src.mood, true, false, g);
         src.g.style.display = "none";                       // la hoja del árbol quieto pasa a la capa superior
         leaf.x = box.left + box.width / 2; leaf.y = box.top + box.height / 2; leaf.a = src.a; leaf.s = .55 + .1 * n; leaf.o = 1; leaf.apply();
-        return { leaf: leaf, vx: 0, vy: 0, ph: rnd(0, 6.28), f: rnd(1.3, 2.1), mass: rnd(.8, 1.25), tumble: rnd(.8, 1.3) };
+        var ang = n * 2.094 + rnd(-.4, .4), rad = rnd(34, 64);        // al seguir el dedo, cada hoja se coloca en su sitio alrededor
+        return { leaf: leaf, vx: 0, vy: 0, ph: rnd(0, 6.28), f: rnd(1.3, 2.1), mass: rnd(.8, 1.25), tumble: rnd(.8, 1.3),
+          ox: Math.cos(ang) * rad, oy: Math.sin(ang) * rad, ease: rnd(7, 11) };
       });
+      /* Táctil: mientras hay un dedo en la pantalla (pulsando o arrastrando), las hojas lo siguen con un muelle suave; al soltarlo
+         conservan la velocidad que llevaban y el viento vuelve a llevárselas, así que siguen flotando por la pantalla. */
+      var touch = { on: false, id: null, x: 0, y: 0 };
+      function onTouch(e) {
+        var t = e.touches[0];
+        if (!t) { touch.on = false; touch.id = null; return; }
+        touch.on = true; touch.id = t.identifier; touch.x = t.clientX; touch.y = t.clientY;
+      }
+      document.addEventListener("touchstart", onTouch, { passive: true });
+      document.addEventListener("touchmove", onTouch, { passive: true });
+      document.addEventListener("touchend", onTouch, { passive: true });
+      document.addEventListener("touchcancel", onTouch, { passive: true });
       function wind(t) {                                    // fuerza 0..1 de la ráfaga y dirección (rad; π = hacia la izquierda)
         var gust = Math.max(0, .55 * Math.sin(t * .33 + ph0) + .45 * Math.sin(t * .11 + 2.3 * ph0) + .15);
         return { k: Math.min(1, gust), dir: Math.PI + .9 * Math.sin(t * .17 + ph0) + .35 * Math.sin(t * .53) };
@@ -421,6 +435,14 @@
         var w = wind(T), speed = 12 + 62 * w.k * w.k, wx = Math.cos(w.dir) * speed, wy = Math.sin(w.dir) * speed + 7;   // +7: cae despacio
         P.forEach(function (p) {
           var l = p.leaf, m = 1 / p.mass, vx = p.vx, vy = p.vy;
+          if (touch.on) {                                   // sigue al dedo; la velocidad del seguimiento se queda para cuando lo suelte
+            var nx = l.x + (touch.x + p.ox - l.x) * Math.min(1, p.ease * dt), ny = l.y + (touch.y + p.oy - l.y) * Math.min(1, p.ease * dt);
+            p.vx = Math.max(-420, Math.min(420, (nx - l.x) / dt)); p.vy = Math.max(-420, Math.min(420, (ny - l.y) / dt));
+            l.x = nx; l.y = ny;
+            l.a += (Math.atan2(p.vy, p.vx) * 57.3 + 90 + Math.sin(T * p.f * 1.4 + p.ph) * 25 - l.a) * Math.min(1, 4 * dt);
+            l.applyT();
+            return;
+          }
           p.vx += (wx - vx) * 1.3 * m * dt; p.vy += (wy - vy) * 1.3 * m * dt;                       // el aire arrastra a la hoja: inercia
           var sp = Math.hypot(p.vx, p.vy) || 1, sway = Math.sin(T * p.f + p.ph) * (10 + 26 * w.k);  // bamboleo de lado a lado
           var x = l.x + (p.vx - p.vy / sp * sway) * dt, y = l.y + (p.vy + p.vx / sp * sway) * dt;
