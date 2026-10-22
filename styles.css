@@ -97,6 +97,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .nav-links { display: flex; align-items: center; gap: 22px; }
 .nav-links a { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
 .nav-links a:hover { color: var(--ink); }
+.nav-links a.social, a.social { display: inline-flex; align-items: center; }
+a.social svg { width: 20px; height: 20px; }
+.nav-links { gap: 18px; }
 
 /* ---------- Botones ---------- */
 .btn-primary, .btn-secondary {
@@ -478,7 +481,7 @@ main, footer { position: relative; z-index: 1; }
   .grid-2, .flow, .feature-grid, .privacy-points { grid-template-columns: minmax(0, 1fr); }
   .grid-2 { gap: 48px; }
   .flow-step, .positioning-card { rotate: 0deg; }
-  .nav-links a { display: none; }
+  .nav-links a:not(.social) { display: none; }
 }
 @media (max-width: 420px) {
   .phone-stage { zoom: 0.84; }
