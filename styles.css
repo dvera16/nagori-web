@@ -468,10 +468,12 @@ main, footer { position: relative; z-index: 1; }
 @media (max-width: 1179px) {                 /* pantallas estrechas: el árbol queda como marca de agua tenue tras el contenido */
   :root { --tree-w: 78vw; }
   .tree-dock { right: -14vw; top: 60px; opacity: 0.12; z-index: -1; }
-  .tree-dock-top { opacity: 0.9; z-index: 5; }   /* capa de hojas sueltas: por encima del texto, sin capturar toques y bajo la barra */
   .tree-kanji { display: none; }
   /* el árbol conserva su capa propia: solo se inclina un poco con el scroll (sin repintar la tinta) */
 }
+
+.leaf-sky { position: fixed; inset: 0; z-index: 5; pointer-events: none; }   /* hojas viajeras: sobre el texto, sin capturar toques y bajo la barra */
+.leaf-sky svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
