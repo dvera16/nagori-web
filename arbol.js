@@ -394,32 +394,32 @@
       window.addEventListener("scroll", function () { if (!on) { on = true; lastY = window.scrollY - 1; gsap.ticker.add(tick); } }, { passive: true });
     }
 
-    /* ---------- Hojas en una capa por encima de la página (móvil) ----------
-       El árbol queda quieto y tenue tras el contenido. Unas pocas hojas se sacan de él y viven en una capa propia, por encima del
-       texto (sin capturar toques), donde revolotean y vuelven a su sitio. Solo se animan esas hojas: el resto del árbol no se repinta. */
+    /* ---------- Hojas viajeras por encima de la página (móvil) ----------
+       El árbol queda quieto y tenue tras el contenido. Tres hojas se sueltan de él y vagan por la pantalla, por encima del texto
+       (capa fija, sin capturar toques), con un trayecto aleatorio: cada tramo va a un punto nuevo de la pantalla, a paso lento. */
     function floatLeaves() {
-      var dock = document.createElement("div");
-      dock.className = "tree-dock tree-dock-top"; dock.setAttribute("aria-hidden", "true");
-      dock.innerHTML = '<div class="tree-wrap"><div class="tree-stage"><svg viewBox="0 0 800 1000" focusable="false"><g></g></svg></div></div>';
-      document.body.appendChild(dock);
-      var g = dock.querySelector("g"), picks = [], list = state.leaves, step = Math.floor(list.length / 14), i;
-      for (i = 0; i < 14; i++) picks.push(list[i * step + 3]);
-      var tweens = picks.map(function (src) {
+      var sky = document.createElement("div");
+      sky.className = "leaf-sky"; sky.setAttribute("aria-hidden", "true");
+      sky.innerHTML = '<svg focusable="false"><g></g></svg>';
+      document.body.appendChild(sky);
+      var g = sky.querySelector("g"), list = state.leaves, SPEED = 11, tweens = [];   // px por segundo
+      var vw = function () { return window.innerWidth; }, vh = function () { return window.innerHeight; };
+      [40, 150, 260].forEach(function (idx, n) {
+        var src = list[idx], box = src.g.getBoundingClientRect();
         var leaf = makeLeaf(src.mood, true, false, g);
         src.g.style.display = "none";                       // la hoja del árbol quieto pasa a la capa superior
-        leaf.x = src.x; leaf.y = src.y; leaf.a = src.a; leaf.s = src.s; leaf.o = 1; leaf.apply();
-        var hx = leaf.x, hy = leaf.y, ha = leaf.a, p = { t: 0 };
-        var ph = rnd(0, 6), spin = rnd(25, 55) * (Math.random() < .5 ? -1 : 1);
-        var dx = -rnd(40, 110), dy = rnd(30, 120);       // el aire sopla hacia la izquierda y las hojas bajan un poco
-        return gsap.to(p, { t: 1, duration: rnd(4.5, 7), ease: "none", repeat: -1, repeatDelay: rnd(1.5, 5), delay: rnd(.5, 5),
-          onUpdate: function () {
-            var e = Math.sin(Math.PI * p.t), w = Math.sin(p.t * 7 + ph);
-            leaf.x = hx + dx * e; leaf.y = hy + dy * e + w * 4 * e; leaf.a = ha + spin * e + w * 10 * e;
-            leaf.applyT();
-          } });
+        leaf.x = box.left + box.width / 2; leaf.y = box.top + box.height / 2; leaf.a = src.a; leaf.s = .55 + .1 * n; leaf.o = 1; leaf.apply();
+        var ph = rnd(0, 6), spin = rnd(18, 34), t0 = 0, p = { t: 0 }, base = leaf.a;
+        function leg() {                                    // siguiente punto al azar dentro de la pantalla
+          var tx = rnd(24, vw() - 24), ty = rnd(84, vh() - 24), dist = Math.hypot(tx - leaf.x, ty - leaf.y);
+          tweens.push(gsap.to(leaf, { x: tx, y: ty, duration: Math.max(4, dist / SPEED), ease: "sine.inOut", onComplete: leg }));
+        }
+        leg();
+        tweens.push(gsap.to(p, { t: 1, duration: 1e5, ease: "none", onUpdate: function () {   // revoloteo: giro y vaivén continuos
+          var T = p.t * 1e5; leaf.a = base + Math.sin(T * .9 + ph) * spin + Math.sin(T * .37) * 12; leaf.applyT();
+        } }));
       });
-      var setOn = function () { var off = document.hidden; tweens.forEach(function (t) { t.paused(off); }); };
-      document.addEventListener("visibilitychange", setOn);
+      document.addEventListener("visibilitychange", function () { tweens.forEach(function (t) { t.paused(document.hidden); }); });
     }
 
     /* ---------- Arranque ---------- */
