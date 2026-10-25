@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ayuda y preguntas frecuentes — Nagori</title>
+<meta name="description" content="Cómo funciona Nagori: la bandeja, la página del día, el Cofre, el Historial, el modo libreta, el bonsái de emociones, la exportación y la copia en Google Drive. Con preguntas frecuentes." />
+<link rel="icon" href="../assets/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../styles.css?v=20261019" />
+<style>
+  .help {
+    padding: clamp(56px, 8vw, 96px) 0 100px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .help .eyebrow span { opacity: 1; transform: none; }
+  .help h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(32px, 5vw, 48px);
+    margin: 0 0 14px;
+  }
+  .help .intro {
+    font-family: var(--font-journal);
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 40px;
+  }
+  .toc {
+    background: var(--paper-card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    padding: 24px 28px;
+    margin-bottom: 56px;
+    box-shadow: var(--shadow-card);
+  }
+  .toc h2 {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin: 0 0 14px;
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 2 220px;
+    column-gap: 28px;
+  }
+  .toc li {
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    line-height: 2;
+    break-inside: avoid;
+  }
+  .toc a { color: var(--ink-soft); text-decoration: none; }
+  .toc a:hover { color: var(--ink); text-decoration: underline; }
+
+  .help section {
+    border-top: 1px solid var(--hairline);
+    padding: 40px 0 0;
+    margin-bottom: 40px;
+    scroll-margin-top: 90px;
+  }
+  .help h2.section-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 30px;
+    margin: 0 0 12px;
+  }
+  .pro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--terracotta);
+    margin: -4px 0 14px;
+  }
+  .pro-badge svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .help p, .help li {
+    font-family: var(--font-journal);
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .help p { margin: 0 0 14px; }
+  .help ul { padding-left: 22px; margin: 0 0 14px; }
+  .help li + li { margin-top: 4px; }
+  .help a.inline { color: var(--terracotta); text-decoration: underline; }
+  .help-shot {
+    margin: 24px auto 0;
+    max-width: var(--w, 360px);
+  }
+  .help-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-card);
+  }
+
+  .faq details {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .faq details:first-of-type { border-top: 1px solid var(--hairline); }
+  .faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 0;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--text-secondary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .25s ease;
+  }
+  .faq details[open] summary svg { transform: rotate(90deg); }
+  .faq details p {
+    color: var(--ink-soft);
+    margin: -4px 0 18px;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-bottom: 32px;
+  }
+  .back-link:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" id="siteNav">
+  <a href="../index.html" class="nav-brand">
+    <img src="../assets/icon.png" alt="" />
+    <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+  </a>
+  <div class="nav-links">
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="help">
+    <a class="back-link" href="../index.html"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Volver a Nagori</a>
+    <p class="eyebrow"><span>Ayuda</span></p>
+    <h1>Cómo funciona <em>Nagori</em></h1>
+    <p class="intro">Nagori es un diario de una página al día. Durante el día vas guardando recortes en la bandeja y, cuando te sientas a escribir, los pegas en tu página junto a lo que sentiste.</p>
+
+    <nav class="toc" aria-label="Contenido">
+      <h2>En esta página</h2>
+      <ol>
+        <li><a href="#hoy">Hoy y la bandeja</a></li>
+        <li><a href="#escribir">Escribir la página de hoy</a></li>
+        <li><a href="#compartir">Compartir una página</a></li>
+        <li><a href="#cofre">El Cofre</a></li>
+        <li><a href="#historial">Historial</a></li>
+        <li><a href="#libreta">Modo libreta</a></li>
+        <li><a href="#bonsai">Bonsái de emociones</a></li>
+        <li><a href="#ajustes">Ajustes</a></li>
+        <li><a href="#exportar">Exportar tu diario</a></li>
+        <li><a href="#copia">Copia en la nube</a></li>
+        <li><a href="#faq">Preguntas frecuentes</a></li>
+      </ol>
+    </nav>
+
+    <section id="hoy">
+      <h2 class="section-title">Hoy y la bandeja</h2>
+      <p>La bandeja es donde caen las cosas del día antes de escribir: fotos, vídeos, notas de voz, textos breves y enlaces.</p>
+      <ul>
+        <li>Añádelas con los botones Foto, Video, Galería, Voz o Texto.</li>
+        <li>O compártelas desde cualquier app (Instagram, TikTok, Spotify, el navegador…) eligiendo «Nagori».</li>
+        <li>Toca un recorte para verlo o abrirlo; mantenlo pulsado para borrarlo.</li>
+        <li>Lo que no pegues en tu página pasa al Cofre a medianoche: el reloj te dice cuánto falta.</li>
+      </ul>
+      <figure class="help-shot"><img src="../assets/ayuda/help_hoy.webp" width="720" height="627" loading="lazy" alt="Pantalla Hoy con la bandeja de recortes del día" /></figure>
+    </section>
+
+    <section id="escribir">
+      <h2 class="section-title">Escribir la página de hoy</h2>
+      <p>Pulsa «Escribir la página de hoy» para abrir tu página.</p>
+      <ul>
+        <li>Arriba eliges cómo te sientes: tranquilo, feliz, agradecido, cansado, triste o ansioso.</li>
+        <li>Escribe sobre las líneas. Se guarda solo mientras escribes, no hace falta darle a nada.</li>
+        <li>Abajo, «De tu bandeja» muestra los recortes sin pegar: toca + para pegarlos en la página.</li>
+        <li>Para despegar un recorte, mantenlo pulsado y elige Borrar: vuelve a la bandeja.</li>
+        <li>«Listo» cierra la página; puedes volver a ella cuando quieras.</li>
+      </ul>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_escribir.webp" width="720" height="873" loading="lazy" alt="Página del día con el selector de ánimo y recortes pegados" /></figure>
+    </section>
+
+    <section id="compartir">
+      <h2 class="section-title">Compartir una página</h2>
+      <p>Con el botón de compartir de la página creas una tarjeta para tus redes.</p>
+      <ul>
+        <li>Pulsa el resaltador y subraya con el dedo la frase que quieres citar. Si no subrayas nada, se comparte solo la fecha y el ánimo.</li>
+        <li>Elige, si quieres, un recorte como miniatura.</li>
+        <li>En la vista previa puedes pellizcar la miniatura para agrandarla, girarla y arrastrarla.</li>
+        <li>Al final eliges dónde publicarla: Instagram, Facebook, Threads, el estado de WhatsApp u otra app.</li>
+      </ul>
+      <figure class="help-shot"><img src="../assets/ayuda/help_compartir_cita.webp" width="720" height="607" loading="lazy" alt="Frase subrayada con el resaltador para compartirla como cita" /></figure>
+    </section>
+
+    <section id="cofre">
+      <h2 class="section-title">El Cofre</h2>
+      <p>Aquí se guarda lo que no usaste, ordenado por meses. Nada se borra solo.</p>
+      <ul>
+        <li>Filtra por enlaces, fotos o voz con los botones de arriba.</li>
+        <li>Pulsa la flecha bajo un recorte para traerlo de vuelta a la bandeja de hoy.</li>
+        <li>De vez en cuando, Nagori te recuerda algo que guardaste hace tiempo por si hoy te dice algo.</li>
+      </ul>
+      <figure class="help-shot"><img src="../assets/ayuda/help_cofre.webp" width="720" height="713" loading="lazy" alt="El Cofre con recortes guardados por meses" /></figure>
+    </section>
+
+    <section id="historial">
+      <h2 class="section-title">Historial</h2>
+      <p>Todas tus páginas, mes a mes.</p>
+      <ul>
+        <li>La franja de colores es tu mes en ánimos: un color por día.</li>
+        <li>Cambia de mes con las flechas o deslizando el dedo hacia los lados.</li>
+        <li>Toca una página para leerla, editarla o compartirla; mantenla pulsada para borrarla.</li>
+        <li>Los botones de arriba abren el modo libreta y el bonsái de emociones.</li>
+      </ul>
+      <figure class="help-shot"><img src="../assets/ayuda/help_historial.webp" width="720" height="733" loading="lazy" alt="Historial del mes con la franja de ánimos" /></figure>
+    </section>
+
+    <section id="libreta">
+      <h2 class="section-title">Modo libreta</h2>
+      <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
+      <p>Hojea tu diario como un cuaderno de verdad, con tu papel y los recortes pegados.</p>
+      <ul>
+        <li>Desliza el dedo para pasar de hoja.</li>
+        <li>Las lengüetas de colores te llevan directamente a cada día.</li>
+        <li>Gira el móvil para leerla en horizontal.</li>
+        <li>Vuelve a pulsar el botón del libro para regresar a la lista.</li>
+      </ul>
+      <figure class="help-shot" style="--w:240px"><img src="../assets/ayuda/help_libreta.webp" width="720" height="1273" loading="lazy" alt="Modo libreta con una hoja del diario y lengüetas de colores" /></figure>
+    </section>
+
+    <section id="bonsai">
+      <h2 class="section-title">Bonsái de emociones</h2>
+      <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
+      <p>Cada página con un ánimo hace crecer una hoja de su color en tu bonsái. Con el tiempo, el árbol cuenta cómo has estado.</p>
+      <ul>
+        <li>La hoja de papel de arriba lleva la cuenta de cada ánimo.</li>
+        <li>Ábrelo desde el botón de la hoja en Historial.</li>
+      </ul>
+      <figure class="help-shot" style="--w:240px"><img src="../assets/ayuda/help_bonsai.webp" width="720" height="1220" loading="lazy" alt="Bonsái con hojas de colores según los ánimos" /></figure>
+    </section>
+
+    <section id="ajustes">
+      <h2 class="section-title">Ajustes</h2>
+      <p>Toca Ajustes en la barra de abajo para abrir el menú:</p>
+      <ul>
+        <li>Modo oscuro: claro, oscuro o según el sistema.</li>
+        <li>Copia de seguridad: guarda tu diario en tu Google Drive.</li>
+        <li>Personalización: paleta de ánimos, textura del papel e icono de la app.</li>
+        <li>Exportar diario: conviértelo en un PDF o un ePub.</li>
+        <li>Política de privacidad y la ayuda.</li>
+      </ul>
+      <figure class="help-shot" style="--w:180px"><img src="../assets/ayuda/help_ajustes.webp" width="420" height="820" loading="lazy" alt="Menú de Ajustes de Nagori" /></figure>
+    </section>
+
+    <section id="exportar">
+      <h2 class="section-title">Exportar tu diario</h2>
+      <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
+      <p>Convierte tu diario en un libro.</p>
+      <ul>
+        <li>Elige qué exportar: todo, este año, este mes o unas fechas concretas.</li>
+        <li>PDF: una libreta A5 con tu papel y los recortes pegados, para imprimir o guardar.</li>
+        <li>ePub: para leerlo en Kindle, Kobo, Apple Books o cualquier lector.</li>
+        <li>Cuando esté listo, guárdalo, compártelo o imprímelo.</li>
+      </ul>
+      <figure class="help-shot" style="--w:260px"><img src="../assets/ayuda/help_exportar.webp" width="720" height="1113" loading="lazy" alt="Pantalla para exportar el diario a PDF o ePub" /></figure>
+    </section>
+
+    <section id="copia">
+      <h2 class="section-title">Copia en la nube</h2>
+      <p>En Ajustes → Copia de seguridad puedes activar la copia automática en tu Google Drive. Se guarda en una carpeta privada que solo usa Nagori y que no verás en tu Drive normal.</p>
+      <ul>
+        <li>Se actualiza al abrir la app y poco después de cada cambio.</li>
+        <li>«Hacer copia ahora» la fuerza en el momento.</li>
+        <li>«Restaurar desde Drive» recupera la última copia en este móvil.</li>
+      </ul>
+    </section>
+
+    <section id="faq" class="faq">
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <details>
+        <summary>¿Dónde se guardan mis datos?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Solo en tu móvil, dentro del espacio privado de la app. Si activas la copia de seguridad, también en una carpeta oculta de tu propio Google Drive. Nunca pasan por servidores de Nagori. Más detalles en la <a class="inline" href="../privacidad/index.html">política de privacidad</a>.</p>
+      </details>
+      <details>
+        <summary>¿Qué pasa con lo que no uso de la bandeja?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>A medianoche pasa al Cofre, donde se queda guardado sin caducar. Desde allí puedes traerlo a la bandeja de hoy cuando quieras.</p>
+      </details>
+      <details>
+        <summary>¿Cómo guardo algo desde otra app?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Usa el botón de compartir de esa app (Instagram, TikTok, Spotify, la galería, el navegador…) y elige «Nagori». Aparecerá en la bandeja de hoy.</p>
+      </details>
+      <details>
+        <summary>¿Puedo escribir o cambiar un día pasado?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Puedes editar cualquier página que ya tengas: ábrela desde Historial y pulsa Editar. Las páginas nuevas siempre son del día de hoy.</p>
+      </details>
+      <details>
+        <summary>¿Cómo borro una página o un recorte?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Mantén pulsado sobre él y elige Borrar. Al borrar una página se borran el texto y el ánimo, pero sus recortes no se pierden: quedan sueltos en la bandeja o en el Cofre.</p>
+      </details>
+      <details>
+        <summary>¿Por qué un enlace no muestra imagen?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Algunas webs no ofrecen portada, o el post se ha borrado o es privado. También hace falta conexión para descargarla. El enlace sigue guardado y se abre igual al tocarlo.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto puede ocupar una nota de texto?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Hasta 280 caracteres: lo justo para una idea o una frase. Para lo largo está tu página del día.</p>
+      </details>
+      <details>
+        <summary>¿Cómo paso mi diario a un móvil nuevo?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>En el móvil antiguo, activa la copia de seguridad y pulsa «Hacer copia ahora». En el nuevo, instala Nagori, ve a Ajustes → Copia de seguridad → «Restaurar desde Drive» con la misma cuenta de Google y reinicia la app.</p>
+      </details>
+      <details>
+        <summary>¿Cómo activo el modo oscuro?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>En Ajustes → Modo oscuro. Puedes dejarlo siempre claro, siempre oscuro o que siga al sistema.</p>
+      </details>
+      <details>
+        <summary>¿Qué incluye Nagori Pro?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>El modo libreta, el bonsái de emociones, la exportación a PDF y ePub, y la personalización: paletas de ánimo, texturas de papel e iconos de la app. Todo lo demás es gratis y sin límites.</p>
+      </details>
+      <details>
+        <summary>¿Nagori tiene anuncios o me rastrea?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>No. No hay publicidad ni herramientas de analítica o seguimiento, y tus datos no se comparten ni se venden.</p>
+      </details>
+    </section>
+
+    <section>
+      <h2 class="section-title">¿Sigues con dudas?</h2>
+      <p>Escribe a <a class="inline" href="mailto:contacto.nagori@gmail.com">contacto.nagori@gmail.com</a> y te respondemos.</p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <a href="../index.html" class="footer-brand">
+        <img src="../assets/icon.png" alt="" />
+        <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+      </a>
+      <div class="footer-links">
+        <a href="../index.html">Inicio</a>
+        <a href="../privacidad/index.html">Privacidad</a>
+        <a href="mailto:contacto.nagori@gmail.com">Contacto</a>
+      </div>
+    </div>
+    <p class="footer-copy"><span>© 2026 Nagori</span><span class="rule"></span><span>名残 — lo que queda del día</span></p>
+  </div>
+</footer>
+
+</body>
+</html>
