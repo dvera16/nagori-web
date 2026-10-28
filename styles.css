@@ -301,11 +301,9 @@ section { padding: clamp(72px, 10vw, 120px) 0; position: relative; border-top: 1
 .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 .flow-step {
   position: relative;
-  background: var(--paper-card);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-card);
-  padding: 30px 26px 26px;
-  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 26px 22px;
   rotate: var(--r, 0deg);
   opacity: 0;
   transform: translateY(28px);
@@ -313,6 +311,29 @@ section { padding: clamp(72px, 10vw, 120px) 0; position: relative; border-top: 1
 .flow-step .num { font-family: var(--font-display); font-style: italic; font-size: 44px; line-height: 1; color: var(--terracotta); margin-bottom: 12px; }
 .flow-step h3 { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.15; margin: 0 0 8px; }
 .flow-step p { font-size: 15px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+
+/* Recorte como en la app: papel rasgado a mano con un canto de tinta, cinta también rasgada
+   y un pie con icono y etiqueta en versalitas. El papel y la cinta los dibuja script.js (SVG). */
+.recorte { background: none; border: 0; box-shadow: none; }
+.recorte > :not(.tape):not(.recorte-paper) { position: relative; z-index: 1; }
+.recorte > .recorte-paper { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none;
+  filter: drop-shadow(0 1px 0 rgba(224, 211, 188, .9)) drop-shadow(0 10px 14px rgba(59, 46, 35, .16)); }
+.recorte:not(.is-torn) { background: var(--paper-card); }   /* sin JS: papel liso */
+.recorte .tape { z-index: 2; }
+.recorte .tape.is-torn { background: none; }
+.tape > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.recorte-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 18px;
+  font: 700 11px/1 var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.recorte-foot svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Funciones ---------- */
 .feature-grid {

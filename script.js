@@ -80,6 +80,84 @@
     if (N && N.onReveal) N.onReveal(sync); else sync();
   })();
 
+  /* ---------- Recortes de papel rasgado, como en la app (RoughPageShape + inkEdge) ----------
+     Cada borde mezcla un temblor fino con una ondulación lenta y algún mordisco más profundo.
+     La semilla es fija por elemento: el papel se ve siempre igual y dos hojas no comparten borde. */
+  (function initRecortes() {
+    var SVG = "http://www.w3.org/2000/svg", INK = "#3b2e23";
+    function rng(seed) {                                   // mulberry32
+      return function () {
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    function edgeProfile(r, count, amp) {                 // cuánto se mete el borde hacia dentro (>= 0)
+      var points = count + 1, every = 6, knots = [], out = [], i, j;
+      for (i = 0; i < Math.floor(points / every) + 2; i++) knots.push(r());
+      for (i = 0; i < points; i++) {
+        var k = Math.floor(i / every), t = (i % every) / every;
+        out.push(amp * (0.55 * r() + 0.45 * (knots[k] * (1 - t) + knots[k + 1] * t)));
+      }
+      i = 2;
+      while (i < points - 2) {
+        if (r() < 0.045) {
+          var half = 1 + Math.floor(r() * 2), depth = amp * (1.4 + r() * 1.2);
+          for (j = -half; j <= half; j++) if (i + j >= 0 && i + j < points) out[i + j] += depth * (1 - Math.abs(j) / (half + 1));
+          i += half * 2 + 3;
+        } else i++;
+      }
+      return out;
+    }
+    function roughPath(seed, w, h, amp, step) {
+      var r = rng(seed), nx = Math.max(2, Math.floor(w / step)), ny = Math.max(2, Math.floor(h / step)), i;
+      var top = edgeProfile(r, nx, amp), right = edgeProfile(r, ny, amp), bottom = edgeProfile(r, nx, amp), left = edgeProfile(r, ny, amp);
+      var d = "M" + left[0].toFixed(1) + " " + top[0].toFixed(1);
+      for (i = 1; i <= nx; i++) d += "L" + (w * i / nx).toFixed(1) + " " + top[i].toFixed(1);
+      for (i = 1; i <= ny; i++) d += "L" + (w - right[i]).toFixed(1) + " " + (h * i / ny).toFixed(1);
+      for (i = nx - 1; i >= 0; i--) d += "L" + (w * i / nx).toFixed(1) + " " + (h - bottom[i]).toFixed(1);
+      for (i = ny - 1; i >= 1; i--) d += "L" + left[i].toFixed(1) + " " + (h * i / ny).toFixed(1);
+      return d + "Z";
+    }
+    function node(name, attrs) {
+      var el = document.createElementNS(SVG, name);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+    var uid = 0;
+    // Papel (o cinta) con el canto de tinta: un velo casi invisible hacia dentro y un contorno fino.
+    function paper(host, seed, fill, amp, step, stroke) {
+      var svg = node("svg", { "aria-hidden": "true", focusable: "false" }), id = "rc" + (++uid);
+      var clip = node("clipPath", { id: id }), clipPath = node("path", {});
+      var body = node("path", { fill: fill, stroke: "none" });   // explícito: hay reglas globales que trazan los path de los svg
+      var wash = node("path", { fill: "none", stroke: INK, "stroke-opacity": .045, "stroke-width": stroke * 7, "stroke-linejoin": "round", "clip-path": "url(#" + id + ")" });
+      var edge = node("path", { fill: "none", stroke: INK, "stroke-opacity": .3, "stroke-width": stroke * .6, "stroke-linejoin": "round", "stroke-linecap": "round" });
+      clip.appendChild(clipPath); svg.appendChild(clip); svg.appendChild(body); svg.appendChild(wash); svg.appendChild(edge);
+      host.insertBefore(svg, host.firstChild);
+      function draw() {
+        var w = host.offsetWidth, h = host.offsetHeight;
+        if (!w || !h) return;
+        svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+        var d = roughPath(seed, w, h, amp, step);
+        [clipPath, body, wash, edge].forEach(function (p) { p.setAttribute("d", d); });
+      }
+      draw();
+      if ("ResizeObserver" in window) new ResizeObserver(draw).observe(host);
+      return svg;
+    }
+    var cs = getComputedStyle(document.documentElement);
+    var paperFill = cs.getPropertyValue("--paper-card").trim() || "#fbf6ec";
+    var tapeFill = cs.getPropertyValue("--tape").trim() || "rgba(226,205,148,.82)";
+    document.querySelectorAll(".recorte").forEach(function (card, n) {
+      var seed = 7919 * (n + 3);
+      paper(card, seed, paperFill, 2.4, 5, 1.4).classList.add("recorte-paper");
+      card.classList.add("is-torn");
+      var tape = card.querySelector(".tape");
+      if (tape) { paper(tape, seed * 31 + 7, tapeFill, 1.2, 3, 1); tape.classList.add("is-torn"); }
+    });
+  })();
+
   /* Sin GSAP (CDN caído) o con movimiento reducido: todo visible al instante */
   if (!hasGsap || reduceMotion) {
     document.querySelectorAll(hidden.join(",")).forEach(function (el) {
