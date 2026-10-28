@@ -55,6 +55,31 @@
     update();
   })();
 
+  /* ---------- Móvil del hero: las capturas reales se suceden despacio, con un fundido largo ----------
+     Solo mientras el hero se ve y la pestaña está activa; con movimiento reducido se queda en la primera. */
+  (function initHeroCycle() {
+    var device = document.getElementById("heroDevice");
+    if (!device || reduceMotion) return;
+    var imgs = device.querySelectorAll("img"), i = 0, timer = null, visible = true;
+    if (imgs.length < 2) return;
+    function next() {
+      imgs[i].classList.remove("is-on");
+      i = (i + 1) % imgs.length;
+      imgs[i].classList.add("is-on");
+    }
+    function sync() {
+      var run = visible && !document.hidden;
+      if (run && !timer) timer = setInterval(next, 5200);
+      else if (!run && timer) { clearInterval(timer); timer = null; }
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(device);
+    }
+    document.addEventListener("visibilitychange", sync);
+    var N = window.__nagori;
+    if (N && N.onReveal) N.onReveal(sync); else sync();
+  })();
+
   /* Sin GSAP (CDN caído) o con movimiento reducido: todo visible al instante */
   if (!hasGsap || reduceMotion) {
     document.querySelectorAll(hidden.join(",")).forEach(function (el) {
