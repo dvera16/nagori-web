@@ -42,7 +42,7 @@ html.is-loading, html.is-loading body { overflow: hidden; }
    Al llegar a 100 se destapa y se emite «nagori:reveal»; a partir de ahí empiezan las animaciones.
    Si algo falla, a los MAX ms se da todo por listo. */
 (function () {
-  var d = document, root = d.documentElement, TOTAL = 3, DURATION = 2000, MAX = 9000, holds = { load: 1, fonts: 1, tree: 1 };
+  var d = document, root = d.documentElement, TOTAL = 3, DURATION = 1000, MAX = 9000, holds = { load: 1, fonts: 1, tree: 1 };
   var start = Date.now(), shown = 0, done = false, pct = null;
   var N = window.__nagori = { revealed: false };
   N.release = function (name) { delete holds[name]; };
