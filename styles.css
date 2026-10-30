@@ -190,6 +190,11 @@ a.social svg { width: 20px; height: 20px; }
   opacity: 0;
 }
 #scrollCue { opacity: 0; }
+.hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.hero-actions .btn-secondary { margin-top: 0; }
+.hero-note { margin: 0; max-width: 46ch; font: 400 14px/1.5 var(--font-body); color: var(--text-secondary); }
+.hero-note strong { font-weight: 600; color: var(--ink); }
 .hero-phone { display: flex; justify-content: center; opacity: 0; }
 .hero-phone .phone-stage { transform: rotate(2deg); }
 
