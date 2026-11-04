@@ -423,6 +423,74 @@ section { padding: clamp(72px, 10vw, 120px) 0; position: relative; border-top: 1
 @media (max-width: 860px) { .shots-arrow { width: 40px; height: 40px; margin-top: -20px; } .shots-arrow svg { width: 18px; height: 18px; } }
 .shot-note { margin: 0; font-family: var(--font-journal); font-style: italic; font-size: 15px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
 
+/* ---------- Novedades: grabaciones reales de la app en un móvil fijo mientras pasan los capítulos ----------
+   Sin JS (o en pantallas estrechas) cada capítulo lleva su propio vídeo debajo del texto.
+   Con JS y en escritorio, script.js pasa los vídeos al móvil fijo de la izquierda. */
+.nv-section { --nv-h: min(74vh, 680px); --nv-ratio: 1080 / 2208; }
+@media (min-width: 1180px) and (max-width: 1599px) { .nv-section { --nv-h: min(70vh, 620px); } }   /* con el bonsái al lado queda menos ancho */
+.nv-section .section-head { margin-bottom: 24px; }
+.nv-stage { position: relative; }
+.nv-sticky { display: none; }
+.nv-steps { position: relative; }
+.nv-step { position: relative; padding: 28px 0 36px; }
+.nv-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.nv-num { font-family: var(--font-display); font-style: italic; font-size: 44px; line-height: .9; color: var(--mood, var(--terracotta)); margin-right: 4px; }
+.nv-pill { font: 700 10.5px/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); background: var(--paper-card); border: 1px solid var(--hairline); padding: 5px 8px; border-radius: 4px; }
+.nv-pill.nv-soon { color: var(--on-terracotta); background: var(--terracotta); border-color: var(--terracotta); }
+.nv-pill.nv-free { color: #3f5a37; background: #e6ecdf; border-color: #cfdac6; }
+.nv-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 3.6vw, 46px); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 14px; }
+.nv-title .line { display: block; overflow: hidden; padding: 0 2px .06em; }
+.nv-title .line > span { display: inline-block; }
+.nv-title em { color: var(--mood, var(--terracotta)); }
+.nv-step p { font-family: var(--font-journal); font-size: clamp(17px, 1.7vw, 19px); line-height: 1.6; color: var(--ink-soft); max-width: 44ch; margin: 0; text-wrap: pretty; }
+.nv-step p.nv-aside { margin-top: 14px; padding-left: 14px; border-left: 2px solid var(--mood, var(--hairline)); font-style: italic; font-size: 16px; color: var(--text-secondary); }
+.nv-media { margin-top: 26px; }
+.device.nv-device-m, .device.nv-device { height: auto; aspect-ratio: var(--nv-ratio); border-radius: 30px; }
+.device.nv-device-m { width: min(270px, 70vw); margin-left: 6px; transform: rotate(-1deg); }
+.device video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--paper); }
+
+/* Escritorio con JS: móvil fijo a la izquierda, capítulos a la derecha y un trazo de tinta que los une */
+@media (min-width: 861px) {
+  .nv-js .nv-stage { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(28px, 4.5vw, 88px); align-items: start; margin-top: 8px; }
+  .nv-js .nv-sticky { display: block; position: sticky; top: max(84px, calc(50vh - var(--nv-h) / 2 + 24px)); padding: 26px 0 0 26px; }
+  .nv-js .nv-media { display: none; }
+  .nv-js .nv-steps { padding: 6vh 0 18vh 44px; }
+  .nv-js .nv-step { min-height: 72vh; display: flex; flex-direction: column; justify-content: center; padding: 0; opacity: .26; transition: opacity .6s ease; }
+  .nv-js .nv-step.is-active { opacity: 1; }
+  .nv-js .nv-ink { display: block; }
+}
+.nv-device-wrap { position: relative; }
+.device.nv-device { width: calc(var(--nv-h) * 1080 / 2208); transform: rotate(-1.2deg); }
+.nv-screen { position: absolute; inset: 0; margin: 0; visibility: hidden; }
+.nv-screen.is-on { visibility: visible; }
+.nv-screen video { width: 100%; height: 100%; }
+/* Lengüetas del color de cada ánimo, como las de la libreta: asoman por detrás del móvil */
+.nv-tabs { position: absolute; z-index: 0; left: -12px; top: 64px; display: flex; flex-direction: column; gap: 8px; }
+.nv-device { z-index: 1; }
+.nv-tab { display: block; width: 26px; height: 40px; padding: 0; border: 0; border-radius: 7px 0 0 7px; background: var(--mood); opacity: .55; cursor: pointer;
+  transform: translateX(2px); transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .45s ease; }
+.nv-tab:hover { opacity: .85; }
+.nv-tab.is-active { opacity: 1; transform: translateX(-12px); }
+.nv-counter { position: absolute; top: -8px; right: -6px; z-index: 2; display: flex; align-items: baseline; gap: 4px; transform: translateY(-100%);
+  font-family: var(--font-display); font-style: italic; color: var(--text-secondary); font-size: 20px; line-height: 1; }
+.nv-counter-cur { display: inline-block; font-size: 44px; color: var(--ink); overflow: hidden; }
+.nv-counter-sep { color: var(--taupe); }
+.nv-tape { position: absolute; z-index: 3; top: -12px; left: 50%; width: 96px; height: 26px; margin-left: -48px; background: var(--tape); transform: rotate(-4deg); transform-origin: 0 50%;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset; }
+.nv-ink { display: none; position: absolute; left: 0; top: 0; width: 24px; height: 100%; overflow: visible; }
+.nv-ink path { fill: none; stroke: var(--taupe); stroke-opacity: .55; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 1; }
+
+/* «Y además»: capturas reales en recortes de papel rasgado */
+.nv-more-head { font: 700 12px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; color: var(--terracotta); margin: 56px 0 28px; overflow: hidden; }
+.nv-more-head span { display: inline-block; opacity: 0; transform: translateY(100%); }
+.nv-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 30px; align-items: start; max-width: 760px; }
+@media (max-width: 560px) { .nv-more { grid-template-columns: minmax(0, 1fr); } }
+.nv-card { position: relative; margin: 0; padding: 14px 14px 18px; rotate: var(--r, 0deg); opacity: 0; transform: translateY(24px); }
+.nv-card img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; background: var(--paper); border-radius: 2px; box-shadow: 0 0 0 1px rgba(59, 46, 35, .08); }
+.nv-card figcaption { padding: 14px 4px 0; }
+.nv-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; margin: 0 0 6px; }
+.nv-card p { font-size: 14.5px; line-height: 1.5; color: var(--ink-soft); margin: 0; text-wrap: pretty; }
+
 /* ---------- Privacidad ---------- */
 .privacy-section { background: var(--paper-card); }
 .privacy-points {

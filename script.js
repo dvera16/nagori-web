@@ -158,6 +158,132 @@
     });
   })();
 
+  /* ---------- Novedades: un móvil fijo con grabaciones reales que cambian al pasar cada capítulo ----------
+     En escritorio, los vídeos de cada capítulo se pasan al móvil de la izquierda y suena (en silencio) solo el del
+     capítulo activo; al cambiar, la pantalla vieja se levanta como una hoja, la cinta se vuelve a pegar y el contador
+     gira. En móvil cada capítulo reproduce su propio vídeo mientras se ve. Con movimiento reducido no hay
+     reproducción automática: se ven los carteles y los controles del vídeo. */
+  (function initNovedades() {
+    var stage = document.getElementById("nvStage");
+    if (!stage || !("IntersectionObserver" in window)) return;
+    var steps = Array.prototype.slice.call(stage.querySelectorAll(".nv-step"));
+    var device = document.getElementById("nvDevice"), tabs = document.getElementById("nvTabs");
+    var cur = document.getElementById("nvCur"), tape = document.getElementById("nvTape");
+    var desk = window.matchMedia("(min-width: 861px)");
+    var anim = hasGsap && !reduceMotion;
+    document.documentElement.classList.add("nv-js");
+
+    var screens = steps.map(function (step, i) {
+      var src = step.querySelector("video");
+      var fig = document.createElement("figure");
+      fig.className = "nv-screen";
+      var v = src.cloneNode(true);
+      v.removeAttribute("aria-label");
+      fig.appendChild(v);
+      device.appendChild(fig);
+      var tab = document.createElement("button");
+      tab.type = "button";
+      tab.className = "nv-tab";
+      tab.tabIndex = -1;
+      tab.style.setProperty("--mood", getComputedStyle(step).getPropertyValue("--mood"));
+      tab.addEventListener("click", function () { step.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" }); });
+      tabs.appendChild(tab);
+      if (reduceMotion) { src.controls = true; v.controls = true; }
+      return { step: step, fig: fig, video: v, own: src, tab: tab, seen: false };
+    });
+
+    var active = -1, inView = false;
+    function play(v) {
+      if (reduceMotion) return;
+      try { v.currentTime = 0; } catch (e) {}
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+    function pauseAll(except) {
+      screens.forEach(function (s) {
+        if (s.video !== except && !s.video.paused) s.video.pause();
+        if (s.own !== except && !s.own.paused) s.own.pause();
+      });
+    }
+
+    function setActive(i) {
+      if (i === active) return;
+      var prev = active >= 0 ? screens[active] : null, next = screens[i];
+      active = i;
+      screens.forEach(function (s, k) {
+        s.step.classList.toggle("is-active", k === i);
+        s.tab.classList.toggle("is-active", k === i);
+      });
+      cur.textContent = (i < 9 ? "0" : "") + (i + 1);
+      next.fig.classList.add("is-on");
+      // Al pasar deprisa por varios capítulos, cualquier pantalla que no sea la que entra o la que sale se recoge del todo.
+      screens.forEach(function (s) {
+        if (s === next || s === prev) return;
+        if (anim) { gsap.killTweensOf(s.fig); gsap.set(s.fig, { clearProps: "clipPath,transform,zIndex" }); }
+        s.fig.classList.remove("is-on");
+      });
+      if (anim) {
+        gsap.killTweensOf(next.fig);
+        gsap.set(next.fig, { zIndex: 1, clipPath: "inset(0% 0% 0% 0%)", y: 0 });
+        gsap.fromTo(next.video, { scale: 1.06 }, { scale: 1, duration: 1.1, ease: "expo.out" });
+        if (prev) {
+          gsap.set(prev.fig, { zIndex: 2 });
+          gsap.fromTo(prev.fig, { clipPath: "inset(0% 0% 0% 0%)", y: 0 },
+            { clipPath: "inset(0% 0% 100% 0%)", y: -18, duration: .75, ease: "power3.inOut",
+              onComplete: function () { if (active !== screens.indexOf(prev)) { prev.fig.classList.remove("is-on"); gsap.set(prev.fig, { clearProps: "clipPath,transform,zIndex" }); } } });
+        }
+        gsap.fromTo(tape, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: "power2.out", delay: .45 });
+        gsap.fromTo(cur, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .6, ease: "expo.out" });
+        gsap.to(device, { rotation: i % 2 ? 1.1 : -1.2, duration: 1, ease: "power2.out" });
+        if (!next.seen) {
+          next.seen = true;
+          gsap.fromTo(next.step.querySelectorAll(".nv-title .line > span"), { y: 40, rotation: 1.5 },
+            { y: 0, rotation: 0, duration: .9, ease: "expo.out", stagger: .11 });
+        }
+      } else if (prev) prev.fig.classList.remove("is-on");
+      sync();
+    }
+
+    // Qué vídeo debe sonar: en escritorio el del móvil fijo (si la sección se ve); en móvil el del capítulo a la vista.
+    var ownVisible = [];
+    function sync() {
+      if (document.hidden) { pauseAll(null); return; }
+      if (desk.matches) {
+        var v = inView && active >= 0 ? screens[active].video : null;
+        pauseAll(v);
+        if (v && v.paused) play(v);
+      } else {
+        var o = null;
+        screens.forEach(function (s, k) { if (ownVisible[k]) o = s.own; });
+        pauseAll(o);
+        if (o && o.paused) play(o);
+      }
+    }
+
+    // El capítulo activo es el que cruza la franja central de la ventana.
+    var mid = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) setActive(steps.indexOf(e.target)); });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    var own = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { ownVisible[steps.indexOf(e.target.closest(".nv-step"))] = e.intersectionRatio >= .6; });
+      sync();
+    }, { threshold: [0, .6] });
+    steps.forEach(function (s) { mid.observe(s); own.observe(s.querySelector(".nv-media")); });
+    new IntersectionObserver(function (es) { inView = es[0].isIntersecting; sync(); }).observe(stage);
+    document.addEventListener("visibilitychange", sync);
+    if (desk.addEventListener) desk.addEventListener("change", sync);
+    setActive(0);
+
+    // El trazo de tinta que une los capítulos se dibuja con el scroll (pathLength = 1: el trazo va de 1 a 0).
+    if (anim) {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.fromTo("#nvInk path", { strokeDashoffset: 1 }, {
+        strokeDashoffset: 0, ease: "none",
+        scrollTrigger: { trigger: "#nvSteps", start: "top 55%", end: "bottom 55%", scrub: .6 }
+      });
+    }
+  })();
+
   /* Sin GSAP (CDN caído) o con movimiento reducido: todo visible al instante */
   if (!hasGsap || reduceMotion) {
     document.querySelectorAll(hidden.join(",")).forEach(function (el) {
