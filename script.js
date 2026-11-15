@@ -284,6 +284,164 @@
     }
   })();
 
+  /* ---------- Interfaz orgánica: tinta, acuarelas y pétalos, como en la app ---------- */
+  var onReveal = function (fn) { var N = window.__nagori; if (N && N.onReveal) N.onReveal(fn); else fn(); };
+
+  // El sello lleva el mismo kanji que la pantalla de carga (que se retira del documento al terminar).
+  (function initHanko() {
+    var from = document.querySelector("#loader path"), to = document.querySelector("#hanko path");
+    if (from && to) to.setAttribute("d", from.getAttribute("d"));
+  })();
+
+  /* Trazos, gotas y marcas se pintan cuando su elemento entra en pantalla (las transiciones están en styles.css). */
+  (function initInk() {
+    if (!("IntersectionObserver" in window) || reduceMotion) return;
+    document.documentElement.classList.add("ink-js");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    onReveal(function () {
+      document.querySelectorAll("section, .eyebrow, .nv-more-head, .btn-secondary, .pro, .tag, .nv-pill, .badge, .mark, .shots-arrow, .feature-card .icon")
+        .forEach(function (el) { io.observe(el); });
+    });
+  })();
+
+  /* Acuarelas que se pintan al llegar (WatercolorReveal de la app): un mapa en grises dice cuándo llega el agua a
+     cada píxel; primero un velo claro, luego el pigmento y, pegada al frente, una franja húmeda más cargada que
+     seca enseguida. Al terminar queda la imagen tal cual y el lienzo se retira. Sin WebGL, o con movimiento
+     reducido, se ve la imagen directamente. */
+  (function initAcuarela() {
+    var els = Array.prototype.slice.call(document.querySelectorAll(".wc[data-wc]"));
+    if (!els.length || reduceMotion || !("IntersectionObserver" in window) || !window.WebGLRenderingContext) return;
+    document.documentElement.classList.add("wc-js");
+    var VS = "attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}";
+    var FS = "precision mediump float;uniform sampler2D uImg,uMap;uniform float uClock,uDur;varying vec2 v;" +
+      "void main(){vec4 c=texture2D(uImg,v);float age=uClock-texture2D(uMap,v).r*uDur;" +
+      "float front=clamp(age/.12,0.,1.);" +
+      "float wash=clamp((age+.35)/.35,0.,1.)*.22*step(uClock,uDur);" +
+      "float wet=front*(1.-clamp((age-.1)/.9,0.,1.))*.45;" +
+      "float g=dot(c.rgb,vec3(.2126,.7152,.0722));" +
+      "vec3 rgb=mix(c.rgb,(vec3(g)+(c.rgb-vec3(g))*1.35)*.78,wet);" +
+      "float a=c.a*max(front,wash);gl_FragColor=vec4(rgb*a,a);}";
+    function load(src) {
+      return new Promise(function (ok, ko) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = ko; i.src = src; });
+    }
+    function done(el, canvas, gl) {
+      el.classList.add("is-done");
+      requestAnimationFrame(function () {
+        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+        var lose = gl && gl.getExtension("WEBGL_lose_context");
+        if (lose) lose.loseContext();
+      });
+    }
+    function paint(el) {
+      var img = el.querySelector("img"), src = img.getAttribute("src");
+      var dur = parseFloat(el.getAttribute("data-wc-dur")) || 2.6, delay = parseFloat(el.getAttribute("data-wc-delay")) || 0;
+      Promise.all([load(src), load(src.replace(/\.webp/, "-mapa.webp"))]).then(function (r) {
+        var canvas = document.createElement("canvas");
+        canvas.className = "wc-paint";
+        canvas.width = r[0].naturalWidth; canvas.height = r[0].naturalHeight;
+        var gl = canvas.getContext("webgl", { premultipliedAlpha: true, antialias: false });
+        if (!gl) { done(el); return; }
+        function shader(type, code) { var s = gl.createShader(type); gl.shaderSource(s, code); gl.compileShader(s); return s; }
+        var prog = gl.createProgram();
+        gl.attachShader(prog, shader(gl.VERTEX_SHADER, VS));
+        gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FS));
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { done(el, null, gl); return; }
+        gl.useProgram(prog);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        var loc = gl.getAttribLocation(prog, "p");
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        r.forEach(function (image, unit) {
+          gl.activeTexture(gl.TEXTURE0 + unit);
+          gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        });
+        gl.uniform1i(gl.getUniformLocation(prog, "uImg"), 0);
+        gl.uniform1i(gl.getUniformLocation(prog, "uMap"), 1);
+        gl.uniform1f(gl.getUniformLocation(prog, "uDur"), dur);
+        var uClock = gl.getUniformLocation(prog, "uClock");
+        gl.disable(gl.BLEND);
+        gl.clearColor(0, 0, 0, 0);
+        el.appendChild(canvas);
+        var t0 = 0;
+        function frame(now) {
+          if (!t0) t0 = now + delay * 1000;
+          var clock = (now - t0) / 1000 - .35;
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.uniform1f(uClock, clock);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          if (clock < dur + 1.15) requestAnimationFrame(frame); else done(el, canvas, gl);
+        }
+        requestAnimationFrame(frame);
+      }).catch(function () { done(el); });
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); paint(e.target); } });
+    }, { threshold: .12 });
+    onReveal(function () { els.forEach(function (el) { io.observe(el); }); });
+  })();
+
+  /* Los pétalos de la ilustración de Hoy (HoyPetals de la app): asoman donde los pintó Dani y luego vuelan despacio
+     hacia la izquierda, abriéndose desde el cerezo de la pagoda; cada uno a su ritmo, meciéndose, y al final de su
+     tramo se desvanece y vuelve a salir junto al árbol. Solo se dibujan mientras se ven. */
+  (function initPetals() {
+    var host = document.querySelector(".wc[data-petals]");
+    if (!host || reduceMotion || !("IntersectionObserver" in window)) return;
+    var P = [[0, 23, 22, 740, 94], [25, 37, 26, 714, 111], [64, 36, 23, 656, 122], [102, 38, 26, 374, 139], [142, 42, 43, 480, 148],
+      [186, 47, 34, 596, 171], [235, 44, 35, 482, 196], [281, 42, 39, 670, 248], [325, 35, 37, 708, 262], [362, 24, 22, 571, 255],
+      [388, 20, 17, 721, 342], [410, 23, 22, 688, 378], [435, 22, 18, 619, 381], [459, 36, 38, 593, 417], [497, 43, 28, 446, 633]];
+    var W = 934, H = 688, SX = 864, SY = 425, PATH = 300, TAU = Math.PI * 2;
+    function smooth(x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
+    var canvas = document.createElement("canvas"), ctx = canvas.getContext("2d"), strip = new Image();
+    canvas.className = "wc-petals";
+    var visible = false, running = false, t0 = 0, cw = 0;
+    function frame(now) {
+      if (!visible || document.hidden) { running = false; return; }
+      requestAnimationFrame(frame);
+      if (!t0) t0 = now;
+      var time = (now - t0) / 1000, w = host.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (!w) return;
+      if (w !== cw) { cw = w; canvas.width = Math.round(w * dpr); canvas.height = Math.round(w * H / W * dpr); }
+      var k = canvas.width / W, appear = smooth((time - 1.5) / 1.2);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (appear <= 0) return;
+      var fly = Math.max(0, time - 3.2), ramp = smooth(fly / 5);
+      for (var i = 0; i < P.length; i++) {
+        var p = P[i], period = 24 + (i * 7 % 11) * 1.7, home = .15 + (i * 5 % 7) / 7 * .45, s = (home + fly / period) % 1;
+        var rx = p[3] - SX, ry = p[4] - SY, rl = Math.sqrt(rx * rx + ry * ry);
+        var dx = -.65 + .35 * rx / rl, dy = .35 * ry / rl, dl = Math.sqrt(dx * dx + dy * dy);
+        dx /= dl; dy /= dl;
+        var along = PATH * (s - home), sway = Math.sin(TAU * (s * 2 + i * .37)) * 9 * ramp;
+        var x = (p[3] + dx * along - dy * sway) * k, y = (p[4] + dy * along + dx * sway) * k;
+        var angle = (Math.sin(TAU * (s * 1.3 + i * .21)) * 18 + (s - home) * 50) * ramp;
+        var alpha = appear * smooth(s / .15) * (1 - smooth((s - .72) / .28));
+        if (alpha <= 0) continue;
+        ctx.setTransform(1, 0, 0, 1, x, y);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(strip, p[0], 0, p[1], p[2], -p[1] * k / 2, -p[2] * k / 2, p[1] * k, p[2] * k);
+      }
+      ctx.globalAlpha = 1;
+    }
+    function sync() { if (visible && !document.hidden && !running && strip.complete && strip.naturalWidth) { running = true; requestAnimationFrame(frame); } }
+    strip.onload = sync;
+    onReveal(function () {
+      host.appendChild(canvas);
+      strip.src = "assets/acuarela/petalos.webp";
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }).observe(host);
+      document.addEventListener("visibilitychange", sync);
+    });
+  })();
+
   /* Sin GSAP (CDN caído) o con movimiento reducido: todo visible al instante */
   if (!hasGsap || reduceMotion) {
     document.querySelectorAll(hidden.join(",")).forEach(function (el) {
@@ -379,7 +537,14 @@
         var tape = card.querySelector(".tape");
         if (tape) gsap.fromTo(tape, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.4, ease: "power2.out", delay: d });
         var bars = card.querySelectorAll(".mood-strip i");
-        if (bars.length) gsap.fromTo(bars, { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.6, ease: "back.out(2)", stagger: 0.05, delay: d });
+        // Las gotas de los ánimos se pintan una tras otra, como la semana de Hoy.
+        if (bars.length) gsap.fromTo(bars, { scale: 0.25, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: "power2.out", stagger: 0.22, delay: d + 0.2 });
+        // El sello cae sobre la cita cuando la tarjeta ya está en su sitio.
+        var hanko = card.querySelector(".hanko");
+        if (hanko) {
+          gsap.fromTo(hanko, { scale: 1.7, opacity: 0 }, { scale: 1, opacity: 0.88, duration: 0.22, ease: "power3.in", delay: d + 0.75 });
+          gsap.fromTo(card, { scale: 1 }, { scale: 0.985, duration: 0.09, ease: "power1.out", yoyo: true, repeat: 1, delay: d + 0.97, overwrite: false });
+        }
       });
     }
   });

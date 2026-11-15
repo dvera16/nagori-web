@@ -1,27 +1,33 @@
-/* Nagori — sistema «Papel, tinta y cinta» (Diario Rediseño) */
+/* Nagori — sistema «Papel, tinta y acuarela» (interfaz orgánica de la app, noviembre de 2026) */
 :root {
   color-scheme: light;
-  --paper: #f6efe3;
-  --paper-card: #fbf6ec;
-  --paper-sunk: #f3eadc;
+  --paper: #f1d5a6;
+  --paper-card: #fbe8c6;
+  --paper-sunk: #f4d6a2;
   --ink: #3b2e23;
-  --ink-soft: #5a4a3a;
-  --text-secondary: #6f604c;
+  --ink-soft: #54442f;
+  --text-secondary: #6a5a46;
   --taupe: #8b7b64;
-  --hairline: #e0d3bc;
-  --ruled-line: #eadcc5;
+  --hairline: #dcba86;
+  --ruled-line: #edcd98;
   --tape: rgba(226, 205, 148, 0.82);
-  --terracotta: #c1662f;
-  --terracotta-deep: #8e4f1f;
+  --terracotta: #96491a;
+  --terracotta-deep: #7a3a12;
   --on-terracotta: #fffbf3;
-  --terracotta-container: #f3e3d3;
+  --terracotta-container: #f3c9a0;
   --btn-ink: #3b2e23;
   --on-btn-ink: #f6efe3;
-  --btn-ink-icon: #e08a52;
+  --btn-ink-icon: #96491a;
+  --bermellon: #c0563f;
+  --salvia: #8fa67e;
+  --dorado: #b8892b;
+  --hanko: #d0362b;
+  --papel: url(assets/acuarela/papel.webp);
 
-  --font-display: "Instrument Serif", serif;
-  --font-body: "Hanken Grotesk", sans-serif;
-  --font-journal: "Newsreader", serif;
+  --font-display: "Alegreya", Georgia, serif;
+  --font-body: "Alegreya", Georgia, serif;
+  --font-journal: "Alegreya", Georgia, serif;
+  --font-brand: "Instrument Serif", serif;
 
   --radius-card: 20px;
   --radius-btn: 16px;
@@ -36,10 +42,10 @@
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--paper) var(--papel) 0 0 / 512px;
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -52,7 +58,7 @@ em { font-style: italic; color: var(--terracotta); }
 
 /* ---------- Wordmark: Instrument Serif itálica, punto de la «i» = cinta ---------- */
 .wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-style: italic;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -485,6 +491,7 @@ section { padding: clamp(72px, 10vw, 120px) 0; position: relative; border-top: 1
 .nv-more-head span { display: inline-block; opacity: 0; transform: translateY(100%); }
 .nv-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 30px; align-items: start; max-width: 760px; }
 @media (max-width: 560px) { .nv-more { grid-template-columns: minmax(0, 1fr); } }
+.nv-more-note { max-width: 760px; margin: 38px 0 0; font-size: 17px; line-height: 1.6; color: var(--ink-soft, #6A5540); font-style: italic; }
 .nv-card { position: relative; margin: 0; padding: 14px 14px 18px; rotate: var(--r, 0deg); opacity: 0; transform: translateY(24px); }
 .nv-card img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; background: var(--paper); border-radius: 2px; box-shadow: 0 0 0 1px rgba(59, 46, 35, .08); }
 .nv-card figcaption { padding: 14px 4px 0; }
@@ -623,3 +630,139 @@ main, footer { position: relative; z-index: 1; }
   html { scroll-behavior: auto; }
   * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+
+/* =====================================================================================
+   Interfaz orgánica: el papel, las acuarelas, el pergamino y los trazos de la app.
+   Las piezas de acuarela (gotas, marcas, trazos) son las de la app; aquí se tiñen con
+   una máscara y se «pintan» al entrar en pantalla (clase .is-in, la pone script.js).
+   ===================================================================================== */
+.site-nav { background: var(--paper) var(--papel) 0 0 / 512px; backdrop-filter: none; box-shadow: 0 0 0 transparent; transition: box-shadow .3s ease; border-bottom: 0; }
+.site-nav.scrolled { box-shadow: 0 10px 18px -16px rgba(90, 60, 25, .7); }
+.nav-links a { font-size: 16px; font-weight: 500; }
+.hero-kanji, .eyebrow, .positioning-card .label, .recorte-foot, .footer-copy, .nv-more-head { font-weight: 700; }
+.hero-kanji { font-size: 14px; }
+.hero-headline, .reveal-heading, .nv-title { font-weight: 500; letter-spacing: -0.005em; }
+.hero-sub, .section-body, .shot-note, .pro-note { font-style: normal; }
+.hero-sub { font-size: clamp(18px, 2vw, 21px); }
+.hero-note { font-size: 16px; }
+.flow-step h3, .feature-card h3, .nv-card h3 { font-weight: 500; }
+.flow-step p, .feature-card p, .privacy-point p { font-size: 16.5px; }
+.nv-card p, .shot-note { font-size: 16px; }
+.footer-links, .privacy-note { font-size: 15px; }
+
+/* ---------- Acuarelas que se pintan (WatercolorReveal de la app, aquí en WebGL) ---------- */
+.wc { position: absolute; z-index: 0; pointer-events: none; }
+.wc img, .wc canvas { display: block; width: 100%; height: auto; }
+.wc canvas { position: absolute; inset: 0; height: 100%; }
+html.wc-js .wc:not(.is-done) > img { opacity: 0; }
+main > .wc-hoy { top: 0; right: 0; width: min(100%, 700px); aspect-ratio: 934 / 688; }
+.hero, section > .wrap, .shots-wrap { position: relative; z-index: 1; }
+.wc-historial { top: 0; right: 0; width: min(96%, 520px); opacity: .9; }
+.wc-escribir { top: 0; right: 0; width: min(100%, 600px); opacity: .9; }
+.dock-scene { display: none; position: fixed; z-index: 0; right: 0; top: 0; bottom: 0; width: var(--tree-w); pointer-events: none; opacity: .92;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 26%); mask-image: linear-gradient(to right, transparent 0, #000 26%); }
+.wc-emo-top { top: 58px; left: 0; width: 100%; }
+.wc-emo-bottom { bottom: 0; left: 0; width: 100%; }
+@media (min-width: 1180px) {
+  .dock-scene { display: block; }
+  .wc-hoy > img, .wc-hoy > .wc-paint, .wc-historial, .wc-escribir { display: none; }   /* una sola escena a la vez: aquí manda la del bonsái */
+}
+@media (max-width: 1179px) { .tree-dock { display: none; } }   /* en estrecho la acuarela ocupa el sitio de la marca de agua */
+
+/* ---------- Pieza teñida: un trazo, una gota o una marca detrás del contenido ---------- */
+.btn-secondary, .pro, .feature-card .tag, .badge, .privacy-point .mark, .shots-arrow, .nv-pill, .feature-card .icon {
+  position: relative; isolation: isolate; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.feature-card .tag, .shots-arrow { position: absolute; }
+.btn-secondary::before, .pro::before, .feature-card .tag::before, .badge::before, .privacy-point .mark::before, .shots-arrow::before, .nv-pill::before, .feature-card .icon::before {
+  content: ""; position: absolute; inset: var(--wash-inset, 0); z-index: -1; background: var(--wash, var(--salvia)); opacity: var(--wash-a, .8);
+  -webkit-mask: var(--stroke) center / 100% 100% no-repeat; mask: var(--stroke) center / 100% 100% no-repeat; }
+html.ink-js .btn-secondary::before, html.ink-js .pro::before, html.ink-js .feature-card .tag::before, html.ink-js .nv-pill::before {
+  clip-path: inset(0 100% 0 0); transition: clip-path .8s cubic-bezier(.3, .7, .2, 1) .15s; }
+html.ink-js .is-in.btn-secondary::before, html.ink-js .is-in.pro::before, html.ink-js .is-in.tag::before, html.ink-js .is-in.nv-pill::before { clip-path: inset(0 -4% 0 0); }
+html.ink-js .badge::before, html.ink-js .privacy-point .mark::before, html.ink-js .shots-arrow::before, html.ink-js .feature-card .icon::before {
+  transform: scale(.3); opacity: 0; transition: transform .9s cubic-bezier(.2, .8, .2, 1) .1s, opacity .6s ease .1s; }
+html.ink-js .is-in.badge::before, html.ink-js .is-in.mark::before, html.ink-js .is-in.shots-arrow::before, html.ink-js .is-in.icon::before { transform: none; opacity: var(--wash-a, .8); }
+
+/* ---------- Botones: pergamino (principal) y trazo de tinta salvia (secundario), como en la app ---------- */
+.btn-primary { height: 60px; padding: 0 34px 2px; border-radius: 0; background: url(assets/acuarela/pergamino.webp) center / 100% 100% no-repeat; color: var(--ink);
+  font: 500 19px/1 var(--font-body); box-shadow: none; filter: drop-shadow(0 7px 7px rgba(70, 45, 20, .3)); transition: filter .25s ease, transform .25s ease; }
+.btn-primary:hover { color: var(--ink); filter: drop-shadow(0 10px 9px rgba(70, 45, 20, .34)) brightness(1.04); transform: translateY(-1px); }
+.btn-primary svg { stroke: var(--ink); stroke-width: 1.8; }
+.btn-secondary { --stroke: url(assets/acuarela/trazo-largo-2.webp); --wash: var(--salvia); --wash-a: .62; --wash-inset: -5px -10px -5px -8px;
+  height: 50px; padding: 0 30px 1px 22px; font: 500 17px/1 var(--font-body); color: var(--ink); transition: transform .25s ease; }
+.btn-secondary:hover { background: none; color: var(--ink); transform: translateY(-1px); }
+.btn-secondary svg { stroke: var(--ink); }
+
+/* ---------- Etiquetas ---------- */
+.pro, .feature-card .tag { --stroke: url(assets/acuarela/trazo-corto-1.webp); --wash: var(--dorado); --wash-a: .78; --wash-inset: -3px -6px;
+  display: inline-block; padding: 5px 11px 4px; color: var(--ink); font: 700 12px/1 var(--font-body); letter-spacing: .12em; }
+.nv-pill { --stroke: url(assets/acuarela/trazo-corto-2.webp); --wash: var(--taupe); --wash-a: .32; --wash-inset: -3px -6px;
+  padding: 5px 11px 4px; color: var(--ink); font-size: 12px; }
+.nv-pill.nv-soon { --wash: var(--bermellon); --wash-a: .8; color: var(--ink); background: none; }
+.nv-pill.nv-free { --wash: var(--salvia); --wash-a: .75; color: var(--ink); background: none; }
+.badge { --stroke: url(assets/acuarela/gota-3.webp); --wash: var(--bermellon); --wash-a: .82; --wash-inset: -7px -8px;
+  min-width: 26px; padding: 6px 4px; text-align: center; color: var(--ink); font: 700 15px/1 var(--font-body); }
+.privacy-point .mark { --stroke: url(assets/acuarela/gota-1.webp); --wash: var(--bermellon); --wash-a: .82; --wash-inset: -5px -7px;
+  width: 30px; height: 30px; color: var(--ink); font: 700 16px/30px var(--font-body); }
+.privacy-point:nth-child(2) .mark { --stroke: url(assets/acuarela/gota-4.webp); }
+.privacy-point:nth-child(3) .mark { --stroke: url(assets/acuarela/gota-5.webp); }
+.privacy-point:nth-child(4) .mark { --stroke: url(assets/acuarela/gota-2.webp); }
+.shot:nth-child(2n) .badge { --stroke: url(assets/acuarela/gota-5.webp); }
+.shot:nth-child(3n) .badge { --stroke: url(assets/acuarela/gota-1.webp); }
+.shots-arrow { --stroke: url(assets/acuarela/gota-4.webp); --wash: var(--bermellon); --wash-a: .9; --wash-inset: -5px; color: var(--ink); }
+.shot-label { align-self: flex-start; padding: 12px 22px 12px 14px; background: url(assets/acuarela/etiqueta-larga.webp) center / 100% 100% no-repeat; font: 500 18px/1 var(--font-body);
+  filter: drop-shadow(0 3px 3px rgba(70, 45, 20, .16)); }
+
+/* ---------- Antetítulo sobre un brochazo, como «días escritos este mes» ---------- */
+.eyebrow, .nv-more-head { overflow: visible; isolation: isolate; color: var(--ink); font-size: 13px; }
+.eyebrow span, .nv-more-head span { position: relative; padding: 9px 26px 8px 14px; margin-left: -14px; }
+.eyebrow span::before, .nv-more-head span::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .8; background: url(assets/acuarela/brochazo.webp) center / 100% 100% no-repeat; }
+html.ink-js .eyebrow span::before, html.ink-js .nv-more-head span::before { clip-path: inset(0 100% 0 0); transition: clip-path .9s cubic-bezier(.3, .7, .2, 1) .2s; }
+html.ink-js .eyebrow.is-in span::before, html.ink-js .nv-more-head.is-in span::before { clip-path: inset(0 0 0 0); }
+
+/* ---------- Secciones: en vez de un filete, una pincelada seca que se traza al llegar ---------- */
+section { border-top: 0; }
+section::before { content: ""; position: absolute; top: -8px; height: 16px; left: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))); width: min(calc(100% - 2 * var(--gutter)), calc(var(--max) - 2 * var(--gutter)));
+  background: var(--taupe); opacity: .42; -webkit-mask: url(assets/acuarela/trazo-ancho-1.webp) center / 100% 100% no-repeat; mask: url(assets/acuarela/trazo-ancho-1.webp) center / 100% 100% no-repeat; }
+section:nth-of-type(2n)::before { -webkit-mask-image: url(assets/acuarela/trazo-ancho-2.webp); mask-image: url(assets/acuarela/trazo-ancho-2.webp); }
+html.ink-js section::before { clip-path: inset(0 100% 0 0); transition: clip-path 1.5s cubic-bezier(.3, .6, .2, 1); }
+html.ink-js section.is-in::before { clip-path: inset(0 0 0 0); }
+.privacy-section { background: rgba(255, 244, 220, .4); }
+footer { border-top: 0; }
+
+/* ---------- Tarjetas de papel (PaperCard): papel claro, sombra cálida y canto de acuarela ---------- */
+.feature-grid { gap: 18px; background: none; border: 0; border-radius: 0; overflow: visible; }
+.feature-card { background: rgba(252, 235, 203, .78); border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(220, 186, 134, .9), 0 16px 22px -18px rgba(90, 60, 25, .6), inset 0 0 0 1px rgba(150, 110, 60, .1), inset 0 0 30px rgba(170, 120, 60, .1); }
+.feature-card .icon { width: 56px; height: 52px; color: var(--ink); --wash-a: .85; }
+.feature-card .icon::before { inset: -12px -16px; background: url(assets/acuarela/marca-1.webp) center / contain no-repeat; -webkit-mask: none; mask: none; }
+.feature-card:nth-child(4n+2) .icon::before { background-image: url(assets/acuarela/marca-2.webp); }
+.feature-card:nth-child(4n+3) .icon::before { background-image: url(assets/acuarela/marca-3.webp); }
+.feature-card:nth-child(4n) .icon::before { background-image: url(assets/acuarela/marca-4.webp); }
+.feature-card .icon svg { width: 28px; height: 28px; }
+.feature-card .tag { top: 22px; right: 22px; }
+/* Ánimos: seis gotas de acuarela teñidas, que se pintan una tras otra */
+.mood-strip { height: 52px; gap: 4px; }
+.mood-strip i { width: 38px; height: 34px; border-radius: 0; -webkit-mask: url(assets/acuarela/gota-1.webp) center / contain no-repeat; mask: url(assets/acuarela/gota-1.webp) center / contain no-repeat; }
+.mood-strip i:nth-child(2) { -webkit-mask-image: url(assets/acuarela/gota-2.webp); mask-image: url(assets/acuarela/gota-2.webp); }
+.mood-strip i:nth-child(3) { -webkit-mask-image: url(assets/acuarela/gota-3.webp); mask-image: url(assets/acuarela/gota-3.webp); }
+.mood-strip i:nth-child(4) { -webkit-mask-image: url(assets/acuarela/gota-4.webp); mask-image: url(assets/acuarela/gota-4.webp); }
+.mood-strip i:nth-child(5) { -webkit-mask-image: url(assets/acuarela/gota-5.webp); mask-image: url(assets/acuarela/gota-5.webp); }
+.mood-strip i:nth-child(6) { -webkit-mask-image: url(assets/acuarela/gota-6.webp); mask-image: url(assets/acuarela/gota-6.webp); }
+.flow-step .num, .nv-num { font-style: italic; font-weight: 400; }
+.device { background: var(--paper-card); }
+
+/* ---------- Hanko 名残: el sello bermellón de la app, estampado en la cita ---------- */
+.hanko { display: none; position: absolute; right: 22px; bottom: -26px; z-index: 2; width: 44px; padding: 6px 5px; border-radius: 10px; background: var(--hanko);
+  box-shadow: inset 0 0 0 2px var(--hanko), inset 0 0 0 3.2px rgba(251, 232, 198, .85); rotate: -5deg; opacity: .88; }
+html.ink-js .hanko { display: block; }
+.hanko svg { display: block; width: 100%; height: auto; stroke: none; }
+.hanko path { fill: var(--paper-card); stroke: none; }
+
+@media (max-width: 860px) {
+  main > .wc-hoy { width: 112%; right: -10%; top: -6px; opacity: .88; }
+  .hero { padding-top: 132px; }
+}
+main { overflow-x: clip; }
+.positioning-card.recorte > .hanko { position: absolute; z-index: 2; }
