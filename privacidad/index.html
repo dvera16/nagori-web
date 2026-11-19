@@ -107,7 +107,7 @@
     <a class="back-link" href="../index.html"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Volver a Nagori</a>
     <p class="eyebrow"><span>Privacidad</span></p>
     <h1>Política de <em>privacidad</em></h1>
-    <p class="updated">Última actualización: 30 de octubre de 2026</p>
+    <p class="updated">Última actualización: 20 de noviembre de 2026</p>
 
     <div class="tldr">
       <h2>Resumen rápido</h2>
@@ -117,6 +117,7 @@
         <li><strong>Nagori solo accede a su propia carpeta de copia</strong> (permiso <code>drive.appdata</code>), nunca a tus archivos ni al resto de tu cuenta.</li>
         <li><strong>No hay integración por API con redes sociales.</strong> Lo que compartes llega por el menú Compartir del sistema operativo.</li>
         <li><strong>Sin publicidad, sin analítica, sin venta de datos.</strong></li>
+        <li><strong>Si algo falla, el registro se queda en tu móvil</strong>: solo sale si tú lo envías.</li>
       </ul>
     </div>
 
@@ -147,11 +148,12 @@
       </p>
       <ul>
         <li><strong>Es opcional.</strong> Está desactivada hasta que tú la activas y das permiso a tu cuenta de Google.</li>
-        <li><strong>Un único archivo <code>.zip</code></strong> con tus entradas y adjuntos, que se actualiza al abrir la app y unos segundos después de cada cambio.</li>
+        <li><strong>Un único archivo <code>.zip</code></strong> con tus entradas y adjuntos, que se actualiza unos minutos después de que escribas, con wifi. Si lleva más de 3 días sin copia, usa también los datos móviles. Google Drive guarda además algunas versiones anteriores de ese archivo.</li>
         <li><strong>Carpeta privada de la app.</strong> La copia se guarda en la carpeta de datos de aplicación de tu Drive («App Data Folder»): no aparece entre tus archivos normales y solo Nagori puede leerla, para que nadie la borre o modifique por error.</li>
         <li><strong>Permiso mínimo (<code>drive.appdata</code>).</strong> El acceso que Google te pide al conectar tu cuenta solo permite a Nagori leer y escribir en esa carpeta propia; no puede ver ni tocar el resto de tu Google Drive.</li>
         <li><strong>Directo de tu móvil a tu Drive.</strong> La copia no pasa por ningún servidor de Nagori ni del desarrollador.</li>
-        <li><strong>Tú decides.</strong> Puedes desactivarla en los ajustes de la app y revocar el acceso cuando quieras en <a class="inline" href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>. Para borrar la copia, en drive.google.com entra en Configuración → Gestionar aplicaciones → Nagori → «Eliminar datos ocultos de la aplicación».</li>
+        <li><strong>Tú decides.</strong> Puedes desactivarla en los ajustes de la app y revocar el acceso cuando quieras en <a class="inline" href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>. Ninguna de las dos cosas borra la copia que ya está en Drive.</li>
+        <li><strong>Borrar la copia.</strong> En la app, «Borrar copia de Drive» en Ajustes → Copia de seguridad la borra entera, con sus versiones anteriores, y apaga la copia automática; tu diario del móvil no se toca. También puedes hacerlo en drive.google.com: Configuración → Gestionar aplicaciones → Nagori → «Eliminar datos ocultos de la aplicación».</li>
       </ul>
     </section>
 
@@ -170,42 +172,55 @@
     </section>
 
     <section>
-      <h2 class="section-title">6. Permisos que usa la app</h2>
+      <h2 class="section-title">6. Registro de errores</h2>
+      <p>
+        Si algo falla —al exportar, importar, hacer la copia o si la app se cierra de golpe—, Nagori apunta en tu móvil qué parte de la app ha fallado: el tipo de error y en qué parte del código. <strong>Nunca guarda lo que escribes</strong> ni el mensaje del error, que podría llevar texto de tu diario.
+      </p>
+      <p>
+        Ese registro no sale del móvil por sí solo. En Ayuda → «¿Algo ha fallado?» puedes leerlo y enviarlo tú por correo a <a class="inline" href="mailto:contacto.nagori@gmail.com">contacto.nagori@gmail.com</a> si quieres que lo miremos, o borrarlo. Los cierres inesperados también pueden llegar a Google Play de forma anónima si lo tienes activado en tu móvil, como en cualquier app.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title">7. Permisos que usa la app</h2>
       <ul>
         <li><strong>Cámara y fotos/galería:</strong> para adjuntar las fotos y vídeos que tú eliges.</li>
         <li><strong>Micrófono:</strong> para grabar notas de voz.</li>
         <li><strong>Internet:</strong> para la vista previa de enlaces, la copia en Drive (si la activas) y las compras de Google Play.</li>
         <li><strong>Notificaciones:</strong> solo si activas el recordatorio nocturno. El aviso se decide en tu móvil y no envía nada fuera de él.</li>
-        <li><strong>Inicio del dispositivo:</strong> para volver a programar el recordatorio tras reiniciar el móvil.</li>
+        <li><strong>Inicio del dispositivo:</strong> para volver a programar el recordatorio y la copia de seguridad tras reiniciar el móvil.</li>
+        <li><strong>Tareas en segundo plano y estado de la red:</strong> para hacer la copia en Drive unos minutos después de tus cambios aunque cierres la app, y esperar a tener wifi.</li>
+        <li><strong>Huella o desbloqueo del móvil:</strong> solo si activas el bloqueo de Nagori; la comprobación la hace el propio móvil.</li>
       </ul>
     </section>
 
     <section>
-      <h2 class="section-title">7. Qué no hace Nagori</h2>
+      <h2 class="section-title">8. Qué no hace Nagori</h2>
       <ul>
         <li>No vende ni comparte tus datos con terceros.</li>
         <li>No muestra publicidad ni usa herramientas de analítica o seguimiento.</li>
         <li>No analiza el contenido de tu diario con fines distintos a los que tú le pides dentro de la propia app.</li>
         <li>No accede a tu Google Drive más allá de su propia carpeta de copia.</li>
+        <li>No envía informes de errores por su cuenta.</li>
       </ul>
     </section>
 
     <section>
-      <h2 class="section-title">8. Tu control sobre tus datos</h2>
+      <h2 class="section-title">9. Tu control sobre tus datos</h2>
       <p>
-        Puedes borrar cualquier entrada, elemento de la bandeja o del Cofre desde la propia app en cualquier momento. Desinstalar Nagori elimina los datos locales del dispositivo. Si habías activado la copia en Drive, esa copia permanece en tu cuenta de Google hasta que la borres tú como se explica arriba.
+        Puedes borrar cualquier entrada, elemento de la bandeja o del Cofre desde la propia app en cualquier momento. Desinstalar Nagori elimina los datos locales del dispositivo. Si habías activado la copia en Drive, esa copia permanece en tu cuenta de Google hasta que la borres tú, desde la app o desde Drive, como se explica arriba.
       </p>
     </section>
 
     <section>
-      <h2 class="section-title">9. Cambios en esta política</h2>
+      <h2 class="section-title">10. Cambios en esta política</h2>
       <p>
         Si Nagori cambia lo que hace con tus datos —por ejemplo, al añadir un nuevo proveedor de copia de seguridad— esta página se actualizará y la fecha de arriba cambiará. Los cambios importantes se avisarán también dentro de la app.
       </p>
     </section>
 
     <section>
-      <h2 class="section-title">10. Contacto</h2>
+      <h2 class="section-title">11. Contacto</h2>
       <p>
         ¿Dudas sobre esta política o sobre tus datos? Escribe a <a class="inline" href="mailto:contacto.nagori@gmail.com">contacto.nagori@gmail.com</a>.
       </p>
