@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ayuda y preguntas frecuentes — Nagori</title>
-<meta name="description" content="Cómo funciona Nagori: la bandeja, la página del día, el Cofre, el Historial, el modo libreta, el bonsái de emociones, la exportación y la copia en Google Drive. Con preguntas frecuentes." />
+<meta name="description" content="Cómo funciona Nagori: la bandeja, la página del día, compartir con pegatinas, el Cofre, el Historial, buscar, el resumen, el modo libreta, el collage, el bonsái, los widgets, el bloqueo, exportar, importar, la copia en Google Drive y la accesibilidad. Con preguntas frecuentes." />
 <link rel="icon" href="../assets/icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -156,6 +156,7 @@
   }
   .back-link:hover { color: var(--ink); }
 </style>
+<script src="../proteger.js?v=20261120"></script>
 </head>
 <body>
 
@@ -174,7 +175,6 @@
     <p class="eyebrow"><span>Ayuda</span></p>
     <h1>Cómo funciona <em>Nagori</em></h1>
     <p class="intro">Nagori es un diario de una página al día. Durante el día vas guardando recortes en la bandeja y, cuando te sientas a escribir, los pegas en tu página junto a lo que sentiste.</p>
-
     <nav class="toc" aria-label="Contenido">
       <h2>En esta página</h2>
       <ol>
@@ -183,27 +183,35 @@
         <li><a href="#compartir">Compartir una página</a></li>
         <li><a href="#cofre">El Cofre</a></li>
         <li><a href="#historial">Historial</a></li>
+        <li><a href="#buscar">Buscar en tu diario</a></li>
+        <li><a href="#otro-dia">Escribir otro día</a></li>
+        <li><a href="#resumen">Resumen para compartir</a></li>
         <li><a href="#libreta">Modo libreta</a></li>
+        <li><a href="#collage">Página collage</a></li>
         <li><a href="#bonsai">Bonsái de emociones</a></li>
+        <li><a href="#widgets">Widgets</a></li>
         <li><a href="#ajustes">Ajustes</a></li>
+        <li><a href="#bloqueo">Bloqueo</a></li>
         <li><a href="#exportar">Exportar tu diario</a></li>
+        <li><a href="#importar">Traer tu diario de otra app</a></li>
         <li><a href="#copia">Copia en la nube</a></li>
+        <li><a href="#accesibilidad">Accesibilidad</a></li>
         <li><a href="#faq">Preguntas frecuentes</a></li>
       </ol>
     </nav>
-
     <section id="hoy">
       <h2 class="section-title">Hoy y la bandeja</h2>
       <p>La bandeja es donde caen las cosas del día antes de escribir: fotos, vídeos, notas de voz, textos breves y enlaces.</p>
       <ul>
-        <li>Añádelas con los botones Foto, Video, Galería, Voz o Texto.</li>
+        <li>Añádelas con los botones Foto, Video, Galería, Voz o Texto. Con Galería puedes elegir varias fotos y vídeos a la vez.</li>
         <li>O compártelas desde cualquier app (Instagram, TikTok, Spotify, el navegador…) eligiendo «Nagori».</li>
         <li>Toca un recorte para verlo o abrirlo; mantenlo pulsado para borrarlo.</li>
+        <li>Bajo la fecha ves tu semana: cada día que escribiste, del color de su ánimo, y cuántos días llevas este mes. No hay rachas: un día sin página no rompe nada.</li>
         <li>Lo que no pegues en tu página pasa al Cofre a medianoche: el reloj te dice cuánto falta.</li>
+        <li>Para ir más rápido, mantén pulsado el icono de Nagori o añade uno de sus widgets a la pantalla de inicio.</li>
       </ul>
-      <figure class="help-shot"><img src="../assets/ayuda/help_hoy.webp" width="720" height="627" loading="lazy" alt="Pantalla Hoy con la bandeja de recortes del día" /></figure>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_hoy.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Pantalla Hoy pintada a la acuarela: la fecha, la semana en gotas de colores, la bandeja con una nota, una foto y un post de Instagram, y los botones para añadir" /></figure>
     </section>
-
     <section id="escribir">
       <h2 class="section-title">Escribir la página de hoy</h2>
       <p>Pulsa «Escribir la página de hoy» para abrir tu página.</p>
@@ -212,34 +220,34 @@
         <li>Escribe sobre las líneas. Se guarda solo mientras escribes, no hace falta darle a nada.</li>
         <li>Abajo, «De tu bandeja» muestra los recortes sin pegar: toca + para pegarlos en la página.</li>
         <li>Para despegar un recorte, mantenlo pulsado y elige Borrar: vuelve a la bandeja.</li>
+        <li>Si el día tiene recortes, encima de las líneas sale una pregunta a mano por si no sabes por dónde empezar («¿Qué te hizo guardar esta foto?»). No se escribe en tu página: «Otra» la cambia y la × la quita.</li>
+        <li>¿Escribes en papel? «Hoja a mano» fotografía la hoja y la pega en tu página, con la tinta limpia sobre el papel. La foto se queda en tu móvil.</li>
         <li>«Listo» cierra la página; puedes volver a ella cuando quieras.</li>
       </ul>
-      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_escribir.webp" width="720" height="873" loading="lazy" alt="Página del día con el selector de ánimo y recortes pegados" /></figure>
+      <figure class="help-shot" style="--w:360px"><img src="../assets/ayuda/help_escribir.webp?v=20261120" width="720" height="800" loading="lazy" alt="Página del día con el selector de ánimo, el texto escrito y el botón Hoja a mano" /></figure>
     </section>
-
     <section id="compartir">
       <h2 class="section-title">Compartir una página</h2>
       <p>Con el botón de compartir de la página creas una tarjeta para tus redes.</p>
       <ul>
-        <li>Pulsa el resaltador y subraya con el dedo la frase que quieres citar. Si no subrayas nada, se comparte solo la fecha y el ánimo.</li>
+        <li>Pulsa el resaltador y subraya con el dedo la frase que quieres citar, o usa «Elegir frase a frase». Si no eliges nada, se comparte solo la fecha y el ánimo.</li>
         <li>Elige, si quieres, un recorte como miniatura.</li>
         <li>En la vista previa puedes pellizcar la miniatura para agrandarla, girarla y arrastrarla.</li>
+        <li>Con Nagori Pro, «Añadir pegatina», junto a la vista previa, decora la tarjeta con las pegatinas del collage. Muévelas, gíralas y cámbialas de tamaño con los dedos; para quitar una, toca su aspa.</li>
         <li>Al final eliges dónde publicarla: Instagram, Facebook, Threads, el estado de WhatsApp u otra app.</li>
       </ul>
-      <figure class="help-shot"><img src="../assets/ayuda/help_compartir_cita.webp" width="720" height="607" loading="lazy" alt="Frase subrayada con el resaltador para compartirla como cita" /></figure>
+      <figure class="help-shot" style="--w:320px"><img src="../assets/ayuda/help_compartir_cita.webp?v=20261120" width="720" height="1147" loading="lazy" alt="Pantalla Compartir: la frase resaltada, las pegatinas puestas y la vista previa de la tarjeta con ellas" /></figure>
     </section>
-
     <section id="cofre">
       <h2 class="section-title">El Cofre</h2>
       <p>Aquí se guarda lo que no usaste, ordenado por meses. Nada se borra solo.</p>
       <ul>
         <li>Filtra por enlaces, fotos o voz con los botones de arriba.</li>
-        <li>Pulsa la flecha bajo un recorte para traerlo de vuelta a la bandeja de hoy.</li>
+        <li>Pulsa «A hoy» bajo un recorte para traerlo de vuelta a la bandeja de hoy.</li>
         <li>De vez en cuando, Nagori te recuerda algo que guardaste hace tiempo por si hoy te dice algo.</li>
       </ul>
-      <figure class="help-shot"><img src="../assets/ayuda/help_cofre.webp" width="720" height="713" loading="lazy" alt="El Cofre con recortes guardados por meses" /></figure>
+      <figure class="help-shot" style="--w:380px"><img src="../assets/ayuda/help_cofre.webp?v=20261120" width="720" height="767" loading="lazy" alt="El Cofre con una foto y una nota guardadas en noviembre y el botón A hoy" /></figure>
     </section>
-
     <section id="historial">
       <h2 class="section-title">Historial</h2>
       <p>Todas tus páginas, mes a mes.</p>
@@ -247,11 +255,46 @@
         <li>La franja de colores es tu mes en ánimos: un color por día.</li>
         <li>Cambia de mes con las flechas o deslizando el dedo hacia los lados.</li>
         <li>Toca una página para leerla, editarla o compartirla; mantenla pulsada para borrarla.</li>
-        <li>Los botones de arriba abren el modo libreta y el bonsái de emociones.</li>
+        <li>Los botones de arriba, de izquierda a derecha: buscar en tu diario, escribir la página de otro día, el modo libreta y el bonsái de emociones.</li>
+        <li>Debajo de la franja, «Resumen del mes para compartir» hace una tarjeta con tu mes para tus historias.</li>
       </ul>
-      <figure class="help-shot"><img src="../assets/ayuda/help_historial.webp" width="720" height="733" loading="lazy" alt="Historial del mes con la franja de ánimos" /></figure>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_historial.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Historial de noviembre con la franja de ánimos pintada y las páginas del mes" /></figure>
     </section>
-
+    <section id="buscar">
+      <h2 class="section-title">Buscar en tu diario</h2>
+      <p>Toca la lupa de arriba en Historial y escribe una palabra o una frase.</p>
+      <ul>
+        <li>Busca en todas tus páginas y en tus notas de texto, de cualquier mes.</li>
+        <li>Da igual que pongas mayúsculas o tildes: «salio» encuentra «salió». La ñ sí cuenta: «año» no encuentra «ano».</li>
+        <li>Lo que coincide sale resaltado, con su fecha, de lo más reciente a lo más antiguo.</li>
+        <li>Toca un resultado para abrir esa página o esa nota.</li>
+      </ul>
+      <figure class="help-shot" style="--w:380px"><img src="../assets/ayuda/help_buscar.webp?v=20261120" width="720" height="600" loading="lazy" alt="Buscador con la palabra hermana y un resultado resaltado" /></figure>
+    </section>
+    <section id="otro-dia">
+      <h2 class="section-title">Escribir otro día</h2>
+      <p>¿Se te pasó un día sin escribir? Toca el calendario de arriba en Historial.</p>
+      <ul>
+        <li>Los días que ya escribiste llevan una hoja del color de su ánimo y hoy tiene un círculo: así ves de un vistazo qué días faltan.</li>
+        <li>Elige la fecha: puedes ir hacia atrás todo lo que quieras, pero no a días que aún no han llegado.</li>
+        <li>Se abre una página nueva con esa fecha y escribes como siempre: ánimo, texto y recortes de tu bandeja.</li>
+        <li>La página se guarda en su día del Historial, no en el de hoy.</li>
+        <li>Si ese día ya tenía página, se añade otra: la que había no se toca.</li>
+      </ul>
+      <figure class="help-shot" style="--w:320px"><img src="../assets/ayuda/help_otro_dia.webp?v=20261120" width="720" height="1088" loading="lazy" alt="Calendario para escribir otro día, con hojas de colores en los días ya escritos" /></figure>
+    </section>
+    <section id="resumen">
+      <h2 class="section-title">Resumen para compartir</h2>
+      <p>Tu mes o tu año en una tarjeta para tus historias, sin enseñar nada de lo que escribes.</p>
+      <ul>
+        <li>Ábrelo en Historial con «Resumen del mes para compartir», debajo de la franja de ánimos.</li>
+        <li>Elige el mes o todo el año y, si quieres, hasta tres recortes. Las notas de texto y de voz nunca salen.</li>
+        <li>Lleva tus páginas, días escritos y recortes, el ánimo más repetido y un calendario con el color de cada día.</li>
+        <li>Compártelo en Instagram, Facebook, Threads o WhatsApp, o guárdalo en la galería.</li>
+        <li>Con Nagori Pro, en la foto crece tu bonsái y puedes sacarlo en vídeo: el árbol se pinta, el calendario se rellena y los recortes caen en su sitio.</li>
+      </ul>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_resumen.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Resumen para compartir del mes de noviembre con el bonsái, las páginas y los días escritos" /></figure>
+    </section>
     <section id="libreta">
       <h2 class="section-title">Modo libreta</h2>
       <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
@@ -262,33 +305,76 @@
         <li>Gira el móvil para leerla en horizontal.</li>
         <li>Vuelve a pulsar el botón del libro para regresar a la lista.</li>
       </ul>
-      <figure class="help-shot" style="--w:240px"><img src="../assets/ayuda/help_libreta.webp" width="720" height="1273" loading="lazy" alt="Modo libreta con una hoja del diario y lengüetas de colores" /></figure>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_libreta.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Modo libreta con lengüetas pintadas y la hoja del sábado 14 de noviembre" /></figure>
     </section>
-
+    <section id="collage">
+      <h2 class="section-title">Página collage</h2>
+      <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
+      <p>Convierte un día en una página de scrapbooking: tus recortes, textos y pegatinas sobre una hoja de papel.</p>
+      <ul>
+        <li>Abre una página desde Historial y pulsa «Hacer un collage».</li>
+        <li>«Texto» escribe en la hoja: a mano, en una etiqueta de papel, en cinta washi, como un sello de tinta o sobre un brochazo de acuarela, del color que elijas.</li>
+        <li>«Pegatinas» añade las hojas de tu bonsái y manchas de tus ánimos en su color, caras, flechas y dibujitos pintados a mano, acuarelas, cinta washi, un clip, el sello 名残, un sello de correos, un matasellos con la fecha de la página y sellos de kanji.</li>
+        <li>Toca cualquier cosa para seleccionarla. Arrástrala con un dedo; con dos, gírala y cambia su tamaño. Los botones de abajo hacen lo mismo paso a paso, y la pasan delante o detrás.</li>
+        <li>Vuelve a tocar un texto seleccionado para editarlo.</li>
+        <li>Se guarda sobre la marcha. El collage sale en la página y en el modo libreta, en una hoja propia después del texto.</li>
+        <li>«Quitar el collage» devuelve los recortes a su sitio y borra los textos y las pegatinas.</li>
+        <li>Con TalkBack, todo lo de la hoja tiene acciones para moverlo, girarlo, cambiar su tamaño y su orden.</li>
+      </ul>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_collage.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Página collage con una nota y dos fotos pegadas sobre papel de libreta" /></figure>
+    </section>
     <section id="bonsai">
       <h2 class="section-title">Bonsái de emociones</h2>
       <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
       <p>Cada página con un ánimo hace crecer una hoja de su color en tu bonsái. Con el tiempo, el árbol cuenta cómo has estado.</p>
       <ul>
-        <li>La hoja de papel de arriba lleva la cuenta de cada ánimo.</li>
+        <li>El pergamino de arriba lleva la cuenta de cada ánimo.</li>
+        <li>Gira el móvil para ver el bonsái entero, con el paisaje detrás.</li>
         <li>Ábrelo desde el botón de la hoja en Historial.</li>
       </ul>
-      <figure class="help-shot" style="--w:240px"><img src="../assets/ayuda/help_bonsai.webp" width="720" height="1220" loading="lazy" alt="Bonsái con hojas de colores según los ánimos" /></figure>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_bonsai.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Emociones: el pergamino con el recuento de ánimos y el bonsái de tinta con hojas de colores" /></figure>
     </section>
-
+    <section id="widgets">
+      <h2 class="section-title">Widgets</h2>
+      <p>Pon Nagori en tu pantalla de inicio: mantén pulsado un hueco libre, toca Widgets y busca Nagori.</p>
+      <ul>
+        <li>Hoy: te dice si ya has escrito y abre tu página o una nota rápida.</li>
+        <li>Captura rápida: además, abre directamente la cámara, el vídeo o la grabadora, y lo que captures cae en tu bandeja.</li>
+        <li>Los dos vienen en papel o translúcidos, dejando ver tu fondo de pantalla, y no muestran nada de lo que has escrito.</li>
+        <li>Bonsái de emociones y Recuento de ánimos (Nagori Pro): tu bonsái, como un recorte pegado con cinta, y el pergamino con tus ánimos. Se actualizan solos cuando escribes.</li>
+        <li>Todos cambian de día solos a medianoche, sin abrir la app.</li>
+        <li>Mantén pulsado un widget para cambiarle el tamaño.</li>
+      </ul>
+      <figure class="help-shot" style="--w:480px"><img src="../assets/ayuda/help_widgets.webp?v=20261120" width="600" height="292" loading="lazy" alt="Widgets de Hoy y Captura rápida en papel rasgado y el recuento de ánimos en un pergamino" /></figure>
+    </section>
     <section id="ajustes">
       <h2 class="section-title">Ajustes</h2>
       <p>Toca Ajustes en la barra de abajo para abrir el menú:</p>
       <ul>
         <li>Modo oscuro: claro, oscuro o según el sistema.</li>
+        <li>Recordatorio: un aviso por la noche los días que aún no hayas escrito.</li>
+        <li>Bloqueo: cierra tu diario con la huella, la cara o el bloqueo de pantalla del móvil.</li>
         <li>Copia de seguridad: guarda tu diario en tu Google Drive.</li>
         <li>Personalización: paleta de ánimos, textura del papel e icono de la app.</li>
+        <li>Accesibilidad: alto contraste, letra legible y reducir movimiento.</li>
         <li>Exportar diario: conviértelo en un PDF o un ePub.</li>
-        <li>Política de privacidad y la ayuda.</li>
+        <li>Importar diario: trae tus páginas de Daylio, Day One, Journey o de archivos de texto.</li>
+        <li>Política de privacidad y esta ayuda.</li>
       </ul>
-      <figure class="help-shot" style="--w:180px"><img src="../assets/ayuda/help_ajustes.webp" width="420" height="820" loading="lazy" alt="Menú de Ajustes de Nagori" /></figure>
+      <figure class="help-shot" style="--w:220px"><img src="../assets/ayuda/help_ajustes.webp?v=20261120" width="403" height="1355" loading="lazy" alt="Menú de Ajustes de Nagori" /></figure>
     </section>
-
+    <section id="bloqueo">
+      <h2 class="section-title">Bloqueo</h2>
+      <p>En Ajustes → Bloqueo puedes cerrar tu diario para que nadie lo lea si coge tu móvil. Es gratis y viene apagado.</p>
+      <ul>
+        <li>Se abre con la huella, la cara o el PIN, patrón o contraseña de tu móvil: no hay una clave nueva que recordar. Si tu móvil no tiene bloqueo de pantalla, ponle uno primero.</li>
+        <li>Lo pide al abrir Nagori y al volver tras más de un minuto fuera. No salta al volver de la cámara o de compartir.</li>
+        <li>Para activarlo o quitarlo también tienes que identificarte.</li>
+        <li>La miniatura de Nagori en las apps recientes sale en blanco.</li>
+        <li>Puedes seguir guardando cosas en la bandeja desde otras apps: compartir no abre tu diario.</li>
+      </ul>
+      <figure class="help-shot" style="--w:360px"><img src="../assets/ayuda/help_bloqueo.webp?v=20261120" width="720" height="600" loading="lazy" alt="Pantalla de diario cerrado con el candado y el botón Abrir" /></figure>
+    </section>
     <section id="exportar">
       <h2 class="section-title">Exportar tu diario</h2>
       <p class="pro-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Nagori Pro</p>
@@ -299,24 +385,45 @@
         <li>ePub: para leerlo en Kindle, Kobo, Apple Books o cualquier lector.</li>
         <li>Cuando esté listo, guárdalo, compártelo o imprímelo.</li>
       </ul>
-      <figure class="help-shot" style="--w:260px"><img src="../assets/ayuda/help_exportar.webp" width="720" height="1113" loading="lazy" alt="Pantalla para exportar el diario a PDF o ePub" /></figure>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_exportar.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Pantalla para exportar el diario a PDF o ePub" /></figure>
     </section>
-
+    <section id="importar">
+      <h2 class="section-title">Traer tu diario de otra app</h2>
+      <p>En Ajustes → Importar diario puedes traer las páginas que escribiste en otra app. Es gratis.</p>
+      <ul>
+        <li>Primero exporta tu diario desde esa app: Daylio en CSV, Day One en JSON (un ZIP con tus fotos) o Journey en ZIP. También valen archivos .txt o .md con fechas.</li>
+        <li>Pulsa «Elegir archivo» bajo el nombre de tu app y busca lo que exportaste.</li>
+        <li>Antes de guardar nada, Nagori te dice cuántas páginas y fotos ha encontrado y de qué fechas son. Puedes confirmarlo o cancelar.</li>
+        <li>Las páginas llegan al Historial con su fecha y, si los tienen, con su ánimo (el más parecido de Nagori) y sus fotos pegadas como recortes.</li>
+        <li>Nada de lo que ya tienes se borra ni se cambia, y si importas el mismo archivo dos veces no se repite nada.</li>
+      </ul>
+      <figure class="help-shot" style="--w:300px"><img src="../assets/ayuda/help_importar.webp?v=20261120" width="720" height="1380" loading="lazy" alt="Pantalla para importar el diario desde Daylio, Day One, Journey o archivos de texto" /></figure>
+    </section>
     <section id="copia">
       <h2 class="section-title">Copia en la nube</h2>
       <p>En Ajustes → Copia de seguridad puedes activar la copia automática en tu Google Drive. Se guarda en una carpeta privada que solo usa Nagori y que no verás en tu Drive normal.</p>
       <ul>
-        <li>Se actualiza al abrir la app y poco después de cada cambio.</li>
+        <li>Se actualiza unos minutos después de que escribas, con wifi. Si lleva más de 3 días sin copia, usa también los datos móviles.</li>
         <li>«Hacer copia ahora» la fuerza en el momento.</li>
         <li>«Restaurar desde Drive» recupera la última copia en este móvil.</li>
+        <li>Desactivarla no borra la copia de Drive. «Borrar copia de Drive» sí, también sus versiones anteriores.</li>
       </ul>
     </section>
-
+    <section id="accesibilidad">
+      <h2 class="section-title">Accesibilidad</h2>
+      <p>Nagori se puede usar con TalkBack y con la letra grande del sistema.</p>
+      <ul>
+        <li>En Ajustes → Accesibilidad puedes activar alto contraste, letra legible y reducir movimiento, por separado.</li>
+        <li>Al leer una página, «Escuchar» la lee en voz alta con una voz en español instalada en tu móvil, sin que el texto salga de él. Si no tienes ninguna, se instala en los ajustes de texto a voz del móvil.</li>
+        <li>Para citar una frase al compartir, «Elegir frase a frase» no necesita arrastrar el dedo.</li>
+        <li>Con TalkBack, en la libreta se pasa de hoja con las acciones de la página.</li>
+      </ul>
+    </section>
     <section id="faq" class="faq">
       <h2 class="section-title">Preguntas frecuentes</h2>
       <details>
         <summary>¿Dónde se guardan mis datos?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
-        <p>Solo en tu móvil, dentro del espacio privado de la app. Si activas la copia de seguridad, también en una carpeta oculta de tu propio Google Drive. Nunca pasan por servidores de Nagori. Más detalles en la <a class="inline" href="../privacidad/index.html">política de privacidad</a>.</p>
+        <p>Solo en tu móvil, dentro del espacio privado de la app. Si activas la copia de seguridad, también en una carpeta oculta de tu propio Google Drive. Nunca pasan por servidores de Nagori.</p>
       </details>
       <details>
         <summary>¿Qué pasa con lo que no uso de la bandeja?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
@@ -327,12 +434,24 @@
         <p>Usa el botón de compartir de esa app (Instagram, TikTok, Spotify, la galería, el navegador…) y elige «Nagori». Aparecerá en la bandeja de hoy.</p>
       </details>
       <details>
+        <summary>¿Cómo uso una foto de otro día?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Si la guardaste en Nagori, está en el Cofre: pulsa «A hoy» bajo la foto y pasará a la bandeja de hoy. Si está en la galería del móvil, añádela con el botón Galería de la pantalla Hoy.  Después, abre tu página y toca + en «De tu bandeja». También puedes pegarla en una página anterior: ábrela desde Historial, pulsa Editar y toca +.</p>
+      </details>
+      <details>
         <summary>¿Puedo escribir o cambiar un día pasado?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
-        <p>Puedes editar cualquier página que ya tengas: ábrela desde Historial y pulsa Editar. Las páginas nuevas siempre son del día de hoy.</p>
+        <p>Sí. Para un día que se quedó sin página, ve a Historial, toca el calendario de arriba y elige la fecha. Para cambiar una página que ya tienes, ábrela desde Historial y pulsa Editar.</p>
       </details>
       <details>
         <summary>¿Cómo borro una página o un recorte?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
         <p>Mantén pulsado sobre él y elige Borrar. Al borrar una página se borran el texto y el ánimo, pero sus recortes no se pierden: quedan sueltos en la bandeja o en el Cofre.</p>
+      </details>
+      <details>
+        <summary>¿Puedo cerrar mi diario con contraseña?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Sí, en Ajustes → Bloqueo. Usa la huella, la cara o el bloqueo de pantalla de tu móvil, así no hay una clave nueva que olvidar. Lo pide al abrir Nagori y al volver tras más de un minuto fuera.</p>
+      </details>
+      <details>
+        <summary>Llevaba mi diario en otra app, ¿puedo traerlo?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>Sí, en Ajustes → Importar diario. Exporta tu diario desde Daylio, Day One o Journey y elige aquí ese archivo; también valen archivos .txt o .md con fechas. Las páginas llegan con su fecha y, si los tienen, con su ánimo y sus fotos. Nada de lo que ya tienes se borra ni se repite.</p>
       </details>
       <details>
         <summary>¿Por qué un enlace no muestra imagen?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
@@ -352,14 +471,17 @@
       </details>
       <details>
         <summary>¿Qué incluye Nagori Pro?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
-        <p>El modo libreta, el bonsái de emociones, la exportación a PDF y ePub, y la personalización: paletas de ánimo, texturas de papel e iconos de la app. Todo lo demás es gratis y sin límites.</p>
+        <p>El modo libreta, la página collage, las pegatinas en la tarjeta que compartes, el bonsái de emociones y sus widgets, el bonsái y el vídeo del resumen, la exportación a PDF y ePub, y la personalización: paletas de ánimo, texturas de papel e iconos de la app. Todo lo demás es gratis y sin límites.</p>
+      </details>
+      <details>
+        <summary>¿La accesibilidad es de pago?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <p>No. Los ajustes de accesibilidad y «Escuchar» son gratis para todos, con o sin Nagori Pro.</p>
       </details>
       <details>
         <summary>¿Nagori tiene anuncios o me rastrea?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></summary>
         <p>No. No hay publicidad ni herramientas de analítica o seguimiento, y tus datos no se comparten ni se venden.</p>
       </details>
     </section>
-
     <section>
       <h2 class="section-title">¿Sigues con dudas?</h2>
       <p>Escribe a <a class="inline" href="mailto:contacto.nagori@gmail.com">contacto.nagori@gmail.com</a> y te respondemos.</p>
