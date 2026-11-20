@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Beta de Nagori — Pruébala antes de que salga</title>
+<meta name="description" content="Prueba Nagori, el diario íntimo pintado a la acuarela para Android, antes de que salga. Gratis, sin cuentas y en dos pasos." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Nagori" />
+<meta property="og:url" content="https://dvera16.github.io/nagori-web/beta/" />
+<meta property="og:title" content="Prueba Nagori antes de que salga" />
+<meta property="og:description" content="El diario íntimo pintado a la acuarela para Android. Gratis, sin cuentas, en dos pasos. / The private journal painted in watercolor, for Android. Free, no sign-up, two steps." />
+<meta property="og:image" content="https://dvera16.github.io/nagori-web/assets/og-nagori.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#F1D5A6" />
+<link rel="icon" href="../assets/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../styles.css?v=20261114" />
+<style>
+  /* Una sola página en dos idiomas: se ve el bloque del idioma de <html lang>. */
+  html[lang="es"] [data-lang="en"], html[lang="en"] [data-lang="es"] { display: none !important; }
+
+  .beta { max-width: 820px; margin: 0 auto; padding: clamp(40px, 7vw, 84px) 0 96px; }
+  .lang-switch { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--paper-card); }
+  .lang-switch button { font: 600 13px/1 var(--font-body); letter-spacing: .08em; color: var(--text-secondary); background: none; border: 0; border-radius: 999px; padding: 8px 12px; cursor: pointer; min-height: 32px; }
+  .lang-switch button[aria-pressed="true"] { background: var(--terracotta); color: #fff7ea; }
+
+  .beta-hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(24px, 5vw, 56px); align-items: center; }
+  .kicker { font: 700 12px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; color: var(--terracotta); margin: 0 0 16px; }
+  .beta h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 5.4vw, 54px); line-height: 1.08; margin: 0 0 18px; }
+  .beta .lead { font-family: var(--font-journal); font-size: 18.5px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 22px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .hero-go { margin-top: 22px; }
+  .beta section { scroll-margin-top: 80px; }
+  .chips li { font: 600 13.5px/1 var(--font-body); color: var(--ink-soft); background: var(--paper-card); border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 13px; }
+
+  .shots { position: relative; height: clamp(340px, 46vw, 470px); }
+  .shots img { position: absolute; width: 58%; height: auto; border-radius: 18px; border: 1px solid var(--hairline); box-shadow: var(--shadow-card); }
+  .shots img:first-child { left: 0; top: 0; transform: rotate(-4deg); }
+  .shots img:last-child { right: 0; bottom: 0; transform: rotate(3deg); }
+
+  .beta section { border-top: 1px solid var(--hairline); margin-top: 48px; padding: 40px 0 0; min-height: 0; }
+  .beta h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 3.6vw, 32px); margin: 0 0 14px; }
+  .beta p, .beta li { font-family: var(--font-journal); font-size: 17px; line-height: 1.7; color: var(--ink); }
+  .beta p { margin: 0 0 14px; }
+
+  .steps { display: grid; gap: 16px; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: step; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: start; background: var(--paper-card); border: 1px solid var(--hairline); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 22px 24px; }
+  .step .num { grid-row: span 3; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--terracotta-container); color: var(--terracotta-deep); font: 700 18px/1 var(--font-body); }
+  .step h3 { font: 700 18px/1.3 var(--font-body); margin: 6px 0 2px; }
+  .step p { margin: 0 0 12px; color: var(--ink-soft); font-size: 16px; }
+  .step .btn-primary { justify-self: start; margin-top: 0; }
+  .after-note { margin-top: 16px !important; font: 400 15px/1.55 var(--font-body) !important; color: var(--text-secondary) !important; }
+
+  .ask { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; }
+  .ask div { border-left: 3px solid var(--terracotta-container); padding: 4px 0 4px 16px; }
+  .ask strong { display: block; font: 700 16px/1.35 var(--font-body); margin-bottom: 4px; }
+  .ask span { font: 400 15.5px/1.6 var(--font-journal); color: var(--ink-soft); }
+
+  .share-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; }
+  .share-row .btn-secondary { margin-top: 0; }
+  .share-msg { font: 600 14px/1 var(--font-body); color: var(--terracotta); min-height: 1em; }
+
+  .faq details { border-bottom: 1px solid var(--hairline); }
+  .faq details:first-of-type { border-top: 1px solid var(--hairline); }
+  .faq summary { display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; cursor: pointer; list-style: none; font: 600 16px/1.4 var(--font-body); color: var(--ink); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--terracotta); font-size: 20px; line-height: 1; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { color: var(--ink-soft); margin: -4px 0 18px; }
+
+  @media (max-width: 720px) {
+    .beta-hero { grid-template-columns: 1fr; }
+    .shots { height: 380px; max-width: 360px; margin: 8px auto 0; width: 100%; }
+    .step { padding: 18px; gap: 4px 14px; }
+    .step .num { width: 34px; height: 34px; font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<nav class="site-nav" id="siteNav">
+  <a href="../index.html" class="nav-brand">
+    <img src="../assets/icon.png" alt="" />
+    <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+  </a>
+  <div class="nav-links">
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+      <button type="button" data-set-lang="es" aria-pressed="true">ES</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="beta">
+
+    <!-- ===================== ESPAÑOL ===================== -->
+    <div data-lang="es">
+      <header class="beta-hero">
+        <div>
+          <p class="kicker">Beta · Solo Android</p>
+          <h1>Prueba Nagori <em>antes de que salga.</em></h1>
+          <p class="lead">Un diario íntimo pintado a la acuarela: tus fotos, notas de voz, recortes de Instagram, TikTok o Spotify y lo que escribes, en una página por día. Entra en dos pasos y cuéntame qué cambiarías.</p>
+          <ul class="chips">
+            <li>Gratis</li>
+            <li>Sin crear cuentas</li>
+            <li>Lo que escribes no sale de tu móvil</li>
+          </ul>
+          <a class="btn-primary hero-go" href="#pasos">Entrar en dos pasos</a>
+        </div>
+        <div class="shots">
+          <img src="../assets/pantallas/hoy.webp?v=20261116" width="720" height="1600" alt="Pantalla Hoy de Nagori pintada a la acuarela, con la semana en gotas de colores y la bandeja del día" />
+          <img src="../assets/pantallas/historial.webp?v=20261116" width="720" height="1600" alt="Historial de Nagori: los días anteriores, cada uno con su estado de ánimo" loading="lazy" />
+        </div>
+      </header>
+
+      <section id="pasos">
+        <h2>Cómo entrar</h2>
+        <p>Hazlo desde el móvil Android, con la <strong>misma cuenta de Google que usas en Play Store</strong>.</p>
+        <ol class="steps">
+          <li class="step">
+            <span class="num" aria-hidden="true">1</span>
+            <h3>Únete al grupo de la beta</h3>
+            <p>Pulsa «Unirse al grupo». Es solo la lista de quién puede probarla: no recibirás correos.</p>
+            <a class="btn-primary" href="https://groups.google.com/g/nagori-beta" target="_blank" rel="noopener">Abrir el grupo</a>
+          </li>
+          <li class="step">
+            <span class="num" aria-hidden="true">2</span>
+            <h3>Apúntate a la prueba e instala</h3>
+            <p>Pulsa «Convertirse en tester» y después «Descargar en Google Play».</p>
+            <a class="btn-primary" href="https://play.google.com/apps/testing/com.danielvera.nagori" target="_blank" rel="noopener">Apuntarme en Google Play</a>
+          </li>
+        </ol>
+        <p class="after-note">Si Play te dice que no está disponible, espera unos minutos y vuelve a abrir el paso 2: el permiso tarda un poco en llegar.</p>
+      </section>
+
+      <section id="a-cambio">
+        <h2>Qué te pido a cambio</h2>
+        <div class="ask">
+          <div><strong>Úsala unos días</strong><span>Como tu diario de verdad, sin prisa. Una línea al día basta.</span></div>
+          <div><strong>Cuéntame qué cambiarías</strong><span>Lo que falla, lo que sobra o lo que te ha servido. Por <a href="https://www.instagram.com/nagori.diario/" target="_blank" rel="noopener">Instagram</a>, <a href="https://www.threads.com/@nagori.diario" target="_blank" rel="noopener">Threads</a> o <a href="mailto:contacto.nagori@gmail.com?subject=Opini%C3%B3n%20sobre%20Nagori">correo</a>.</span></div>
+          <div><strong>Y te lo agradezco</strong><span>Las opiniones que más ayuden se llevan Nagori Pro de por vida. Y si quieres, tu nombre irá en los agradecimientos de la app.</span></div>
+        </div>
+      </section>
+
+      <section id="invitar">
+        <h2>¿Conoces a alguien que escriba diario?</h2>
+        <p>Pásale esta página. Cuantas más personas distintas la prueben, mejor saldrá Nagori.</p>
+        <div class="share-row">
+          <button type="button" class="btn-secondary" data-share>Compartir esta página</button>
+          <span class="share-msg" data-share-msg aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section id="preguntas" class="faq">
+        <h2>Preguntas</h2>
+        <details><summary>¿Tiene versión para iPhone?</summary><p>Todavía no: Nagori es solo para Android. Si quieres que te avisemos cuando haya novedades, <a href="mailto:contacto.nagori@gmail.com?subject=Av%C3%ADsame%20de%20Nagori%20para%20iPhone">escríbenos</a>.</p></details>
+        <details><summary>¿Es gratis?</summary><p>Sí. Escribir, guardar el día y la bandeja son gratis. Algunas funciones son de Nagori Pro y se pueden probar gratis 14 días.</p></details>
+        <details><summary>¿Qué pasa con lo que escribo?</summary><p>Se queda en tu móvil, también durante la beta. No hay cuentas ni servidores nuestros. La copia de seguridad es opcional y va a tu propio Google Drive. Lo tienes todo en la <a href="../privacidad/index.html">política de privacidad</a>.</p></details>
+        <details><summary>¿Y si quiero dejar la beta?</summary><p>Abre el enlace del paso 2 y pulsa «Dejar de participar». Antes de desinstalar, haz una copia en tu Google Drive (Ajustes › Copia de seguridad) para no perder nada.</p></details>
+        <details><summary>¿Por qué hacen falta dos pasos?</summary><p>Nagori aún no ha salido en Google Play. Hasta entonces, Google solo deja instalarla a quien esté en la lista de la prueba, y el grupo es esa lista.</p></details>
+      </section>
+    </div>
+
+    <!-- ===================== ENGLISH ===================== -->
+    <div data-lang="en">
+      <header class="beta-hero">
+        <div>
+          <p class="kicker">Beta · Android only</p>
+          <h1>Try Nagori <em>before it's out.</em></h1>
+          <p class="lead">A private journal painted in watercolor: your photos, voice notes, clippings from Instagram, TikTok or Spotify and your own words, one page per day. Join in two steps and tell me what you'd change.</p>
+          <ul class="chips">
+            <li>Free</li>
+            <li>No sign-up</li>
+            <li>What you write never leaves your phone</li>
+          </ul>
+          <a class="btn-primary hero-go" href="#steps">Join in two steps</a>
+        </div>
+        <div class="shots">
+          <img src="../assets/beta/hoy-en.webp" width="720" height="1600" alt="Nagori's Today screen painted in watercolor, with a photo and a note in the tray" />
+          <img src="../assets/beta/libreta-en.webp" width="720" height="1600" alt="Nagori's History as a notebook, with painted day tabs" loading="lazy" />
+        </div>
+      </header>
+
+      <section id="steps">
+        <h2>How to join</h2>
+        <p>Do it from your Android phone, with the <strong>same Google account you use on the Play Store</strong>.</p>
+        <ol class="steps">
+          <li class="step">
+            <span class="num" aria-hidden="true">1</span>
+            <h3>Join the beta group</h3>
+            <p>Tap “Join group”. It's just the list of who can try it: you won't get any emails.</p>
+            <a class="btn-primary" href="https://groups.google.com/g/nagori-beta" target="_blank" rel="noopener">Open the group</a>
+          </li>
+          <li class="step">
+            <span class="num" aria-hidden="true">2</span>
+            <h3>Sign up for the test and install</h3>
+            <p>Tap “Become a tester”, then “Download it on Google Play”.</p>
+            <a class="btn-primary" href="https://play.google.com/apps/testing/com.danielvera.nagori" target="_blank" rel="noopener">Sign me up on Google Play</a>
+          </li>
+        </ol>
+        <p class="after-note">If Play says it isn't available, wait a few minutes and open step 2 again: access takes a moment to arrive.</p>
+      </section>
+
+      <section>
+        <h2>What I ask in return</h2>
+        <div class="ask">
+          <div><strong>Use it for a few days</strong><span>As your real journal, no rush. One line a day is enough.</span></div>
+          <div><strong>Tell me what you'd change</strong><span>What breaks, what's too much, or what helped you. On <a href="https://www.instagram.com/nagori.diario/" target="_blank" rel="noopener">Instagram</a>, <a href="https://www.threads.com/@nagori.diario" target="_blank" rel="noopener">Threads</a> or by <a href="mailto:contacto.nagori@gmail.com?subject=Feedback%20on%20Nagori">email</a>.</span></div>
+          <div><strong>And I'll thank you</strong><span>The most helpful feedback gets Nagori Pro for life. And if you like, your name goes in the app's thank-you page.</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Know someone who keeps a journal?</h2>
+        <p>Send them this page. The more different people try it, the better Nagori gets.</p>
+        <div class="share-row">
+          <button type="button" class="btn-secondary" data-share>Share this page</button>
+          <span class="share-msg" data-share-msg aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is there an iPhone version?</summary><p>Not yet: Nagori is Android only. If you'd like to hear when there's news, <a href="mailto:contacto.nagori@gmail.com?subject=Let%20me%20know%20about%20Nagori%20for%20iPhone">email us</a>.</p></details>
+        <details><summary>Is it free?</summary><p>Yes. Writing, saving your day and the tray are free. Some features are part of Nagori Pro, which you can try free for 14 days.</p></details>
+        <details><summary>What happens to what I write?</summary><p>It stays on your phone, during the beta too. No accounts, no servers of ours. Backup is optional and goes to your own Google Drive. It's all in the <a href="../privacidad/index.html">privacy policy</a> (in Spanish).</p></details>
+        <details><summary>What if I want to leave the beta?</summary><p>Open the step 2 link and tap “Leave the program”. Before uninstalling, back up to your Google Drive (Settings › Backup) so you don't lose anything.</p></details>
+        <details><summary>Why two steps?</summary><p>Nagori isn't out on Google Play yet. Until then, Google only lets people on the test list install it, and the group is that list.</p></details>
+      </section>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <a href="../index.html" class="footer-brand">
+        <img src="../assets/icon.png" alt="" />
+        <span class="wordmark">nagor<span class="i">ı<span class="dot"></span></span></span>
+      </a>
+      <div class="footer-links">
+        <a href="../index.html">Inicio</a>
+        <a href="../ayuda/index.html">Ayuda</a>
+        <a href="../privacidad/index.html">Privacidad</a>
+        <a href="mailto:contacto.nagori@gmail.com">Contacto</a>
+      </div>
+    </div>
+    <p class="footer-copy"><span>© 2026 Nagori</span><span class="rule"></span><span>名残 — lo que queda del día</span></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var titles = { es: "Beta de Nagori — Pruébala antes de que salga", en: "Nagori beta — Try it before it's out" };
+  function setLang(lang, remember) {
+    root.lang = lang;
+    document.title = titles[lang];
+    document.querySelectorAll("[data-set-lang]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.setLang === lang)); });
+    if (remember) { try { localStorage.setItem("nagori-beta-lang", lang); } catch (e) {} }
+  }
+  // ?lang=en manda; si no, lo último elegido; si no, el idioma del navegador.
+  var asked = new URLSearchParams(location.search).get("lang");
+  var saved = null;
+  try { saved = localStorage.getItem("nagori-beta-lang"); } catch (e) {}
+  var lang = asked === "en" || asked === "es" ? asked : saved || ((navigator.language || "es").toLowerCase().indexOf("es") === 0 ? "es" : "en");
+  setLang(lang, false);
+  document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.dataset.setLang, true); });
+  });
+
+  var msgs = { es: "Enlace copiado", en: "Link copied" };
+  document.querySelectorAll("[data-share]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var url = "https://dvera16.github.io/nagori-web/beta/?utm_source=invitacion&utm_medium=compartir&utm_campaign=beta";
+      var msg = button.parentNode.querySelector("[data-share-msg]");
+      if (navigator.share) {
+        navigator.share({ title: "Nagori", text: root.lang === "en" ? "Try Nagori, a private journal painted in watercolor:" : "Prueba Nagori, un diario íntimo pintado a la acuarela:", url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function () { msg.textContent = msgs[root.lang]; });
+      } else {
+        msg.textContent = url;
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
